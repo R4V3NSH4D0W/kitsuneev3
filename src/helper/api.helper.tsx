@@ -21,3 +21,11 @@ export const getAnimeDetail = async (id: string) => {
   const data = await response.json();
   return data;
 };
+
+export const getEpisodeSource = async (id: string) => {
+  const response = await fetch(
+    `${BASE_URL}/api/gogoanime/episodesource?id=${id}`,
+  );
+  const data = await response.json();
+  return data;
+};

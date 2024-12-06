@@ -1,9 +1,10 @@
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../constants/types';
+import {IEpisodeSource, RootStackParamList} from '../constants/types';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import AAText from '../ui/text';
+import {getEpisodeSource} from '../helper/api.helper';
 
 type IVideoScreenProps = {
   route: RouteProp<RootStackParamList, 'VideoScreen'>;
@@ -11,11 +12,28 @@ type IVideoScreenProps = {
 
 export default function VideoScreen({route}: IVideoScreenProps) {
   const id = route.params.id;
-  console.log(id);
+  const [episodeSource, setEpisodeSource] = useState<IEpisodeSource[] | null>(
+    null,
+  );
+  console.log('episodeSource:', episodeSource);
+
+  const fetchEpisodeSource = useCallback(async () => {
+    try {
+      const response = await getEpisodeSource(id);
+      setEpisodeSource(response);
+    } catch (error) {
+      console.error('Error fetching episode source:', error);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchEpisodeSource();
+  }, [fetchEpisodeSource]);
+
   return (
     <LayoutWrapper>
       <View style={styles.container}>
-        <AAText>Video Screen</AAText>
+        <AAText>{id}</AAText>
       </View>
     </LayoutWrapper>
   );

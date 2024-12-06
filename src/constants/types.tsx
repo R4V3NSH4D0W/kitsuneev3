@@ -38,6 +38,11 @@ export interface Anime {
   episodes: Episode[];
 }
 
+export interface IEpisodeSource {
+  name: string;
+  url: string;
+}
+
 export type RootStackParamList = {
   Tabs: undefined;
   Detail: {id: string};
