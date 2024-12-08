@@ -3,11 +3,16 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home-screen';
 import Icons from 'react-native-vector-icons/Ionicons';
 import AAText from '../ui/text';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import FIcons from 'react-native-vector-icons/FontAwesome';
 import Profile from '../screens/profile';
 import {useTheme} from '../wrappers/theme-context';
 import {Colors} from '../constants/constants';
+
+interface IIconsProps {
+  color: string;
+  size: number;
+}
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +31,22 @@ const MyList = () => {
     </View>
   );
 };
+const HomeIcon = ({color, size}: IIconsProps) => (
+  <Icons name="home-outline" size={size} color={color} />
+);
+
+const CalendarIcon = ({color, size}: IIconsProps) => (
+  <Icons name="calendar-outline" size={size} color={color} />
+);
+
+const MyListIcon = ({color, size}: IIconsProps) => (
+  <Icons name="bookmark-outline" size={size} color={color} />
+);
+
+const ProfileIcon = ({color, size}: IIconsProps) => (
+  <FIcons name="user-o" size={size} color={color} />
+);
+
 const BottomTabNavigation = () => {
   const {theme} = useTheme();
   return (
@@ -34,11 +55,9 @@ const BottomTabNavigation = () => {
         headerShown: false,
         tabBarActiveTintColor: Colors.Green,
         tabBarStyle: {
-          //   position: 'absolute',
-          //   borderTopLeftRadius: 20,
-          //   borderTopRightRadius: 20,
-          paddingTop: 10,
+          paddingTop: Platform.OS === 'ios' ? 10 : 0,
           shadowColor: '#000',
+          height: Platform.OS === 'ios' ? 80 : 60,
           shadowOpacity: 0.1,
           shadowOffset: {width: 0, height: -3},
           shadowRadius: 5,
@@ -50,36 +69,28 @@ const BottomTabNavigation = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icons name="home-outline" size={size} color={color} />
-          ),
+          tabBarIcon: HomeIcon,
         }}
       />
       <Tab.Screen
         name="Release Cale.."
         component={Calender}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icons name="calendar-outline" size={size} color={color} />
-          ),
+          tabBarIcon: CalendarIcon,
         }}
       />
       <Tab.Screen
         name="My List"
         component={MyList}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icons name="bookmark-outline" size={size} color={color} />
-          ),
+          tabBarIcon: MyListIcon,
         }}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <FIcons name="user-o" size={size} color={color} />
-          ),
+          tabBarIcon: ProfileIcon,
         }}
       />
     </Tab.Navigator>

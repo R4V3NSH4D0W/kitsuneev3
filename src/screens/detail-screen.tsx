@@ -18,6 +18,7 @@ import Icons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../constants/constants';
 import AAButton from '../ui/button';
 import EpisodeCard from '../components/episodes-card';
+import AnimeCard from '../components/AnimeCard';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -180,6 +181,10 @@ const DetailScreen = ({route}: DetailScreenProps) => {
         </View>
         <View style={styles.description}>{renderDescription()}</View>
         <EpisodeCard data={animeInfo?.episodes ?? []} />
+        <AnimeCard
+          title="Recommendations"
+          data={animeInfo?.recommendations || []}
+        />
       </ScrollView>
     </LayoutWrapper>
   );
@@ -244,7 +249,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     maxWidth: '70%',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
   },
   statusText: {

@@ -5,9 +5,15 @@ export interface AnimeResult {
   title: string;
   image: string;
   url: string;
-  genres: Genre[];
+  genres?: Genre[];
   episodeId: string;
   episodeNumber: number;
+  duration?: string;
+  japaneseTitle?: string;
+  type?: string;
+  sub?: number;
+  dub?: number;
+  episodes?: number;
 }
 
 export interface AnimeResponse {
@@ -36,11 +42,33 @@ export interface Anime {
   status: string;
   otherName: string;
   episodes: Episode[];
+  recommendations?: AnimeResult[];
 }
 
 export interface IEpisodeSource {
   name: string;
   url: string;
+}
+
+export interface ISpotLightResult {
+  id: string;
+  title: string;
+  japaneseTitle: string;
+  banner: string;
+  rank: number;
+  url: string;
+  type: string;
+  duration: string;
+  releaseDate: string;
+  quality: string;
+  sub: number;
+  dub: number;
+  episodes: number;
+  description: string;
+}
+
+export interface ISpotLight {
+  results: ISpotLightResult[];
 }
 
 export type RootStackParamList = {

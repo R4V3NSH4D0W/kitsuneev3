@@ -1,63 +1,72 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, View, ScrollView, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import Slider from '../components/slider';
 import AnimeCard from '../components/AnimeCard';
-import {getPopularAnime, getTopAiringAnime} from '../helper/api.helper';
-import {AnimeResponse, AnimeResult} from '../constants/types';
+import {
+  getPopularAnime,
+  getSpotLight,
+  getTopAiringAnime,
+} from '../helper/api.helper';
+import {AnimeResult, ISpotLightResult} from '../constants/types';
+import NavBar from '../components/navbar';
 
 export default function HomeScreen() {
   const [topAiringAnime, setTopAiringAnime] = useState<AnimeResult[]>([]);
   const [popularAnime, setPopularAnime] = useState<AnimeResult[]>([]);
-
+  const [spotLight, setSpotLight] = useState<ISpotLightResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchTopAiringAnime = async () => {
-    setLoading(true);
+  const fetchAllData = async () => {
     try {
-      const result: AnimeResponse = await getTopAiringAnime();
-      setTopAiringAnime(result.results || []);
-    } catch (error) {
-      console.error('Error fetching anime:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      setLoading(true);
+      const [topAiringResult, popularAnimeResult, spotLightResult] =
+        await Promise.all([
+          getTopAiringAnime(),
+          getPopularAnime(),
+          getSpotLight(),
+        ]);
 
-  const fetchPopularAnime = async () => {
-    setLoading(true);
-    try {
-      const result: AnimeResponse = await getPopularAnime();
-      setPopularAnime(result.results || []);
+      setTopAiringAnime(topAiringResult.results || []);
+      setPopularAnime(popularAnimeResult.results || []);
+      setSpotLight(spotLightResult.results || []);
     } catch (error) {
-      console.error('Error fetching anime:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchTopAiringAnime();
-    fetchPopularAnime();
+    fetchAllData();
   }, []);
+
+  if (loading) {
+    return (
+      <LayoutWrapper>
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </View>
+      </LayoutWrapper>
+    );
+  }
 
   return (
     <LayoutWrapper>
+      <NavBar />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Slider />
-        <AnimeCard
-          title="Top Airing"
-          isloading={loading}
-          data={topAiringAnime}
-        />
-        <AnimeCard
-          title="Popular Anime"
-          isloading={loading}
-          data={popularAnime}
-        />
+        <Slider data={spotLight} />
+        <AnimeCard title="Top Airing" data={topAiringAnime} />
+        <AnimeCard title="Popular Anime" data={popularAnime} />
       </ScrollView>
     </LayoutWrapper>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
