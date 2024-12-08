@@ -36,3 +36,25 @@ export const getSpotLight = async () => {
   const data = await response.json();
   return data;
 };
+
+export const getRecentlyUpdated = async (page?: number) => {
+  const response = await fetch(
+    `${BASE_URL}/api/${SOURCE2}/recentlyupdated?page=${page}`,
+  );
+  const data = await response.json();
+  return data;
+};
+
+export const getReleaseSchedule = async (date: string) => {
+  console.log('date:', date);
+  const response = await fetch(
+    `${BASE_URL}/api/${SOURCE2}/schedule?date=${date}`,
+  );
+  if (!response.ok) {
+    console.error('Error fetching schedule:', response.statusText);
+    throw new Error('Failed to fetch schedule');
+  }
+
+  const data = await response.json();
+  return data;
+};

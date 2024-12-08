@@ -76,3 +76,9 @@ export type RootStackParamList = {
   Detail: {id: string};
   VideoScreen: {id: string};
 };
+
+export type DateItem = {
+  id: string;
+  day: number;
+  weekday: string;
+};

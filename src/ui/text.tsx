@@ -9,7 +9,6 @@ interface IAATextProps {
 }
 
 const AAText: React.FC<IAATextProps> = ({children, style, ignoretheme}) => {
-  console.log(ignoretheme);
   const {theme} = useTheme();
   return (
     <Text

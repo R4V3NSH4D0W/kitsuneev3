@@ -2,12 +2,14 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home-screen';
 import Icons from 'react-native-vector-icons/Ionicons';
-import AAText from '../ui/text';
-import {Platform, View} from 'react-native';
+import {Platform} from 'react-native';
 import FIcons from 'react-native-vector-icons/FontAwesome';
 import Profile from '../screens/profile';
 import {useTheme} from '../wrappers/theme-context';
 import {Colors} from '../constants/constants';
+
+import MyList from '../screens/my-list-screen';
+import CalendarScreen from '../screens/calendar-screen';
 
 interface IIconsProps {
   color: string;
@@ -16,21 +18,6 @@ interface IIconsProps {
 
 const Tab = createBottomTabNavigator();
 
-const Calender = () => {
-  return (
-    <View>
-      <AAText>Calender</AAText>
-    </View>
-  );
-};
-
-const MyList = () => {
-  return (
-    <View>
-      <AAText>MyList</AAText>
-    </View>
-  );
-};
 const HomeIcon = ({color, size}: IIconsProps) => (
   <Icons name="home-outline" size={size} color={color} />
 );
@@ -74,7 +61,7 @@ const BottomTabNavigation = () => {
       />
       <Tab.Screen
         name="Release Cale.."
-        component={Calender}
+        component={CalendarScreen}
         options={{
           tabBarIcon: CalendarIcon,
         }}

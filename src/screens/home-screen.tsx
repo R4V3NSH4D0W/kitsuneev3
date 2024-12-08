@@ -5,6 +5,7 @@ import Slider from '../components/slider';
 import AnimeCard from '../components/AnimeCard';
 import {
   getPopularAnime,
+  getRecentlyUpdated,
   getSpotLight,
   getTopAiringAnime,
 } from '../helper/api.helper';
@@ -14,22 +15,29 @@ import NavBar from '../components/navbar';
 export default function HomeScreen() {
   const [topAiringAnime, setTopAiringAnime] = useState<AnimeResult[]>([]);
   const [popularAnime, setPopularAnime] = useState<AnimeResult[]>([]);
+  const [recentlyUpdated, setRecentlyUpdated] = useState<AnimeResult[]>([]);
   const [spotLight, setSpotLight] = useState<ISpotLightResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchAllData = async () => {
     try {
       setLoading(true);
-      const [topAiringResult, popularAnimeResult, spotLightResult] =
-        await Promise.all([
-          getTopAiringAnime(),
-          getPopularAnime(),
-          getSpotLight(),
-        ]);
+      const [
+        topAiringResult,
+        popularAnimeResult,
+        spotLightResult,
+        recentlyUpdatedResult,
+      ] = await Promise.all([
+        getTopAiringAnime(),
+        getPopularAnime(),
+        getSpotLight(),
+        getRecentlyUpdated(),
+      ]);
 
       setTopAiringAnime(topAiringResult.results || []);
       setPopularAnime(popularAnimeResult.results || []);
       setSpotLight(spotLightResult.results || []);
+      setRecentlyUpdated(recentlyUpdatedResult.results || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -56,6 +64,7 @@ export default function HomeScreen() {
       <NavBar />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Slider data={spotLight} />
+        <AnimeCard title="Recently Updated" data={recentlyUpdated} />
         <AnimeCard title="Top Airing" data={topAiringAnime} />
         <AnimeCard title="Popular Anime" data={popularAnime} />
       </ScrollView>
