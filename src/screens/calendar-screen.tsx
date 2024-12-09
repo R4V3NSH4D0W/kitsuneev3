@@ -20,6 +20,9 @@ import {Colors} from '../constants/constants';
 import {generateDates, trimTitle} from '../helper/util.helper';
 import {getAnimeDetail, getReleaseSchedule} from '../helper/api.helper';
 
+import {useMyList} from '../helper/storage.helper';
+import {useTheme} from '../wrappers/theme-context';
+
 const {height} = Dimensions.get('window');
 
 type ScheduleItem = {
@@ -36,6 +39,8 @@ export default function CalendarScreen() {
   const [loading, setLoading] = useState<boolean>(false);
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
 
+  const {addToList, removeFromList, isInList} = useMyList();
+  const {theme} = useTheme();
   const dates: DateItem[] = generateDates();
   const [selectedDate, setSelectedDate] = useState<string | null>(
     dates[0]?.id || null,
@@ -99,29 +104,49 @@ export default function CalendarScreen() {
     );
   };
 
-  const renderScheduleItem = ({item}: {item: ScheduleItem}) => (
-    <View style={styles.scheduleContainer}>
-      <View style={styles.time}>
-        <View style={styles.smallLine} />
-        <AAText>{item.airingTime}</AAText>
-      </View>
-      <View style={styles.scheduleContent}>
-        <Image source={{uri: item.image}} style={styles.image} />
-        <View style={styles.col}>
-          <AAText style={styles.title}>{trimTitle(item?.title)}</AAText>
-          <AAText style={styles.episode}>{item.airingEpisode}</AAText>
-          <AAButton
-            ignoreTheme
-            title="My List"
-            style={styles.button}
-            textStyle={styles.text}
-            onPress={() => console.log('My List Pressed')}
-            icon={<FIcons name="plus" size={20} color={Colors.White} />}
-          />
+  const renderScheduleItem = ({item}: {item: ScheduleItem}) => {
+    const isInMyList = isInList(item.id);
+
+    const handlePress = async () => {
+      if (isInMyList) {
+        await removeFromList(item.id);
+      } else {
+        await addToList(item.id);
+      }
+    };
+    return (
+      <View style={styles.scheduleContainer}>
+        <View style={styles.time}>
+          <View style={styles.smallLine} />
+          <AAText>{item.airingTime}</AAText>
+        </View>
+        <View style={styles.scheduleContent}>
+          <Image source={{uri: item.image}} style={styles.image} />
+          <View style={styles.col}>
+            <AAText style={styles.title}>{trimTitle(item?.title)}</AAText>
+            <AAText style={styles.episode}>{item.airingEpisode}</AAText>
+            <AAButton
+              ignoreTheme
+              title={'My List'}
+              style={[
+                styles.button,
+                isInMyList && {backgroundColor: theme.colors.primary},
+              ]}
+              textStyle={isInMyList ? {color: Colors.Green} : styles.text}
+              onPress={handlePress}
+              icon={
+                <FIcons
+                  size={20}
+                  name={isInMyList ? 'check' : 'plus'}
+                  color={isInMyList ? Colors.Green : Colors.White}
+                />
+              }
+            />
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <LayoutWrapper>

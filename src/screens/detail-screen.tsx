@@ -24,6 +24,7 @@ import AnimeCard from '../components/AnimeCard';
 import EpisodeCard from '../components/episodes-card';
 
 import {getAnimeDetail} from '../helper/api.helper';
+import {useMyList} from '../helper/storage.helper';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -82,6 +83,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+  const {addToList, removeFromList, isInList} = useMyList();
 
   const {theme} = useTheme();
   const navigation = useNavigation();
@@ -136,6 +138,16 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     );
   }
 
+  const isInMyList = isInList(animeInfo?.id || '');
+
+  const handlePress = async () => {
+    if (isInMyList) {
+      await removeFromList(animeInfo?.id || '');
+    } else {
+      await addToList(animeInfo?.id || '');
+    }
+  };
+
   return (
     <LayoutWrapper>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -147,11 +159,17 @@ const DetailScreen = ({route}: DetailScreenProps) => {
         <View style={styles.row}>
           <AAText style={styles.titleText}>{animeInfo?.title}</AAText>
           <View style={styles.iconContainer}>
-            <Icons
-              size={30}
-              name="bookmark-outline"
-              color={theme.colors.text}
-            />
+            <TouchableOpacity onPress={() => handlePress()}>
+              {isInMyList ? (
+                <Icons size={30} name="bookmark-outline" color={Colors.Green} />
+              ) : (
+                <Icons
+                  size={30}
+                  name="bookmark-outline"
+                  color={theme.colors.text}
+                />
+              )}
+            </TouchableOpacity>
             <Icons
               size={30}
               name="share-social-outline"
