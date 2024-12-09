@@ -46,7 +46,6 @@ export const getRecentlyUpdated = async (page?: number) => {
 };
 
 export const getReleaseSchedule = async (date: string) => {
-  console.log('date:', date);
   const response = await fetch(
     `${BASE_URL}/api/${SOURCE2}/schedule?date=${date}`,
   );

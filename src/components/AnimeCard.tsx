@@ -13,7 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 interface IAnimeCardProps {
   title: string;
-  isloading: boolean;
   data: AnimeResult[];
 }
 
@@ -32,20 +31,13 @@ const ImageSlider = ({data}: IImageSliderProps) => {
   );
 };
 
-const AnimeCard = ({title, data, isloading}: IAnimeCardProps) => {
+const AnimeCard = ({title, data}: IAnimeCardProps) => {
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const navigateToDetail = (id: string) => {
     navigation.navigate('Detail', {id});
   };
 
-  if (isloading) {
-    return (
-      <View style={styles.container}>
-        <AAText>Loading...</AAText>
-      </View>
-    );
-  }
   return (
     <View style={styles.container}>
       <View style={styles.titleRow}>

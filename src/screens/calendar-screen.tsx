@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import AAText from '../ui/text';
@@ -15,6 +16,8 @@ import AAButton from '../ui/button';
 import FIcons from 'react-native-vector-icons/Feather';
 import {DateItem} from '../constants/types';
 import {generateDates, trimTitle} from '../helper/util.helper';
+
+const {height} = Dimensions.get('window');
 
 type ScheduleItem = {
   id: string;
@@ -134,7 +137,7 @@ export default function CalendarScreen() {
           <View style={styles.loading}>
             <ActivityIndicator size="large" color={Colors.Green} />
           </View>
-        ) : (
+        ) : schedule.length > 0 ? (
           <FlatList
             data={schedule}
             showsVerticalScrollIndicator={false}
@@ -142,16 +145,29 @@ export default function CalendarScreen() {
             renderItem={renderScheduleItem}
             style={styles.scheduleList}
           />
+        ) : (
+          <View style={styles.emptySchedule}>
+            <Image
+              source={require('../../assets/images/sad-removebg.png')}
+              style={styles.emptyImage}
+            />
+            <AAText ignoretheme style={styles.noSchedule}>
+              No Release Schedule
+            </AAText>
+            <AAText style={styles.sorry}>
+              sorry, there is no anime release schedule on this date
+            </AAText>
+          </View>
         )}
       </View>
     </LayoutWrapper>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingHorizontal: 20,
+    paddingTop: 20,
+    flex: 1, // Ensure the container takes the full height
   },
   navText: {
     fontSize: 24,
@@ -165,7 +181,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     borderWidth: 1,
     borderColor: Colors.Green,
-    borderRadius: 25,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
     width: 60,
@@ -232,11 +248,34 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.White,
+    fontWeight: '600',
   },
   loading: {
     flex: 1,
+    marginBottom: height / 3,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 300,
+  },
+  emptyImage: {
+    height: 250,
+    width: 350,
+    resizeMode: 'contain',
+  },
+  emptySchedule: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: height / 2.5,
+  },
+  noSchedule: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: Colors.Green,
+  },
+  sorry: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 10,
+    paddingHorizontal: 30,
   },
 });
