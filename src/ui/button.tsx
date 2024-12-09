@@ -1,28 +1,28 @@
 import React from 'react';
 import {
+  View,
   StyleSheet,
-  TouchableOpacity,
   ViewStyle,
   StyleProp,
-  View,
   TextStyle,
+  TouchableOpacity,
 } from 'react-native';
 import AAText from './text';
 
 interface IAAButtonProps {
-  title: string | number;
   onPress: () => void;
-  style?: StyleProp<ViewStyle>;
-  icon?: React.ReactNode;
   textStyle?: TextStyle;
   ignoreTheme?: boolean;
+  title: string | number;
+  icon?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
 const AAButton = ({
+  icon,
   title,
   style,
   onPress,
-  icon,
   textStyle,
   ignoreTheme,
 }: IAAButtonProps) => {

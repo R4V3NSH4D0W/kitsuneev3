@@ -1,22 +1,25 @@
-import {ActivityIndicator, View, ScrollView, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import LayoutWrapper from '../wrappers/layout-wrapper';
+import {ActivityIndicator, View, ScrollView, StyleSheet} from 'react-native';
+
 import Slider from '../components/slider';
-import AnimeCard from '../components/AnimeCard';
-import {
-  getPopularAnime,
-  getRecentlyUpdated,
-  getSpotLight,
-  getTopAiringAnime,
-} from '../helper/api.helper';
-import {AnimeResult, ISpotLightResult} from '../constants/types';
 import NavBar from '../components/navbar';
+import AnimeCard from '../components/AnimeCard';
+
+import {
+  getSpotLight,
+  getPopularAnime,
+  getTopAiringAnime,
+  getRecentlyUpdated,
+} from '../helper/api.helper';
+import LayoutWrapper from '../wrappers/layout-wrapper';
+import {AnimeResult, ISpotLightResult} from '../constants/types';
 
 export default function HomeScreen() {
-  const [topAiringAnime, setTopAiringAnime] = useState<AnimeResult[]>([]);
-  const [popularAnime, setPopularAnime] = useState<AnimeResult[]>([]);
-  const [recentlyUpdated, setRecentlyUpdated] = useState<AnimeResult[]>([]);
   const [spotLight, setSpotLight] = useState<ISpotLightResult[]>([]);
+  const [popularAnime, setPopularAnime] = useState<AnimeResult[]>([]);
+  const [topAiringAnime, setTopAiringAnime] = useState<AnimeResult[]>([]);
+  const [recentlyUpdated, setRecentlyUpdated] = useState<AnimeResult[]>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchAllData = async () => {
@@ -34,9 +37,9 @@ export default function HomeScreen() {
         getRecentlyUpdated(),
       ]);
 
+      setSpotLight(spotLightResult.results || []);
       setTopAiringAnime(topAiringResult.results || []);
       setPopularAnime(popularAnimeResult.results || []);
-      setSpotLight(spotLightResult.results || []);
       setRecentlyUpdated(recentlyUpdatedResult.results || []);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -75,7 +78,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });

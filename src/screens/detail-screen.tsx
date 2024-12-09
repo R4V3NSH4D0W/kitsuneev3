@@ -1,24 +1,29 @@
-import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
-  StyleSheet,
-  ActivityIndicator,
   Image,
-  ScrollView,
-  TouchableOpacity,
   FlatList,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import LayoutWrapper from '../wrappers/layout-wrapper';
-import AAText from '../ui/text';
-import {Anime, RootStackParamList} from '../constants/types';
-import {getAnimeDetail} from '../helper/api.helper';
-import {useTheme} from '../wrappers/theme-context';
 import Icons from 'react-native-vector-icons/Ionicons';
-import {Colors} from '../constants/constants';
+import React, {useCallback, useEffect, useState} from 'react';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+
+import {useTheme} from '../wrappers/theme-context';
+import LayoutWrapper from '../wrappers/layout-wrapper';
+
+import AAText from '../ui/text';
 import AAButton from '../ui/button';
-import EpisodeCard from '../components/episodes-card';
+
+import {Colors} from '../constants/constants';
+import {Anime, RootStackParamList} from '../constants/types';
+
 import AnimeCard from '../components/AnimeCard';
+import EpisodeCard from '../components/episodes-card';
+
+import {getAnimeDetail} from '../helper/api.helper';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -54,14 +59,14 @@ const Banner = ({
 
 const GenreList = ({genres}: {genres: string[]}) => (
   <FlatList
-    data={genres}
     horizontal
+    data={genres}
     keyExtractor={item => item}
     renderItem={({item}) => (
       <AAButton
-        onPress={() => {}}
         title={item}
         ignoreTheme
+        onPress={() => {}}
         style={styles.genreButton}
         textStyle={styles.genreText}
       />
@@ -73,9 +78,11 @@ const GenreList = ({genres}: {genres: string[]}) => (
 
 const DetailScreen = ({route}: DetailScreenProps) => {
   const {id} = route.params;
-  const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+
   const {theme} = useTheme();
   const navigation = useNavigation();
 
@@ -141,13 +148,13 @@ const DetailScreen = ({route}: DetailScreenProps) => {
           <AAText style={styles.titleText}>{animeInfo?.title}</AAText>
           <View style={styles.iconContainer}>
             <Icons
-              name="bookmark-outline"
               size={30}
+              name="bookmark-outline"
               color={theme.colors.text}
             />
             <Icons
-              name="share-social-outline"
               size={30}
+              name="share-social-outline"
               color={theme.colors.text}
             />
           </View>
@@ -164,18 +171,18 @@ const DetailScreen = ({route}: DetailScreenProps) => {
         <View style={styles.controllerRow}>
           <AAButton
             title="Play"
-            onPress={() => {}}
             ignoreTheme
-            style={[styles.buttonAlt, styles.controllerButton]}
+            onPress={() => {}}
             textStyle={styles.buttonTextAlt}
+            style={[styles.buttonAlt, styles.controllerButton]}
             icon={<Icons name="play-circle" size={20} color={Colors.White} />}
           />
           <AAButton
+            ignoreTheme
             title="Download"
             onPress={() => {}}
-            ignoreTheme
-            style={[styles.button, styles.controllerButton]}
             textStyle={styles.buttonText}
+            style={[styles.button, styles.controllerButton]}
             icon={<Icons name="download" size={20} color={Colors.Green} />}
           />
         </View>
@@ -193,63 +200,63 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 const styles = StyleSheet.create({
   container: {marginBottom: 40},
   descriptionContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   descriptionText: {
     lineHeight: 24,
   },
   description: {
-    marginHorizontal: 20,
     marginTop: 20,
+    marginHorizontal: 20,
   },
   viewMoreText: {
-    color: Colors.Green,
     marginBottom: -3,
+    color: Colors.Green,
     textDecorationLine: 'underline',
   },
   loading: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   banner: {
     position: 'relative',
   },
   backIcon: {
-    position: 'absolute',
     top: 20,
     left: 20,
     zIndex: 1,
+    position: 'absolute',
   },
   image: {
-    width: '100%',
     height: 300,
+    width: '100%',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   row: {
+    marginTop: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 20,
+    justifyContent: 'space-between',
   },
   controllerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
     marginTop: -10,
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   iconContainer: {
-    flexDirection: 'row',
     gap: 20,
+    flexDirection: 'row',
   },
   titleText: {
-    maxWidth: '70%',
     fontSize: 22,
+    maxWidth: '70%',
     fontWeight: '600',
   },
   statusText: {
@@ -257,25 +264,25 @@ const styles = StyleSheet.create({
   },
   genreListContainer: {
     paddingLeft: 10,
-    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   genreButton: {
-    borderColor: Colors.Green,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
+    borderColor: Colors.Green,
   },
   genreText: {
     color: Colors.Green,
   },
   button: {
-    borderColor: Colors.Green,
     borderRadius: 10,
+    borderColor: Colors.Green,
   },
   buttonAlt: {
-    borderColor: Colors.Green,
     borderRadius: 10,
+    borderColor: Colors.Green,
     backgroundColor: Colors.Green,
   },
   buttonText: {
@@ -289,10 +296,10 @@ const styles = StyleSheet.create({
     color: Colors.White,
   },
   infoContainer: {
+    gap: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
   },
 });
 

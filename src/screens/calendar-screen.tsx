@@ -1,41 +1,45 @@
-import React, {useEffect, useState} from 'react';
 import {
-  StyleSheet,
   View,
-  FlatList,
-  TouchableOpacity,
   Image,
-  ActivityIndicator,
+  FlatList,
   Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import FIcons from 'react-native-vector-icons/Feather';
+
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import AAText from '../ui/text';
-import {Colors} from '../constants/constants';
-import {getAnimeDetail, getReleaseSchedule} from '../helper/api.helper';
 import AAButton from '../ui/button';
-import FIcons from 'react-native-vector-icons/Feather';
+
 import {DateItem} from '../constants/types';
+import {Colors} from '../constants/constants';
+
 import {generateDates, trimTitle} from '../helper/util.helper';
+import {getAnimeDetail, getReleaseSchedule} from '../helper/api.helper';
 
 const {height} = Dimensions.get('window');
 
 type ScheduleItem = {
   id: string;
-  title: string;
-  japaneseTitle: string;
   url: string;
-  airingEpisode: string;
-  airingTime: string;
+  title: string;
   image: string;
+  airingTime: string;
+  japaneseTitle: string;
+  airingEpisode: string;
 };
 
 export default function CalendarScreen() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
+
   const dates: DateItem[] = generateDates();
   const [selectedDate, setSelectedDate] = useState<string | null>(
     dates[0]?.id || null,
   );
-  const [loading, setLoading] = useState<boolean>(false);
-  const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
 
   useEffect(() => {
     if (!selectedDate) {
@@ -107,8 +111,8 @@ export default function CalendarScreen() {
           <AAText style={styles.title}>{trimTitle(item?.title)}</AAText>
           <AAText style={styles.episode}>{item.airingEpisode}</AAText>
           <AAButton
-            title="My List"
             ignoreTheme
+            title="My List"
             style={styles.button}
             textStyle={styles.text}
             onPress={() => console.log('My List Pressed')}
@@ -127,10 +131,10 @@ export default function CalendarScreen() {
         <FlatList
           data={dates}
           horizontal
+          style={styles.flatList}
           keyExtractor={item => item.id}
           renderItem={renderCalendarItem}
           showsHorizontalScrollIndicator={false}
-          style={styles.flatList}
         />
 
         {loading ? (
@@ -140,10 +144,10 @@ export default function CalendarScreen() {
         ) : schedule.length > 0 ? (
           <FlatList
             data={schedule}
-            showsVerticalScrollIndicator={false}
+            style={styles.scheduleList}
             keyExtractor={item => item.id}
             renderItem={renderScheduleItem}
-            style={styles.scheduleList}
+            showsVerticalScrollIndicator={false}
           />
         ) : (
           <View style={styles.emptySchedule}>
@@ -165,9 +169,9 @@ export default function CalendarScreen() {
 }
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    flex: 1,
     paddingTop: 20,
-    flex: 1, // Ensure the container takes the full height
+    paddingHorizontal: 20,
   },
   navText: {
     fontSize: 24,
@@ -178,18 +182,18 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   calendar: {
-    marginRight: 12,
+    width: 60,
+    height: 90,
     borderWidth: 1,
-    borderColor: Colors.Green,
+    marginRight: 12,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 60,
-    height: 90,
+    borderColor: Colors.Green,
   },
   selectedCalendar: {
-    backgroundColor: Colors.Green,
     borderColor: Colors.Green,
+    backgroundColor: Colors.Green,
   },
   weekdayText: {
     fontSize: 14,
@@ -211,22 +215,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Green,
   },
   time: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 5,
     marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   image: {
     width: 150,
     height: 100,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
   },
   scheduleContent: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    alignItems: 'center',
     gap: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: 18,
@@ -243,18 +247,18 @@ const styles = StyleSheet.create({
     width: 120,
     padding: 8,
     borderRadius: 20,
-    backgroundColor: Colors.Green,
     borderColor: Colors.Green,
+    backgroundColor: Colors.Green,
   },
   text: {
-    color: Colors.White,
     fontWeight: '600',
+    color: Colors.White,
   },
   loading: {
     flex: 1,
     marginBottom: height / 3,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   emptyImage: {
     height: 250,
@@ -263,8 +267,8 @@ const styles = StyleSheet.create({
   },
   emptySchedule: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: height / 2.5,
   },
   noSchedule: {
@@ -273,9 +277,9 @@ const styles = StyleSheet.create({
     color: Colors.Green,
   },
   sorry: {
-    textAlign: 'center',
     fontSize: 18,
     marginTop: 10,
+    textAlign: 'center',
     paddingHorizontal: 30,
   },
 });

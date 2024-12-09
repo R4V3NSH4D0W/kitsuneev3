@@ -1,9 +1,11 @@
 import React from 'react';
-import {Dimensions, Image, StyleSheet, View, FlatList} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import FIcons from 'react-native-vector-icons/Feather';
-import AAButton from '../ui/button';
+import {Dimensions, Image, StyleSheet, View, FlatList} from 'react-native';
+
 import AAText from '../ui/text';
+import AAButton from '../ui/button';
+
 import {Colors} from '../constants/constants';
 import {ISpotLightResult} from '../constants/types';
 
@@ -32,8 +34,8 @@ const SliderItem = ({item}: ISliderItemProps) => (
         <AAButton
           title="Play"
           ignoreTheme
-          style={[styles.button, styles.greenButton]}
           textStyle={styles.text}
+          style={[styles.button, styles.greenButton]}
           onPress={() => console.log('Play Pressed')}
           icon={<Icons name="play-circle" size={20} color={Colors.White} />}
         />
@@ -55,9 +57,9 @@ const Slider = ({data}: ISliderProps) => {
     <View style={styles.sliderContainer}>
       <FlatList
         data={data}
-        keyExtractor={item => item.id}
         horizontal
         pagingEnabled
+        keyExtractor={item => item.id}
         showsHorizontalScrollIndicator={false}
         viewabilityConfig={{viewAreaCoveragePercentThreshold: 50}}
         renderItem={({item}) => <SliderItem item={item} />}
@@ -93,35 +95,35 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   sliderContent: {
-    position: 'absolute',
-    bottom: 20,
     left: 20,
+    bottom: 20,
+    position: 'absolute',
   },
   subText: {
-    paddingVertical: 5,
     fontSize: 20,
-    fontWeight: '400',
     maxWidth: 400,
+    fontWeight: '400',
+    paddingVertical: 5,
     color: Colors.White,
   },
   controller: {
-    flexDirection: 'row',
     gap: 10,
     marginTop: 10,
+    flexDirection: 'row',
   },
   button: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
     borderWidth: 1,
-    borderColor: Colors.White,
     borderRadius: 25,
-    alignItems: 'center',
+    paddingVertical: 12,
     flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    borderColor: Colors.White,
     gap: 5,
   },
   greenButton: {
-    backgroundColor: Colors.Green,
     borderColor: Colors.Green,
+    backgroundColor: Colors.Green,
   },
   text: {
     color: Colors.White,

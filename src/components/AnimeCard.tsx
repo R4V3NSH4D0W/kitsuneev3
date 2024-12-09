@@ -6,11 +6,12 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {AnimeResult} from '../constants/types';
-import AAText from '../ui/text';
-import {Colors} from '../constants/constants';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+
+import AAText from '../ui/text';
+import {Colors} from '../constants/constants';
+import {AnimeResult} from '../constants/types';
 interface IAnimeCardProps {
   title: string;
   data: AnimeResult[];
@@ -74,10 +75,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   titleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   titleButton: {
     fontSize: 16,
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 250,
+    marginRight: 20,
     borderRadius: 10,
     marginBottom: 10,
-    marginRight: 20,
   },
 });

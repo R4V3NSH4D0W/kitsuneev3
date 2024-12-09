@@ -1,11 +1,13 @@
-import {StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
-import AAText from '../ui/text';
-import {Episode} from '../constants/types';
-import AAButton from '../ui/button';
-import {Colors} from '../constants/constants';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+import AAText from '../ui/text';
+import AAButton from '../ui/button';
+
+import {Episode} from '../constants/types';
+import {Colors} from '../constants/constants';
 
 interface IEpisodeCardProps {
   data: Episode[];
@@ -59,33 +61,33 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   buttonContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 10,
-    justifyContent: 'flex-start',
     gap: 8,
+    marginTop: 10,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
   button: {
     width: '30%',
     maxWidth: 60,
-    borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors.Green,
+    borderRadius: 5,
     paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: Colors.Green,
   },
   viewMoreButton: {
-    marginTop: 10,
     padding: 10,
-    borderRadius: 5,
+    marginTop: 10,
     borderWidth: 1,
-    borderColor: Colors.Green,
+    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: Colors.Green,
   },
   buttonText: {
-    color: Colors.Green,
     fontSize: 16,
+    color: Colors.Green,
   },
 });

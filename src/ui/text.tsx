@@ -3,9 +3,9 @@ import React from 'react';
 import {useTheme} from '../wrappers/theme-context';
 
 interface IAATextProps {
-  children: React.ReactNode;
   style?: TextStyle;
   ignoretheme?: boolean;
+  children: React.ReactNode;
 }
 
 const AAText: React.FC<IAATextProps> = ({children, style, ignoretheme}) => {
