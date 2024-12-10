@@ -15,6 +15,7 @@ import {AnimeResult} from '../constants/types';
 interface IAnimeCardProps {
   title: string;
   data: AnimeResult[];
+  hideSeeAll?: boolean;
 }
 
 interface IImageSliderProps {
@@ -32,7 +33,7 @@ const ImageSlider = ({data}: IImageSliderProps) => {
   );
 };
 
-const AnimeCard = ({title, data}: IAnimeCardProps) => {
+const AnimeCard = ({title, data, hideSeeAll}: IAnimeCardProps) => {
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const navigateToDetail = (id: string) => {
@@ -43,9 +44,11 @@ const AnimeCard = ({title, data}: IAnimeCardProps) => {
     <View style={styles.container}>
       <View style={styles.titleRow}>
         <AAText style={styles.title}>{title}</AAText>
-        <AAText ignoretheme style={styles.titleButton}>
-          See all
-        </AAText>
+        {hideSeeAll ? null : (
+          <AAText ignoretheme style={styles.titleButton}>
+            See all
+          </AAText>
+        )}
       </View>
 
       <FlatList
@@ -71,8 +74,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '500',
+    fontSize: 20,
+    fontWeight: '600',
   },
   titleRow: {
     marginBottom: 20,
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
     color: Colors.Green,
   },
   image: {
-    width: 200,
+    width: 170,
     height: 250,
     marginRight: 20,
     borderRadius: 10,

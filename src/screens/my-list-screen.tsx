@@ -83,6 +83,7 @@ export default function MyList() {
         ) : (
           <FlatList
             data={animeDetails}
+            showsVerticalScrollIndicator={false}
             renderItem={renderAnimeItem}
             keyExtractor={item => item.id}
             numColumns={2}
@@ -97,7 +98,7 @@ export default function MyList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    paddingTop: 20,
     paddingHorizontal: 20,
   },
   navTitle: {

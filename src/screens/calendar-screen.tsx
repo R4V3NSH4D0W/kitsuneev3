@@ -22,6 +22,9 @@ import {getAnimeDetail, getReleaseSchedule} from '../helper/api.helper';
 
 import {useMyList} from '../helper/storage.helper';
 import {useTheme} from '../wrappers/theme-context';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import AIcons from 'react-native-vector-icons/AntDesign';
 
 const {height} = Dimensions.get('window');
 
@@ -45,6 +48,8 @@ export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState<string | null>(
     dates[0]?.id || null,
   );
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   useEffect(() => {
     if (!selectedDate) {
@@ -105,6 +110,9 @@ export default function CalendarScreen() {
   };
 
   const renderScheduleItem = ({item}: {item: ScheduleItem}) => {
+    const navigateToDetail = (id: string) => {
+      navigation.navigate('Detail', {id});
+    };
     const isInMyList = isInList(item.id);
 
     const handlePress = async () => {
@@ -121,7 +129,17 @@ export default function CalendarScreen() {
           <AAText>{item.airingTime}</AAText>
         </View>
         <View style={styles.scheduleContent}>
-          <Image source={{uri: item.image}} style={styles.image} />
+          <TouchableOpacity onPress={() => navigateToDetail(item.id)}>
+            <View>
+              <Image source={{uri: item.image}} style={styles.image} />
+              <AIcons
+                name="play"
+                size={30}
+                color={Colors.White}
+                style={styles.playIcon}
+              />
+            </View>
+          </TouchableOpacity>
           <View style={styles.col}>
             <AAText style={styles.title}>{trimTitle(item?.title)}</AAText>
             <AAText style={styles.episode}>{item.airingEpisode}</AAText>
@@ -306,5 +324,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 30,
+  },
+  playIcon: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{translateX: -15}, {translateY: -15}],
+    zIndex: 1,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });

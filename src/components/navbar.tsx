@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Platform} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 
 import AAText from '../ui/text';
@@ -25,7 +25,7 @@ export default NavBar;
 
 const styles = StyleSheet.create({
   navbar: {
-    top: 80,
+    top: Platform.OS === 'ios' ? 80 : 20,
     zIndex: 1,
     width: '100%',
     position: 'absolute',
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   icons: {
-    gap: 10,
+    gap: 20,
     flexDirection: 'row',
   },
   titleText: {

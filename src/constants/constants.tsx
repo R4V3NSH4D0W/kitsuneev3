@@ -38,3 +38,10 @@ export const darkTheme: Theme = {
     maxiumTintColor: '#808080',
   },
 };
+export interface IWidht {
+  small: number;
+}
+
+export const DeviceWidth: IWidht = {
+  small: 411.42857142857144,
+};

@@ -1,8 +1,28 @@
-import {useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export function useMyList() {
+interface ContextProps {
+  myList: string[];
+  addToList: (id: string) => void;
+  removeFromList: (id: string) => void;
+  isInList: (id: string) => boolean;
+
+  watchedEpisodes: string[];
+  markAsWatched: (id: string, watchedPercentage: number) => void;
+  isWatched: (id: string) => boolean;
+}
+
+const AppContext = createContext<ContextProps | undefined>(undefined);
+
+export const AppProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [myList, setMyList] = useState<string[]>([]);
+  const [watchedEpisodes, setWatchedEpisodes] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchMyList = async () => {
@@ -14,7 +34,17 @@ export function useMyList() {
       }
     };
 
+    const fetchWatchedEpisodes = async () => {
+      try {
+        const storedEpisodes = await AsyncStorage.getItem('watchedEpisodes');
+        setWatchedEpisodes(storedEpisodes ? JSON.parse(storedEpisodes) : []);
+      } catch (error) {
+        console.error('Error fetching Watched Episodes:', error);
+      }
+    };
+
     fetchMyList();
+    fetchWatchedEpisodes();
   }, []);
 
   const addToList = async (id: string) => {
@@ -39,5 +69,60 @@ export function useMyList() {
 
   const isInList = (id: string) => myList.includes(id);
 
-  return {myList, addToList, removeFromList, isInList};
-}
+  const markAsWatched = async (id: string, watchedPercentage: number) => {
+    if (watchedPercentage >= 30 && !watchedEpisodes.includes(id)) {
+      try {
+        const updatedEpisodes = [...watchedEpisodes, id];
+        setWatchedEpisodes(updatedEpisodes);
+        await AsyncStorage.setItem(
+          'watchedEpisodes',
+          JSON.stringify(updatedEpisodes),
+        );
+      } catch (error) {
+        console.error('Error marking episode as watched:', error);
+      }
+    }
+  };
+
+  const isWatched = (id: string) => watchedEpisodes.includes(id);
+
+  return (
+    <AppContext.Provider
+      value={{
+        myList,
+        addToList,
+        removeFromList,
+        isInList,
+        watchedEpisodes,
+        markAsWatched,
+        isWatched,
+      }}>
+      {children}
+    </AppContext.Provider>
+  );
+};
+
+export const useMyList = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useMyList must be used within AppProvider');
+  }
+  return {
+    myList: context.myList,
+    addToList: context.addToList,
+    removeFromList: context.removeFromList,
+    isInList: context.isInList,
+  };
+};
+
+export const useWatchedEpisodes = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useWatchedEpisodes must be used within AppProvider');
+  }
+  return {
+    watchedEpisodes: context.watchedEpisodes,
+    markAsWatched: context.markAsWatched,
+    isWatched: context.isWatched,
+  };
+};

@@ -31,10 +31,9 @@ type DetailScreenProps = {
 };
 
 const LoadingIndicator = () => {
-  const {theme} = useTheme();
   return (
     <View style={styles.loading}>
-      <ActivityIndicator size="large" color={theme.colors.text} />
+      <ActivityIndicator size="large" color={Colors.Green} />
     </View>
   );
 };
@@ -205,9 +204,13 @@ const DetailScreen = ({route}: DetailScreenProps) => {
           />
         </View>
         <View style={styles.description}>{renderDescription()}</View>
-        <EpisodeCard data={animeInfo?.episodes ?? []} />
+        <EpisodeCard
+          data={animeInfo?.episodes ?? []}
+          image={animeInfo?.image}
+        />
         <AnimeCard
-          title="Recommendations"
+          title="More Like This"
+          hideSeeAll
           data={animeInfo?.recommendations || []}
         />
       </ScrollView>

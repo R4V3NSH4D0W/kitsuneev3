@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import Video from 'react-native-video';
 import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../constants/types';
+import {Anime, RootStackParamList} from '../constants/types';
 import LayoutWrapper from '../wrappers/layout-wrapper';
-import {getEpisodeSource} from '../helper/api.helper';
+import {getAnimeDetail, getEpisodeSource} from '../helper/api.helper';
 import {
   SelectedTrackType,
   TextTrackType,
 } from 'react-native-video/lib/types/video';
+import {useWatchedEpisodes} from '../helper/storage.helper';
 
 type VideoScreenProps = {
   route: RouteProp<RootStackParamList, 'VideoScreen'>;
@@ -16,24 +17,35 @@ type VideoScreenProps = {
 
 const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
   const {id} = route.params;
+  const animeID = id.split('$episode')[0];
+  console.log(animeID);
   const [episodeSources, setEpisodeSources] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [isBuffering, setIsBuffering] = useState<boolean>(false);
+  const [hasMarkedWatched, setHasMarkedWatched] = useState<boolean>(false);
+  const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+  console.log(animeInfo);
+
+  const {markAsWatched} = useWatchedEpisodes();
+
+  const fetchAllData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const [sourceResult, animeInfoResult] = await Promise.all([
+        getEpisodeSource(id),
+        getAnimeDetail(animeID),
+      ]);
+      setEpisodeSources(sourceResult || null);
+      setAnimeInfo(animeInfoResult || null);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id, animeID]);
 
   useEffect(() => {
-    const fetchSources = async () => {
-      try {
-        const sources = await getEpisodeSource(id);
-        setEpisodeSources(sources);
-      } catch (error) {
-        console.error('Error fetching episode sources:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSources();
-  }, [id]);
+    fetchAllData();
+  }, [fetchAllData]);
 
   const getHlsSource = (): string | null => {
     if (!episodeSources || !episodeSources.sources) {
@@ -49,13 +61,24 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     (subtitle: any) => subtitle.lang === 'English',
   );
 
-  // const handleBufferingStart = () => {
-  //   setIsBuffering(true);
-  // };
+  const handleProgress = async (progress: {
+    currentTime: number;
+    playableDuration: number;
+  }) => {
+    if (progress.playableDuration > 0) {
+      const playbackPercentage =
+        (progress.currentTime / progress.playableDuration) * 100;
 
-  // const handleBufferingEnd = () => {
-  //   setIsBuffering(false);
-  // };
+      if (playbackPercentage >= 50 && !hasMarkedWatched) {
+        try {
+          await markAsWatched(id, playbackPercentage);
+          setHasMarkedWatched(true);
+        } catch (error) {
+          console.error('Error marking as watched:', error);
+        }
+      }
+    }
+  };
 
   const renderVideo = () => {
     const hlsSource = getHlsSource();
@@ -85,9 +108,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
         style={styles.video}
         controls={true}
         resizeMode="contain"
-        paused={false}
-        // onLoad={handleBufferingEnd}
-        // onLoadStart={handleBufferingEnd}
+        onProgress={handleProgress}
         selectedTextTrack={{
           type: SelectedTrackType.INDEX,
           value: 0,

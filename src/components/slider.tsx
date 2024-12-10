@@ -8,6 +8,7 @@ import AAButton from '../ui/button';
 
 import {Colors} from '../constants/constants';
 import {ISpotLightResult} from '../constants/types';
+import {useMyList} from '../helper/storage.helper';
 
 const {height, width} = Dimensions.get('window');
 
@@ -18,39 +19,58 @@ interface ISliderProps {
 interface ISliderItemProps {
   item: ISpotLightResult;
 }
-const SliderItem = ({item}: ISliderItemProps) => (
-  <View style={styles.slide}>
-    <Image source={{uri: item.banner}} style={styles.image} />
+const SliderItem = ({item}: ISliderItemProps) => {
+  const {addToList, removeFromList, isInList} = useMyList();
+  const isInMyList = isInList(item.id);
 
-    <View style={styles.overlay} />
-    <View style={styles.sliderContent}>
-      <AAText ignoretheme style={styles.titleText}>
-        #{item.rank} spotlight
-      </AAText>
-      <AAText ignoretheme style={styles.subText}>
-        {item.title}
-      </AAText>
-      <View style={styles.controller}>
-        <AAButton
-          title="Play"
-          ignoreTheme
-          textStyle={styles.text}
-          style={[styles.button, styles.greenButton]}
-          onPress={() => console.log('Play Pressed')}
-          icon={<Icons name="play-circle" size={20} color={Colors.White} />}
-        />
-        <AAButton
-          title="My List"
-          ignoreTheme
-          style={styles.button}
-          textStyle={styles.text}
-          onPress={() => console.log('My List Pressed')}
-          icon={<FIcons name="plus" size={20} color={Colors.White} />}
-        />
+  const handlePress = async () => {
+    if (isInMyList) {
+      await removeFromList(item.id);
+    } else {
+      await addToList(item.id);
+    }
+  };
+  return (
+    <View style={styles.slide}>
+      <Image source={{uri: item.banner}} style={styles.image} />
+
+      <View style={styles.overlay} />
+      <View style={styles.sliderContent}>
+        <AAText ignoretheme style={styles.titleText}>
+          #{item.rank} spotlight
+        </AAText>
+        <AAText ignoretheme style={styles.subText}>
+          {item.title}
+        </AAText>
+        <View style={styles.controller}>
+          <AAButton
+            title="Play"
+            ignoreTheme
+            textStyle={styles.text}
+            style={[styles.button, styles.greenButton]}
+            onPress={() => console.log('Play Pressed')}
+            icon={<Icons name="play-circle" size={20} color={Colors.White} />}
+          />
+
+          <AAButton
+            title="My List"
+            ignoreTheme
+            style={styles.button}
+            textStyle={styles.text}
+            onPress={() => handlePress()}
+            icon={
+              <FIcons
+                size={20}
+                name={isInMyList ? 'check' : 'plus'}
+                color={Colors.White}
+              />
+            }
+          />
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
+};
 
 const Slider = ({data}: ISliderProps) => {
   return (
@@ -92,7 +112,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.38)',
   },
   sliderContent: {
     left: 20,

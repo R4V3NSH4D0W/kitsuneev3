@@ -60,7 +60,7 @@ const BottomTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Release Cale.."
+        name="Schedule"
         component={CalendarScreen}
         options={{
           tabBarIcon: CalendarIcon,

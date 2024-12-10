@@ -11,6 +11,7 @@ import {
   getTopAiringAnime,
   getRecentlyUpdated,
 } from '../helper/api.helper';
+import {Colors} from '../constants/constants';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import {AnimeResult, ISpotLightResult} from '../constants/types';
 
@@ -56,7 +57,7 @@ export default function HomeScreen() {
     return (
       <LayoutWrapper>
         <View style={styles.loading}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color={Colors.Green} />
         </View>
       </LayoutWrapper>
     );
