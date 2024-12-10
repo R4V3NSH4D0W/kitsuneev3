@@ -4,6 +4,7 @@ import BottomTabNavigation from './bottom-tab-navigation';
 import DetailScreen from '../screens/detail-screen';
 import {RootStackParamList} from '../constants/types';
 import VideoScreen from '../screens/video-screen';
+import SearchScreen from '../screens/search-screen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -13,6 +14,7 @@ export default function StackNavigation() {
       <Stack.Screen name="Tabs" component={BottomTabNavigation} />
       <Stack.Screen name="Detail" component={DetailScreen} />
       <Stack.Screen name="VideoScreen" component={VideoScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
   );
 }

@@ -13,6 +13,7 @@ export interface Theme {
 export const Colors = {
   Green: '#0bc248',
   White: '#ffffff',
+  LightGray: '#1e222a',
 };
 
 export const lightTheme: Theme = {

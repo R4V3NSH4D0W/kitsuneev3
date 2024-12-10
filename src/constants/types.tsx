@@ -75,6 +75,7 @@ export type RootStackParamList = {
   Tabs: undefined;
   Detail: {id: string};
   VideoScreen: {id: string};
+  Search: undefined;
 };
 
 export type DateItem = {

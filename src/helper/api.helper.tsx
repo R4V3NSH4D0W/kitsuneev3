@@ -57,3 +57,9 @@ export const getReleaseSchedule = async (date: string) => {
   const data = await response.json();
   return data;
 };
+
+export const getAnimeSearchResults = async (query: string) => {
+  const response = await fetch(`${BASE_URL}/api/${SOURCE2}/search?q=${query}`);
+  const data = await response.json();
+  return data;
+};
