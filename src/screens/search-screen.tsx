@@ -34,7 +34,7 @@ export default function SearchScreen() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(searchText);
-    }, 500);
+    }, 1000);
 
     return () => {
       clearTimeout(handler);
@@ -74,19 +74,24 @@ export default function SearchScreen() {
             <Icon name="arrow-back" size={30} color={theme.colors.text} />
           </TouchableOpacity>
           <View
-            style={[styles.searchContainer, {borderColor: theme.colors.text}]}>
+            style={[
+              styles.searchContainer,
+              {backgroundColor: theme.colors.alt},
+            ]}>
             <AIcons name="search1" size={20} color={theme.colors.text} />
             <TextInput
               style={[styles.searchInput, {color: theme.colors.text}]}
               placeholder="Search"
-              placeholderTextColor={Colors.White}
+              placeholderTextColor={theme.colors.text}
               value={searchText}
               onChangeText={setSearchText}
             />
           </View>
-          <View style={styles.option}>
+          <TouchableOpacity
+            style={styles.option}
+            onPress={() => navigation.navigate('SortAndFilter')}>
             <Icon name="options" size={30} color={Colors.Green} />
-          </View>
+          </TouchableOpacity>
         </View>
         {!loading && (
           <FlatList
@@ -120,14 +125,15 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flex: 1,
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.LightGray,
     paddingHorizontal: 10,
     borderRadius: 14,
     height: 50,
   },
   searchInput: {
+    flex: 1,
     padding: 10,
     marginLeft: 10,
   },

@@ -76,6 +76,7 @@ export type RootStackParamList = {
   Detail: {id: string};
   VideoScreen: {id: string};
   Search: undefined;
+  SortAndFilter: undefined;
 };
 
 export type DateItem = {

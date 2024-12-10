@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
 import {
-  FlatList,
+  View,
   Image,
   Keyboard,
-  StyleSheet,
+  FlatList,
   TextInput,
+  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
 } from 'react-native';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
