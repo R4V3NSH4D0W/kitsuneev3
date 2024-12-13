@@ -328,9 +328,9 @@ const styles = StyleSheet.create({
   },
   playIcon: {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{translateX: -15}, {translateY: -15}],
+    top: '40%',
+    left: '40%',
+    // transform: [{translateX: -15}, {translateY: -15}],
     zIndex: 1,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},

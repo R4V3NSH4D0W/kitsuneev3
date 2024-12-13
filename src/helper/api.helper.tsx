@@ -64,6 +64,14 @@ export const getAnimeSearchResults = async (query: string) => {
   return data;
 };
 
+export const getMostFavorite = async (page?: number) => {
+  const response = await fetch(
+    `${BASE_URL}/api/${SOURCE2}/mostfavorite?page=${page}`,
+  );
+  const data = await response.json();
+  return data;
+};
+
 export const getFilteredAnimeResults = async (filters: {
   sort: string | null;
   type: string | null;

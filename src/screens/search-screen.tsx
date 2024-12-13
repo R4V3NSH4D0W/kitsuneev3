@@ -12,11 +12,12 @@ import {Colors} from '../constants/constants';
 import {useTheme} from '../wrappers/theme-context';
 import AIcons from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import {getAnimeSearchResults} from '../helper/api.helper';
+import {getAnimeSearchResults, getMostFavorite} from '../helper/api.helper';
 import {AnimeResult} from '../constants/types';
 import AnimeItemCard from '../components/anime-items-cards';
 import {FlatList} from 'react-native-gesture-handler';
 import {StackNavigationProp} from '@react-navigation/stack';
+import RowAnimeCard from '../components/row-anime-card';
 
 export default function SearchScreen() {
   const {theme} = useTheme();
@@ -24,6 +25,7 @@ export default function SearchScreen() {
   const [debouncedValue, setDebouncedValue] = useState('');
   const [searchResults, setSearchResults] = useState<AnimeResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [mostfavorite, setMostFavorite] = useState<AnimeResult[]>([]);
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -34,7 +36,7 @@ export default function SearchScreen() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(searchText);
-    }, 1000);
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -56,6 +58,22 @@ export default function SearchScreen() {
     } catch (error) {
       setLoading(false);
       console.error('Error fetching search results:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMostWatched();
+  }, []);
+
+  const fetchMostWatched = async () => {
+    setLoading(true);
+    try {
+      const response = await getMostFavorite();
+      setLoading(false);
+      setMostFavorite(response.results);
+    } catch (error) {
+      setLoading(false);
+      console.log('error', error);
     }
   };
 
@@ -102,6 +120,9 @@ export default function SearchScreen() {
             numColumns={2}
             columnWrapperStyle={styles.row}
           />
+        )}
+        {searchText.length === 0 && !loading && (
+          <RowAnimeCard data={mostfavorite} />
         )}
       </View>
       {loading && (
