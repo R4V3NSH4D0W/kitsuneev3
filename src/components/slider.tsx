@@ -9,6 +9,8 @@ import AAButton from '../ui/button';
 import {Colors} from '../constants/constants';
 import {ISpotLightResult} from '../constants/types';
 import {useMyList} from '../helper/storage.helper';
+import LinearGradient from 'react-native-linear-gradient';
+import NavBar from './navbar';
 
 const {height, width} = Dimensions.get('window');
 
@@ -32,9 +34,14 @@ const SliderItem = ({item}: ISliderItemProps) => {
   };
   return (
     <View style={styles.slide}>
+      <NavBar />
       <Image source={{uri: item.banner}} style={styles.image} />
 
       <View style={styles.overlay} />
+      <LinearGradient
+        colors={['transparent', '#181a20']}
+        style={styles.gradient}
+      />
       <View style={styles.sliderContent}>
         <AAText ignoretheme style={styles.titleText}>
           #{item.rank} spotlight
@@ -47,7 +54,7 @@ const SliderItem = ({item}: ISliderItemProps) => {
             title="Play"
             ignoreTheme
             textStyle={styles.text}
-            style={[styles.button, styles.greenButton]}
+            style={[styles.button, styles.PinkButton]}
             onPress={() => console.log('Play Pressed')}
             icon={<Icons name="play-circle" size={20} color={Colors.White} />}
           />
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   titleText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '600',
 
     color: Colors.White,
@@ -112,15 +119,16 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.38)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   sliderContent: {
     left: 20,
     bottom: 20,
+    zIndex: 999,
     position: 'absolute',
   },
   subText: {
-    fontSize: 20,
+    fontSize: 18,
     maxWidth: 400,
     fontWeight: '400',
     paddingVertical: 5,
@@ -134,18 +142,25 @@ const styles = StyleSheet.create({
   button: {
     borderWidth: 1,
     borderRadius: 25,
-    paddingVertical: 12,
+    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     borderColor: Colors.White,
     gap: 5,
   },
-  greenButton: {
-    borderColor: Colors.Green,
-    backgroundColor: Colors.Green,
+  PinkButton: {
+    borderColor: Colors.Pink,
+    backgroundColor: Colors.Pink,
   },
   text: {
     color: Colors.White,
+  },
+  gradient: {
+    zIndex: 1,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
   },
 });

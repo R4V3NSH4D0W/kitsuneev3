@@ -90,7 +90,7 @@ export default function SearchScreen() {
           <TouchableOpacity
             style={styles.option}
             onPress={() => navigation.navigate('SortAndFilter')}>
-            <Icon name="options" size={30} color={Colors.Green} />
+            <Icon name="options" size={30} color={Colors.Pink} />
           </TouchableOpacity>
         </View>
         {!loading && (
@@ -106,7 +106,7 @@ export default function SearchScreen() {
       </View>
       {loading && (
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color={Colors.Green} />
+          <ActivityIndicator size="large" color={Colors.Pink} />
         </View>
       )}
     </LayoutWrapper>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 14,
-    backgroundColor: 'rgba(0, 128, 0, 0.2)',
+    backgroundColor: 'rgba(255, 192, 203, 0.2)',
     width: 50,
   },
   row: {

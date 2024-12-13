@@ -9,6 +9,7 @@ import {
   SelectedTrackType,
   TextTrackType,
 } from 'react-native-video/lib/types/video';
+import AAText from '../ui/text';
 import {useWatchedEpisodes} from '../helper/storage.helper';
 
 type VideoScreenProps = {
@@ -131,6 +132,9 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
             renderVideo()
           )}
         </View>
+        <View style={styles.content}>
+          <AAText>{animeInfo?.title || 'Loading...'}</AAText>
+        </View>
       </View>
     </LayoutWrapper>
   );
@@ -158,6 +162,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  content: {
+    paddingHorizontal: 20,
+  },
+  episodeCard: {
+    marginTop: -10,
   },
 });
 

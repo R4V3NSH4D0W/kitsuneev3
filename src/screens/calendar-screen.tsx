@@ -150,13 +150,13 @@ export default function CalendarScreen() {
                 styles.button,
                 isInMyList && {backgroundColor: theme.colors.primary},
               ]}
-              textStyle={isInMyList ? {color: Colors.Green} : styles.text}
+              textStyle={isInMyList ? {color: Colors.Pink} : styles.text}
               onPress={handlePress}
               icon={
                 <FIcons
                   size={20}
                   name={isInMyList ? 'check' : 'plus'}
-                  color={isInMyList ? Colors.Green : Colors.White}
+                  color={isInMyList ? Colors.Pink : Colors.White}
                 />
               }
             />
@@ -182,7 +182,7 @@ export default function CalendarScreen() {
 
         {loading ? (
           <View style={styles.loading}>
-            <ActivityIndicator size="large" color={Colors.Green} />
+            <ActivityIndicator size="large" color={Colors.Pink} />
           </View>
         ) : schedule.length > 0 ? (
           <FlatList
@@ -225,18 +225,19 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   calendar: {
-    width: 60,
-    height: 90,
+    width: 50,
+    height: 80,
     borderWidth: 1,
     marginRight: 12,
     borderRadius: 30,
+    marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: Colors.Green,
+    borderColor: Colors.Pink,
   },
   selectedCalendar: {
-    borderColor: Colors.Green,
-    backgroundColor: Colors.Green,
+    borderColor: Colors.Pink,
+    backgroundColor: Colors.Pink,
   },
   weekdayText: {
     fontSize: 14,
@@ -249,13 +250,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   scheduleContainer: {
-    paddingTop: 20,
+    paddingTop: 5,
   },
   smallLine: {
     width: 14,
     height: 5,
     borderRadius: 5,
-    backgroundColor: Colors.Green,
+    backgroundColor: Colors.Pink,
   },
   time: {
     gap: 5,
@@ -276,22 +277,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
   },
   episode: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
   },
   col: {
     gap: 10,
   },
   button: {
-    width: 120,
-    padding: 8,
+    padding: 4,
+    width: 110,
     borderRadius: 20,
-    borderColor: Colors.Green,
-    backgroundColor: Colors.Green,
+    borderColor: Colors.Pink,
+    backgroundColor: Colors.Pink,
   },
   text: {
     fontWeight: '600',
@@ -317,7 +318,7 @@ const styles = StyleSheet.create({
   noSchedule: {
     fontSize: 20,
     fontWeight: '600',
-    color: Colors.Green,
+    color: Colors.Pink,
   },
   sorry: {
     fontSize: 18,

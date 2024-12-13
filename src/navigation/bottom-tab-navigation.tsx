@@ -40,7 +40,7 @@ const BottomTabNavigation = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.Green,
+        tabBarActiveTintColor: Colors.Pink,
         tabBarStyle: {
           paddingTop: Platform.OS === 'ios' ? 10 : 0,
           shadowColor: '#000',

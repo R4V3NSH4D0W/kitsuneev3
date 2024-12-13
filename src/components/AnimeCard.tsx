@@ -24,12 +24,15 @@ interface IImageSliderProps {
 
 const ImageSlider = ({data}: IImageSliderProps) => {
   return (
-    <Image
-      source={{
-        uri: data.image || 'https://via.placeholder.com/300',
-      }}
-      style={styles.image}
-    />
+    <View style={styles.imageContainer}>
+      <Image
+        source={{
+          uri: data.image || 'https://via.placeholder.com/300',
+        }}
+        style={styles.image}
+      />
+      <AAText style={styles.type}>{data?.type}</AAText>
+    </View>
   );
 };
 
@@ -85,13 +88,26 @@ const styles = StyleSheet.create({
   },
   titleButton: {
     fontSize: 16,
-    color: Colors.Green,
+    color: Colors.Pink,
   },
   image: {
-    width: 170,
-    height: 250,
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+    objectFit: 'cover',
+  },
+  imageContainer: {
+    height: 200,
+    width: 140,
     marginRight: 20,
-    borderRadius: 10,
     marginBottom: 10,
+  },
+  type: {
+    top: 10,
+    right: 10,
+    position: 'absolute',
+    backgroundColor: Colors.Pink,
+    paddingHorizontal: 5,
+    borderRadius: 5,
   },
 });

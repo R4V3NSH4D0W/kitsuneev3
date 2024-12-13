@@ -70,10 +70,10 @@ export default function SortFilterCard({
               // eslint-disable-next-line react-native/no-inline-styles
               {
                 borderColor: selectedIds.includes(item.id)
-                  ? Colors.Green
+                  ? Colors.Pink
                   : Colors.LightGray,
                 backgroundColor: selectedIds.includes(item.id)
-                  ? Colors.Green
+                  ? Colors.Pink
                   : 'transparent',
               },
             ]}

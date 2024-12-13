@@ -21,7 +21,7 @@ const AAText: React.FC<IAATextProps> = ({children, style, ignoretheme}) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
+    fontFamily: 'Poppins-Medium',
   },
 });
-
 export default AAText;

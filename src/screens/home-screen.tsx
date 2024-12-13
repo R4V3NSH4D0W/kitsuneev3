@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, View, ScrollView, StyleSheet} from 'react-native';
 
 import Slider from '../components/slider';
-import NavBar from '../components/navbar';
 import AnimeCard from '../components/AnimeCard';
 
 import {
@@ -57,7 +56,7 @@ export default function HomeScreen() {
     return (
       <LayoutWrapper>
         <View style={styles.loading}>
-          <ActivityIndicator size="large" color={Colors.Green} />
+          <ActivityIndicator size="large" color={Colors.Pink} />
         </View>
       </LayoutWrapper>
     );
@@ -65,11 +64,10 @@ export default function HomeScreen() {
 
   return (
     <LayoutWrapper>
-      <NavBar />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Slider data={spotLight} />
-        <AnimeCard title="Recently Updated" data={recentlyUpdated} />
         <AnimeCard title="Top Airing" data={topAiringAnime} />
+        <AnimeCard title="New Episode Releases" data={recentlyUpdated} />
         <AnimeCard title="Popular Anime" data={popularAnime} />
       </ScrollView>
     </LayoutWrapper>

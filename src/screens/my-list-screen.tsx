@@ -57,7 +57,7 @@ export default function MyList() {
     return (
       <LayoutWrapper>
         <View style={styles.loadingIndicator}>
-          <ActivityIndicator size="large" color={Colors.Green} />
+          <ActivityIndicator size="large" color={Colors.Pink} />
         </View>
       </LayoutWrapper>
     );
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 24,
     fontWeight: '600',
-    color: Colors.Green,
+    color: Colors.Pink,
   },
   emptySubText: {
     textAlign: 'center',

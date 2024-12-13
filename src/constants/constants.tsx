@@ -12,7 +12,7 @@ export interface Theme {
 }
 
 export const Colors = {
-  Green: '#0bc248',
+  Pink: '#ea376b',
   White: '#ffffff',
   LightGray: '#1e222a',
 };
@@ -33,9 +33,9 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   dark: true,
   colors: {
-    background: '#121212',
+    background: '#181a20',
     text: '#ffffff',
-    primary: '#121212',
+    primary: ' #181a20',
     secondary: '#CF6679',
     miniumTintColor: '#FFFFFF',
     maxiumTintColor: '#808080',

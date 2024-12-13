@@ -33,7 +33,7 @@ type DetailScreenProps = {
 const LoadingIndicator = () => {
   return (
     <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Colors.Green} />
+      <ActivityIndicator size="large" color={Colors.Pink} />
     </View>
   );
 };
@@ -160,7 +160,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
           <View style={styles.iconContainer}>
             <TouchableOpacity onPress={() => handlePress()}>
               {isInMyList ? (
-                <Icons size={30} name="bookmark-outline" color={Colors.Green} />
+                <Icons size={30} name="bookmark-outline" color={Colors.Pink} />
               ) : (
                 <Icons
                   size={30}
@@ -200,7 +200,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
             onPress={() => {}}
             textStyle={styles.buttonText}
             style={[styles.button, styles.controllerButton]}
-            icon={<Icons name="download" size={20} color={Colors.Green} />}
+            icon={<Icons name="download" size={20} color={Colors.Pink} />}
           />
         </View>
         <View style={styles.description}>{renderDescription()}</View>
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   viewMoreText: {
     marginBottom: -3,
-    color: Colors.Green,
+    color: Colors.Pink,
     textDecorationLine: 'underline',
   },
   loading: {
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   statusText: {
-    color: Colors.Green,
+    color: Colors.Pink,
   },
   genreListContainer: {
     paddingLeft: 10,
@@ -292,22 +292,22 @@ const styles = StyleSheet.create({
   genreButton: {
     marginRight: 10,
     borderRadius: 10,
-    borderColor: Colors.Green,
+    borderColor: Colors.Pink,
   },
   genreText: {
-    color: Colors.Green,
+    color: Colors.Pink,
   },
   button: {
     borderRadius: 10,
-    borderColor: Colors.Green,
+    borderColor: Colors.Pink,
   },
   buttonAlt: {
     borderRadius: 10,
-    borderColor: Colors.Green,
-    backgroundColor: Colors.Green,
+    borderColor: Colors.Pink,
+    backgroundColor: Colors.Pink,
   },
   buttonText: {
-    color: Colors.Green,
+    color: Colors.Pink,
   },
   controllerButton: {
     width: '48%',

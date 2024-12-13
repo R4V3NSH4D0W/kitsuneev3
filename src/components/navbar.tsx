@@ -1,8 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, Platform, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 
-import AAText from '../ui/text';
 import {Colors} from '../constants/constants';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../constants/types';
@@ -13,9 +12,10 @@ const NavBar = () => {
   return (
     <View style={styles.navbar}>
       <View style={styles.navbarContent}>
-        <AAText ignoretheme style={styles.titleText}>
-          Kitsunee
-        </AAText>
+        <Image
+          source={require('../../assets/images/icon-256x256.png')}
+          style={styles.logo}
+        />
         <View style={styles.icons}>
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <Icons name="search-outline" size={24} color={Colors.White} />
@@ -31,15 +31,14 @@ export default NavBar;
 
 const styles = StyleSheet.create({
   navbar: {
-    top: Platform.OS === 'ios' ? 80 : 20,
-    zIndex: 1,
+    zIndex: 999,
     width: '100%',
     position: 'absolute',
   },
   navbarContent: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 20,
+    paddingRight: 20,
     justifyContent: 'space-between',
   },
   icons: {
@@ -50,5 +49,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: Colors.White,
+  },
+  logo: {
+    height: 80,
+    width: 70,
+    objectFit: 'contain',
   },
 });

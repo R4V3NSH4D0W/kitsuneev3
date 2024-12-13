@@ -1,5 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../wrappers/theme-context';
 import LayoutWrapper from '../wrappers/layout-wrapper';
@@ -9,50 +15,44 @@ import {Genres, Colors, Status, Type, Sort} from '../constants/constants';
 import SortFilterCard from '../components/sort-filter-card';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {getFilteredAnimeResults} from '../helper/api.helper';
 
 export default function SortAndFilter() {
   const {theme} = useTheme();
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  const [selectedSort, setSelectedSort] = useState<null | {
-    id: number;
-    title: string;
-  }>(null);
-  const [selectedType, setSelectedType] = useState<null | {
-    id: number;
-    title: string;
-  }>(null);
-  const [selectedStatus, setSelectedStatus] = useState<null | {
-    id: number;
-    title: string;
-  }>(null);
-  const [selectedGenres, setSelectedGenres] = useState<
-    {id: number; title: string}[]
-  >([]);
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+
   const [resetState, setResetState] = useState(false);
 
   const handleSortSelection = useCallback(
-    (selected: {id: number; title: string}) => setSelectedSort(selected),
+    (selected: {id: number; title: string}) =>
+      setSelectedSort(selected.title.toLowerCase()),
     [],
   );
 
   const handleTypeSelection = useCallback(
-    (selected: {id: number; title: string}) => setSelectedType(selected),
+    (selected: {id: number; title: string}) =>
+      setSelectedType(selected.title.toLowerCase()),
     [],
   );
 
   const handleStatusSelection = useCallback(
-    (selected: {id: number; title: string}) => setSelectedStatus(selected),
+    (selected: {id: number; title: string}) =>
+      setSelectedStatus(selected.title.toLowerCase()),
     [],
   );
 
   const handleGenreSelection = useCallback(
     (selected: {id: number; title: string}) => {
       setSelectedGenres(prev =>
-        prev.find(item => item.id === selected.id)
-          ? prev.filter(item => item.id !== selected.id)
-          : [...prev, selected],
+        prev.includes(selected.title.toLowerCase())
+          ? prev.filter(item => item !== selected.title.toLowerCase())
+          : [...prev, selected.title.toLowerCase()],
       );
     },
     [],
@@ -60,20 +60,33 @@ export default function SortAndFilter() {
 
   const handleReset = useCallback(() => {
     setResetState(true);
+    setSelectedSort(null);
+    setSelectedType(null);
+    setSelectedStatus(null);
     setSelectedGenres([]);
     setTimeout(() => {
       setResetState(false);
     }, 0);
   }, []);
 
-  const applyFilters = () => {
+  const applyFilters = async () => {
     const filters = {
       sort: selectedSort,
       type: selectedType,
       status: selectedStatus,
       genres: selectedGenres,
     };
-    console.log('Applied Filters:', filters);
+
+    console.log('Applying Filters:', filters);
+
+    try {
+      const result = await getFilteredAnimeResults(filters);
+      console.log('Filtered Results:', result);
+      Alert.alert('Success', 'Filters applied successfully.');
+    } catch (error) {
+      console.error('Failed to apply filters:', error);
+      Alert.alert('Error', 'Failed to fetch results. Please try again.');
+    }
   };
 
   return (
@@ -129,7 +142,7 @@ export default function SortAndFilter() {
         <AAButton
           title="Apply"
           textStyle={styles.text}
-          style={[styles.button, {backgroundColor: Colors.Green}]}
+          style={[styles.button, {backgroundColor: Colors.Pink}]}
           onPress={applyFilters}
         />
       </View>
