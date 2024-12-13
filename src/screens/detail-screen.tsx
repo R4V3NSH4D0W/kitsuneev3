@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {RouteProp, useNavigation} from '@react-navigation/native';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 
 import {useTheme} from '../wrappers/theme-context';
 import LayoutWrapper from '../wrappers/layout-wrapper';
@@ -80,9 +81,10 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   const {id} = route.params;
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
   const {addToList, removeFromList, isInList} = useMyList();
+  const [isSheetVisible, setIsSheetVisible] = useState<boolean>(false);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const {theme} = useTheme();
   const navigation = useNavigation();
@@ -103,7 +105,14 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     fetchAnimeInfo();
   }, [id, fetchAnimeInfo]);
 
-  const handleToggleExpand = () => setIsExpanded(!isExpanded);
+  const toggleBottomSheet = () => {
+    if (isSheetVisible) {
+      bottomSheetRef.current?.close();
+    } else {
+      bottomSheetRef.current?.expand();
+    }
+    setIsSheetVisible(!isSheetVisible);
+  };
 
   const renderDescription = () => {
     if (!animeInfo?.description) {
@@ -112,20 +121,20 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
     const truncatedDescription =
       animeInfo.description.length > 250
-        ? `${animeInfo.description.slice(0, 250)}...`
+        ? `${animeInfo.description.slice(0, 250)}`
         : animeInfo.description;
 
     return (
-      <AAText style={styles.descriptionText}>
-        {isExpanded ? animeInfo.description : truncatedDescription}
-        {animeInfo.description.length > 250 && (
-          <TouchableOpacity onPress={handleToggleExpand}>
+      <TouchableOpacity onPress={toggleBottomSheet}>
+        <AAText style={styles.descriptionText}>
+          {truncatedDescription}
+          {animeInfo.description.length > 250 && (
             <AAText ignoretheme style={styles.viewMoreText}>
-              {isExpanded ? ' View Less' : ' View More'}
+              ...View More
             </AAText>
-          </TouchableOpacity>
-        )}
-      </AAText>
+          )}
+        </AAText>
+      </TouchableOpacity>
     );
   };
 
@@ -214,6 +223,30 @@ const DetailScreen = ({route}: DetailScreenProps) => {
           data={animeInfo?.recommendations || []}
         />
       </ScrollView>
+      {isSheetVisible && (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            bottomSheetRef.current?.close();
+            setIsSheetVisible(false);
+          }}
+          style={styles.overlay}
+        />
+      )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{backgroundColor: theme.colors.text}}
+        handleStyle={[styles.bar, {backgroundColor: theme.colors.background}]}
+        onClose={() => setIsSheetVisible(false)}>
+        <BottomSheetView
+          style={[styles.sheet, {backgroundColor: theme.colors.background}]}>
+          <AAText style={styles.descriptionText}>
+            {animeInfo?.description}
+          </AAText>
+        </BottomSheetView>
+      </BottomSheet>
     </LayoutWrapper>
   );
 };
@@ -225,16 +258,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   descriptionText: {
-    lineHeight: 24,
+    lineHeight: 20,
+    fontSize: 12,
   },
   description: {
     marginTop: 20,
     marginHorizontal: 20,
   },
   viewMoreText: {
-    marginBottom: -3,
     color: Colors.Pink,
-    textDecorationLine: 'underline',
+    fontSize: 14,
   },
   loading: {
     flex: 1,
@@ -256,7 +289,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   row: {
     marginTop: 20,
@@ -276,7 +309,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   titleText: {
-    fontSize: 22,
+    fontSize: 18,
     maxWidth: '70%',
     fontWeight: '600',
   },
@@ -321,6 +354,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  sheet: {
+    padding: 20,
+  },
+  bar: {
+    borderBottomWidth: 0,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
 });
 

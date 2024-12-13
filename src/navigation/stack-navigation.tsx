@@ -11,7 +11,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export default function StackNavigation() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
       <Stack.Screen name="Tabs" component={BottomTabNavigation} />
       <Stack.Screen name="Detail" component={DetailScreen} />
       <Stack.Screen name="VideoScreen" component={VideoScreen} />
