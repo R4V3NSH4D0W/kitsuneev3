@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -252,7 +253,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {marginBottom: 40},
+  container: {marginBottom: Platform.OS === 'ios' ? 10 : 0},
   descriptionContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -332,10 +333,12 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
+    height: 50,
     borderColor: Colors.Pink,
   },
   buttonAlt: {
     borderRadius: 10,
+    height: 50,
     borderColor: Colors.Pink,
     backgroundColor: Colors.Pink,
   },

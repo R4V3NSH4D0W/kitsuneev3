@@ -17,7 +17,12 @@ import AAButton from '../ui/button';
 import {DateItem} from '../constants/types';
 import {Colors} from '../constants/constants';
 
-import {generateDates, trimTitle} from '../helper/util.helper';
+import {
+  checkDate,
+  generateDates,
+  getDeviceDate,
+  trimTitle,
+} from '../helper/util.helper';
 import {getAnimeDetail, getReleaseSchedule} from '../helper/api.helper';
 
 import {useMyList} from '../helper/storage.helper';
@@ -25,6 +30,7 @@ import {useTheme} from '../wrappers/theme-context';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import AIcons from 'react-native-vector-icons/AntDesign';
+import SecondaryNavBar from '../components/secondary-navbar';
 
 const {height} = Dimensions.get('window');
 
@@ -50,6 +56,16 @@ export default function CalendarScreen() {
   );
 
   const navigation = useNavigation<StackNavigationProp<any>>();
+
+  const [dateTime, setDateTime] = useState(getDeviceDate());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDateTime(getDeviceDate());
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!selectedDate) {
@@ -109,7 +125,23 @@ export default function CalendarScreen() {
     );
   };
 
-  const renderScheduleItem = ({item}: {item: ScheduleItem}) => {
+  const renderScheduleItem = ({
+    item,
+    index,
+  }: {
+    item: ScheduleItem;
+    index: number;
+  }) => {
+    const previousTime = index > 0 ? schedule[index - 1] : null;
+
+    const currentTime = checkDate(
+      selectedDate || '',
+      dateTime?.date,
+      dateTime?.time,
+      item.airingTime,
+      previousTime?.airingTime,
+    );
+
     const navigateToDetail = (id: string) => {
       navigation.navigate('Detail', {id});
     };
@@ -122,8 +154,18 @@ export default function CalendarScreen() {
         await addToList(item.id);
       }
     };
+
     return (
       <View style={styles.scheduleContainer}>
+        {currentTime && (
+          <View style={styles.lineContainer}>
+            <View style={styles.line} />
+            <AAText style={styles.currentTime}>
+              Current Time - {dateTime.time}
+            </AAText>
+            <View style={styles.line} />
+          </View>
+        )}
         <View style={styles.time}>
           <View style={styles.smallLine} />
           <AAText>{item.airingTime}</AAText>
@@ -148,7 +190,7 @@ export default function CalendarScreen() {
               title={'My List'}
               style={[
                 styles.button,
-                isInMyList && {backgroundColor: theme.colors.primary},
+                isInMyList && {backgroundColor: theme.colors.background},
               ]}
               textStyle={isInMyList ? {color: Colors.Pink} : styles.text}
               onPress={handlePress}
@@ -169,8 +211,7 @@ export default function CalendarScreen() {
   return (
     <LayoutWrapper>
       <View style={styles.container}>
-        <AAText style={styles.navText}>Release Calendar</AAText>
-
+        <SecondaryNavBar title="Schedule" />
         <FlatList
           data={dates}
           horizontal
@@ -188,7 +229,7 @@ export default function CalendarScreen() {
           <FlatList
             data={schedule}
             style={styles.scheduleList}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={renderScheduleItem}
             showsVerticalScrollIndicator={false}
           />
@@ -215,10 +256,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 20,
-  },
-  navText: {
-    fontSize: 24,
-    fontWeight: '600',
   },
   flatList: {
     marginTop: 20,
@@ -337,5 +374,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+  },
+  line: {
+    height: 2,
+    backgroundColor: Colors.Pink,
+    width: '30%',
+    marginVertical: 5,
+  },
+  lineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 10,
+  },
+  currentTime: {
+    fontSize: 14,
   },
 });

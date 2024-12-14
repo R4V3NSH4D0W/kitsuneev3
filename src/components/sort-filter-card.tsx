@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   button: {
-    padding: 10,
+    padding: 5,
     paddingHorizontal: 15,
     borderWidth: 2,
   },

@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '45%',
-    height: 60,
+    // height: 50,
     borderRadius: 30,
     borderWidth: 0,
   },

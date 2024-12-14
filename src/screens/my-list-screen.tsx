@@ -14,6 +14,7 @@ import AnimeItemCard from '../components/anime-items-cards';
 import {getAnimeDetail} from '../helper/api.helper';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import SecondaryNavBar from '../components/secondary-navbar';
 
 export default function MyList() {
   const {myList} = useMyList();
@@ -66,7 +67,7 @@ export default function MyList() {
   return (
     <LayoutWrapper>
       <View style={styles.container}>
-        <AAText style={styles.navTitle}>My List</AAText>
+        <SecondaryNavBar title="MyList" />
         {animeDetails.length === 0 ? (
           <View style={styles.emptyDesc}>
             <Image
