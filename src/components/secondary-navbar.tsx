@@ -8,18 +8,33 @@ import {useTheme} from '../wrappers/theme-context';
 
 interface ISecondaryNavBarProps {
   title: string;
+  hasGoBack?: boolean;
+  logoEnabled?: boolean;
 }
 
-export default function SecondaryNavBar({title}: ISecondaryNavBarProps) {
+export default function SecondaryNavBar({
+  title,
+  hasGoBack,
+  logoEnabled = true,
+}: ISecondaryNavBarProps) {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const {theme} = useTheme();
   return (
     <View style={styles.navContainer}>
       <View style={styles.logoContainer}>
-        <Image
-          source={require('../../assets/images/icon-256x256.png')}
-          style={styles.logo}
-        />
+        {hasGoBack && (
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.goBack}>
+            <AIcons name="arrowleft" size={24} color={theme.colors.text} />
+          </TouchableOpacity>
+        )}
+        {logoEnabled && (
+          <Image
+            source={require('../../assets/images/icon-256x256.png')}
+            style={styles.logo}
+          />
+        )}
         <AAText style={styles.navText}>{title}</AAText>
       </View>
 
@@ -44,11 +59,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingRight: 10,
-    marginTop: -10,
+    paddingHorizontal: 20,
+    marginTop: 10,
   },
   navText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '600',
+  },
+  goBack: {
+    paddingRight: 10,
   },
 });

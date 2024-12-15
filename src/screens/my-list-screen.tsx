@@ -66,8 +66,8 @@ export default function MyList() {
 
   return (
     <LayoutWrapper>
+      <SecondaryNavBar title="Mylist" />
       <View style={styles.container}>
-        <SecondaryNavBar title="MyList" />
         {animeDetails.length === 0 ? (
           <View style={styles.emptyDesc}>
             <Image

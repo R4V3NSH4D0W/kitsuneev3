@@ -15,6 +15,7 @@ import {
   getPopularAnime,
   getTopAiringAnime,
   getRecentlyUpdated,
+  getMostFavorite,
 } from '../helper/api.helper';
 import {Colors} from '../constants/constants';
 import LayoutWrapper from '../wrappers/layout-wrapper';
@@ -25,6 +26,7 @@ export default function HomeScreen() {
   const [popularAnime, setPopularAnime] = useState<AnimeResult[]>([]);
   const [topAiringAnime, setTopAiringAnime] = useState<AnimeResult[]>([]);
   const [recentlyUpdated, setRecentlyUpdated] = useState<AnimeResult[]>([]);
+  const [mostFavorite, setMostFavorite] = useState<AnimeResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -36,17 +38,20 @@ export default function HomeScreen() {
         popularAnimeResult,
         spotLightResult,
         recentlyUpdatedResult,
+        mostFavoriteResult,
       ] = await Promise.all([
         getTopAiringAnime(),
         getPopularAnime(),
         getSpotLight(),
         getRecentlyUpdated(),
+        getMostFavorite(),
       ]);
 
       setSpotLight(spotLightResult.results || []);
       setTopAiringAnime(topAiringResult.results || []);
       setPopularAnime(popularAnimeResult.results || []);
       setRecentlyUpdated(recentlyUpdatedResult.results || []);
+      setMostFavorite(mostFavoriteResult.results || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -88,7 +93,8 @@ export default function HomeScreen() {
         <Slider data={spotLight} />
         <AnimeCard title="Top Airing" data={topAiringAnime} />
         <AnimeCard title="New Episode Releases" data={recentlyUpdated} />
-        <AnimeCard title="Popular Anime" data={popularAnime} />
+        <AnimeCard title="Most Popular" data={popularAnime} />
+        <AnimeCard title="Most Favorite" data={mostFavorite} />
       </ScrollView>
     </LayoutWrapper>
   );

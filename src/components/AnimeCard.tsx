@@ -31,7 +31,9 @@ const ImageSlider = ({data}: IImageSliderProps) => {
         }}
         style={styles.image}
       />
-      <AAText style={styles.type}>{data?.type}</AAText>
+      <AAText ignoretheme style={styles.type}>
+        {data?.type}
+      </AAText>
     </View>
   );
 };
@@ -43,14 +45,20 @@ const AnimeCard = ({title, data, hideSeeAll}: IAnimeCardProps) => {
     navigation.navigate('Detail', {id});
   };
 
+  const handelnavigationToSeeAll = (type: string) => {
+    navigation.navigate('SeeAll', {type});
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleRow}>
         <AAText style={styles.title}>{title}</AAText>
         {hideSeeAll ? null : (
-          <AAText ignoretheme style={styles.titleButton}>
-            See all
-          </AAText>
+          <TouchableOpacity onPress={() => handelnavigationToSeeAll(title)}>
+            <AAText ignoretheme style={styles.titleButton}>
+              See all
+            </AAText>
+          </TouchableOpacity>
         )}
       </View>
 
@@ -107,6 +115,7 @@ const styles = StyleSheet.create({
     right: 10,
     position: 'absolute',
     backgroundColor: Colors.Pink,
+    color: Colors.White,
     paddingHorizontal: 5,
     borderRadius: 5,
   },

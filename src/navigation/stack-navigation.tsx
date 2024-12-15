@@ -6,6 +6,7 @@ import {RootStackParamList} from '../constants/types';
 import VideoScreen from '../screens/video-screen';
 import SearchScreen from '../screens/search-screen';
 import SortAndFilter from '../screens/sort-and-filter-screen';
+import SeeAllScreen from '../screens/see-all-screen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -17,6 +18,7 @@ export default function StackNavigation() {
       <Stack.Screen name="VideoScreen" component={VideoScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="SortAndFilter" component={SortAndFilter} />
+      <Stack.Screen name="SeeAll" component={SeeAllScreen} />
     </Stack.Navigator>
   );
 }

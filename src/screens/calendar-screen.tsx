@@ -119,8 +119,16 @@ export default function CalendarScreen() {
       <TouchableOpacity
         style={[styles.calendar, isSelected && styles.selectedCalendar]}
         onPress={() => handleDatePress(item.id)}>
-        <AAText style={styles.weekdayText}>{item.weekday}</AAText>
-        <AAText style={styles.dateText}>{item.day}</AAText>
+        <AAText
+          ignoretheme={isSelected}
+          style={isSelected ? styles.selectedWeekdayText : styles.weekdayText}>
+          {item.weekday}
+        </AAText>
+        <AAText
+          ignoretheme={isSelected}
+          style={isSelected ? styles.selectedDateText : styles.dateText}>
+          {item.day}
+        </AAText>
       </TouchableOpacity>
     );
   };
@@ -145,6 +153,7 @@ export default function CalendarScreen() {
     const navigateToDetail = (id: string) => {
       navigation.navigate('Detail', {id});
     };
+
     const isInMyList = isInList(item.id);
 
     const handlePress = async () => {
@@ -210,8 +219,8 @@ export default function CalendarScreen() {
 
   return (
     <LayoutWrapper>
+      <SecondaryNavBar title="Schedule" />
       <View style={styles.container}>
-        <SecondaryNavBar title="Schedule" />
         <FlatList
           data={dates}
           horizontal
@@ -254,7 +263,7 @@ export default function CalendarScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+
     paddingHorizontal: 20,
   },
   flatList: {
@@ -279,9 +288,18 @@ const styles = StyleSheet.create({
   weekdayText: {
     fontSize: 14,
   },
+  selectedWeekdayText: {
+    fontSize: 14,
+    color: Colors.White,
+  },
   dateText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  selectedDateText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.White,
   },
   scheduleList: {
     marginTop: 20,
