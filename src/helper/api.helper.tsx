@@ -1,106 +1,78 @@
 import {BASE_URL} from '../../env';
-// const SOURCE1="gogoanime";
+
 const SOURCE2 = 'zoroanime';
-export const getTopAiringAnime = async (page?: number) => {
-  const response = await fetch(
-    `${BASE_URL}/api/${SOURCE2}/topairing?page=${page}`,
-  );
-  const data = await response.json();
-  return data;
+
+type FetchOptions = {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
 };
 
-export const getPopularAnime = async (page?: number) => {
-  const response = await fetch(
-    `${BASE_URL}/api/${SOURCE2}/popularanime?page=${page}`,
-  );
-  const data = await response.json();
-  return data;
-};
-
-export const getAnimeDetail = async (id: string) => {
-  const response = await fetch(`${BASE_URL}/api/${SOURCE2}/animeinfo?id=${id}`);
-  const data = await response.json();
-  return data;
-};
-
-export const getEpisodeSource = async (id: string) => {
-  const response = await fetch(
-    `${BASE_URL}/api/${SOURCE2}/episodesource?id=${id}`,
-  );
-  const data = await response.json();
-  return data;
-};
-
-export const getSpotLight = async () => {
-  const response = await fetch(`${BASE_URL}/api/${SOURCE2}/spotlight`);
-  const data = await response.json();
-  return data;
-};
-
-export const getRecentlyUpdated = async (page?: number) => {
-  const response = await fetch(
-    `${BASE_URL}/api/${SOURCE2}/recentlyupdated?page=${page}`,
-  );
-  const data = await response.json();
-  return data;
-};
-
-export const getReleaseSchedule = async (date: string) => {
-  const response = await fetch(
-    `${BASE_URL}/api/${SOURCE2}/schedule?date=${date}`,
-  );
-  if (!response.ok) {
-    console.error('Error fetching schedule:', response.statusText);
-    throw new Error('Failed to fetch schedule');
+const fetchData = async (
+  endpoint: string,
+  options: FetchOptions = {},
+): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/${SOURCE2}/${endpoint}`,
+      options,
+    );
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Failed to fetch ${endpoint}:`, error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data;
 };
 
-export const getAnimeSearchResults = async (query: string) => {
-  const response = await fetch(`${BASE_URL}/api/${SOURCE2}/search?q=${query}`);
-  const data = await response.json();
-  return data;
-};
+export const getTopAiringAnime = (page?: number): Promise<any> =>
+  fetchData(`topairing?page=${page}`);
 
-export const getMostFavorite = async (page?: number) => {
-  const response = await fetch(
-    `${BASE_URL}/api/${SOURCE2}/mostfavorite?page=${page}`,
-  );
-  const data = await response.json();
-  return data;
-};
+export const getPopularAnime = (page?: number): Promise<any> =>
+  fetchData(`popularanime?page=${page}`);
 
-export const getFilteredAnimeResults = async (filters: {
+export const getAnimeDetail = (id: string): Promise<any> =>
+  fetchData(`animeinfo?id=${id}`);
+
+export const getEpisodeSource = (id: string): Promise<any> =>
+  fetchData(`episodesource?id=${id}`);
+
+export const getSpotLight = (): Promise<any> => fetchData('spotlight');
+
+export const getRecentlyUpdated = (page?: number): Promise<any> =>
+  fetchData(`recentlyupdated?page=${page}`);
+
+export const getMovie = (page?: number): Promise<any> =>
+  fetchData(`movie?page=${page}`);
+
+export const getReleaseSchedule = (date: string): Promise<any> =>
+  fetchData(`schedule?date=${date}`);
+
+export const getAnimeSearchResults = (query: string): Promise<any> =>
+  fetchData(`search?q=${query}`);
+
+export const getMostFavorite = (page?: number): Promise<any> =>
+  fetchData(`mostfavorite?page=${page}`);
+
+export const getFilteredAnimeResults = (filters: {
   sort: string | null;
   type: string | null;
   status: string | null;
   genres: string[];
-}) => {
-  try {
-    console.log('Filters:', filters);
-    const response = await fetch(`${BASE_URL}/api/${SOURCE2}/filtersearch`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sort: filters.sort,
-        type: filters.type,
-        status: filters.status,
-        genres: filters.genres || [],
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Failed to fetch filtered anime results:', error);
-    throw error;
-  }
+}): Promise<any> => {
+  const options: FetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      sort: filters.sort,
+      type: filters.type,
+      status: filters.status,
+      genres: filters.genres || [],
+    }),
+  };
+  return fetchData('filtersearch', options);
 };

@@ -16,10 +16,12 @@ import {
   getTopAiringAnime,
   getRecentlyUpdated,
   getMostFavorite,
+  getMovie,
 } from '../helper/api.helper';
 import {Colors} from '../constants/constants';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import {AnimeResult, ISpotLightResult} from '../constants/types';
+import {useContinueWatching} from '../helper/storage.helper';
 
 export default function HomeScreen() {
   const [spotLight, setSpotLight] = useState<ISpotLightResult[]>([]);
@@ -27,9 +29,10 @@ export default function HomeScreen() {
   const [topAiringAnime, setTopAiringAnime] = useState<AnimeResult[]>([]);
   const [recentlyUpdated, setRecentlyUpdated] = useState<AnimeResult[]>([]);
   const [mostFavorite, setMostFavorite] = useState<AnimeResult[]>([]);
+  const [movie, setMovie] = useState<AnimeResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-
+  const {continueWatching} = useContinueWatching();
   const fetchAllData = async () => {
     try {
       setLoading(true);
@@ -39,12 +42,14 @@ export default function HomeScreen() {
         spotLightResult,
         recentlyUpdatedResult,
         mostFavoriteResult,
+        movieResult,
       ] = await Promise.all([
         getTopAiringAnime(),
         getPopularAnime(),
         getSpotLight(),
         getRecentlyUpdated(),
         getMostFavorite(),
+        getMovie(),
       ]);
 
       setSpotLight(spotLightResult.results || []);
@@ -52,6 +57,7 @@ export default function HomeScreen() {
       setPopularAnime(popularAnimeResult.results || []);
       setRecentlyUpdated(recentlyUpdatedResult.results || []);
       setMostFavorite(mostFavoriteResult.results || []);
+      setMovie(movieResult.results || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -82,6 +88,8 @@ export default function HomeScreen() {
   return (
     <LayoutWrapper>
       <ScrollView
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{marginBottom: continueWatching ? 80 : 0}}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -95,6 +103,7 @@ export default function HomeScreen() {
         <AnimeCard title="New Episode Releases" data={recentlyUpdated} />
         <AnimeCard title="Most Popular" data={popularAnime} />
         <AnimeCard title="Most Favorite" data={mostFavorite} />
+        <AnimeCard title="Movies" data={movie} />
       </ScrollView>
     </LayoutWrapper>
   );

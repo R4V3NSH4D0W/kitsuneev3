@@ -1,7 +1,6 @@
 import {
   View,
   Image,
-  FlatList,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -59,24 +58,24 @@ const Banner = ({
   </View>
 );
 
-const GenreList = ({genres}: {genres: string[]}) => (
-  <FlatList
-    horizontal
-    data={genres}
-    keyExtractor={item => item}
-    renderItem={({item}) => (
-      <AAButton
-        title={item}
-        ignoreTheme
-        onPress={() => {}}
-        style={styles.genreButton}
-        textStyle={styles.genreText}
-      />
-    )}
-    showsHorizontalScrollIndicator={false}
-    contentContainerStyle={styles.genreListContainer}
-  />
-);
+// const GenreList = ({genres}: {genres: string[]}) => (
+//   <FlatList
+//     horizontal
+//     data={genres}
+//     keyExtractor={item => item}
+//     renderItem={({item}) => (
+//       <AAButton
+//         title={item}
+//         ignoreTheme
+//         onPress={() => {}}
+//         style={styles.genreButton}
+//         textStyle={styles.genreText}
+//       />
+//     )}
+//     showsHorizontalScrollIndicator={false}
+//     contentContainerStyle={styles.genreListContainer}
+//   />
+// );
 
 const DetailScreen = ({route}: DetailScreenProps) => {
   const {id} = route.params;
@@ -126,16 +125,21 @@ const DetailScreen = ({route}: DetailScreenProps) => {
         : animeInfo.description;
 
     return (
-      <TouchableOpacity onPress={toggleBottomSheet}>
-        <AAText style={styles.descriptionText}>
-          {truncatedDescription}
-          {animeInfo.description.length > 250 && (
-            <AAText ignoretheme style={styles.viewMoreText}>
-              ...View More
-            </AAText>
-          )}
-        </AAText>
-      </TouchableOpacity>
+      <View>
+        {/* <AAText style={styles.genres}>
+          genres: {animeInfo.genres.join(', ')}
+        </AAText> */}
+        <TouchableOpacity onPress={toggleBottomSheet}>
+          <AAText style={styles.descriptionText}>
+            {truncatedDescription}
+            {animeInfo.description.length > 250 && (
+              <AAText ignoretheme style={styles.viewMoreText}>
+                ...View More
+              </AAText>
+            )}
+          </AAText>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -187,13 +191,12 @@ const DetailScreen = ({route}: DetailScreenProps) => {
           </View>
         </View>
 
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           <View style={styles.infoContainer}>
-            <AAText>{animeInfo?.releaseDate}</AAText>
+            <AAText style={styles.statusText}>{animeInfo?.releaseDate}</AAText>
             <AAText style={styles.statusText}>{animeInfo?.status}</AAText>
           </View>
-          <GenreList genres={animeInfo?.genres || []} />
-        </View>
+        </View> */}
 
         <View style={styles.controllerRow}>
           <AAButton
@@ -262,6 +265,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontSize: 12,
   },
+  genres: {
+    fontSize: 12,
+    paddingBottom: 10,
+  },
   description: {
     marginTop: 20,
     marginHorizontal: 20,
@@ -300,7 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   controllerRow: {
-    marginTop: -10,
+    marginTop: 20,
     flexDirection: 'row',
     paddingHorizontal: 20,
     justifyContent: 'space-between',
@@ -315,7 +322,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   statusText: {
-    color: Colors.Pink,
+    fontSize: 14,
   },
   genreListContainer: {
     paddingLeft: 10,

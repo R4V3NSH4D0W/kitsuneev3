@@ -25,7 +25,7 @@ import {
 } from '../helper/util.helper';
 import {getAnimeDetail, getReleaseSchedule} from '../helper/api.helper';
 
-import {useMyList} from '../helper/storage.helper';
+import {useContinueWatching, useMyList} from '../helper/storage.helper';
 import {useTheme} from '../wrappers/theme-context';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -47,6 +47,7 @@ type ScheduleItem = {
 export default function CalendarScreen() {
   const [loading, setLoading] = useState<boolean>(false);
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
+  const {continueWatching} = useContinueWatching();
 
   const {addToList, removeFromList, isInList} = useMyList();
   const {theme} = useTheme();
@@ -220,7 +221,9 @@ export default function CalendarScreen() {
   return (
     <LayoutWrapper>
       <SecondaryNavBar title="Schedule" />
-      <View style={styles.container}>
+      <View
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={[styles.container, {marginBottom: continueWatching ? 90 : 0}]}>
         <FlatList
           data={dates}
           horizontal
@@ -263,7 +266,6 @@ export default function CalendarScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     paddingHorizontal: 20,
   },
   flatList: {

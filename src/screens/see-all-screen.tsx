@@ -18,6 +18,7 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import SecondaryNavBar from '../components/secondary-navbar';
 import {
   getMostFavorite,
+  getMovie,
   getPopularAnime,
   getRecentlyUpdated,
   getTopAiringAnime,
@@ -64,6 +65,9 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
       case 'Most Favorite':
         await fetchMostFavorite();
         break;
+      case 'Movies':
+        await fetchMovies();
+        break;
       default:
         break;
     }
@@ -100,6 +104,15 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
   const fetchPopularAnime = async () => {
     try {
       const response = await getPopularAnime(page);
+      handlePaginatedResponse(response, setAnimeList, setHasNextPage);
+    } catch (error) {
+      console.error('Error fetching Top Airing Anime:', error);
+    }
+  };
+
+  const fetchMovies = async () => {
+    try {
+      const response = await getMovie(page);
       handlePaginatedResponse(response, setAnimeList, setHasNextPage);
     } catch (error) {
       console.error('Error fetching Top Airing Anime:', error);
@@ -208,6 +221,7 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingTop: 20,
   },
   loadingContainer: {
     flex: 1,

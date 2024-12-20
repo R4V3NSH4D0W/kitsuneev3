@@ -3,6 +3,7 @@ import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 interface IAnimeItemCard {
   title?: string;
   image: string;
+  type?: string;
   onPress?: () => void;
 }
 

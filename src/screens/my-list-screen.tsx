@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import AAText from '../ui/text';
-import {useMyList} from '../helper/storage.helper';
+import {useContinueWatching, useMyList} from '../helper/storage.helper';
 import {Colors} from '../constants/constants';
 import AnimeItemCard from '../components/anime-items-cards';
 import {getAnimeDetail} from '../helper/api.helper';
@@ -18,6 +18,7 @@ import SecondaryNavBar from '../components/secondary-navbar';
 
 export default function MyList() {
   const {myList} = useMyList();
+  const {continueWatching} = useContinueWatching();
   const [animeDetails, setAnimeDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -51,13 +52,19 @@ export default function MyList() {
     <AnimeItemCard
       title={item.title}
       image={item.image}
+      type={item.type}
       onPress={() => navigateToDetail(item.id)}
     />
   );
   if (loading) {
     return (
       <LayoutWrapper>
-        <View style={styles.loadingIndicator}>
+        <View
+          style={[
+            styles.loadingIndicator,
+            // eslint-disable-next-line react-native/no-inline-styles
+            {marginBottom: continueWatching ? 90 : 0},
+          ]}>
           <ActivityIndicator size="large" color={Colors.Pink} />
         </View>
       </LayoutWrapper>

@@ -66,7 +66,7 @@ const checkTime = (
     ? parseTimeStringToMinutes(previousTime)
     : 0;
 
-  if (currentMinutes <= airingMinutes && currentMinutes >= previousMinutes) {
+  if (currentMinutes < airingMinutes && currentMinutes >= previousMinutes) {
     return true;
   }
   return false;

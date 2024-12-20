@@ -74,7 +74,7 @@ export interface ISpotLight {
 export type RootStackParamList = {
   Tabs: undefined;
   Detail: {id: string};
-  VideoScreen: {id: string};
+  VideoScreen: {id: string; episodeNumber: number};
   Search: undefined;
   SortAndFilter: undefined;
   SeeAll: {type: string};

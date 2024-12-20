@@ -15,6 +15,7 @@ export const Colors = {
   Pink: '#ea376b',
   White: '#ffffff',
   LightGray: '#1e222a',
+  DarkPink: '#572649',
 };
 
 export const lightTheme: Theme = {

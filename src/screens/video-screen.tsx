@@ -1,7 +1,17 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  ScrollView,
+  TextInput,
+  Dimensions,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import Video from 'react-native-video';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {Anime, RootStackParamList} from '../constants/types';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import {getAnimeDetail, getEpisodeSource} from '../helper/api.helper';
@@ -10,23 +20,42 @@ import {
   TextTrackType,
 } from 'react-native-video/lib/types/video';
 import AAText from '../ui/text';
-import {useWatchedEpisodes} from '../helper/storage.helper';
+import {
+  useContinueWatching,
+  useWatchedEpisodes,
+} from '../helper/storage.helper';
+import AIcons from 'react-native-vector-icons/AntDesign';
+import {Colors} from '../constants/constants';
+import AADropDown from '../utils/dropdown';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useTheme} from '../wrappers/theme-context';
+
+const {width} = Dimensions.get('window');
 
 type VideoScreenProps = {
   route: RouteProp<RootStackParamList, 'VideoScreen'>;
 };
 
 const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
-  const {id} = route.params;
+  const {id, episodeNumber} = route.params;
   const animeID = id.split('$episode')[0];
-  console.log(animeID);
   const [episodeSources, setEpisodeSources] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasMarkedWatched, setHasMarkedWatched] = useState<boolean>(false);
   const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
-  console.log(animeInfo);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const {markAsWatched} = useWatchedEpisodes();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const {theme} = useTheme();
+
+  const {markAsWatched, isWatched} = useWatchedEpisodes();
+  const {continueWatching, setContinueWatching} = useContinueWatching();
+
+  useEffect(() => {
+    if (animeInfo && (!continueWatching || continueWatching.id !== id)) {
+      setContinueWatching(id, animeInfo.image, animeInfo.title, episodeNumber);
+    }
+  }, [animeInfo, continueWatching, setContinueWatching, id, episodeNumber]);
 
   const fetchAllData = useCallback(async () => {
     try {
@@ -118,6 +147,49 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     );
   };
 
+  const [selectedRange, setSelectedRange] = useState<
+    | {
+        start: number;
+        end: number;
+      }
+    | undefined
+  >(undefined);
+
+  const handleRangeSelected = (range: {start: number; end: number}) => {
+    setSelectedRange(range);
+  };
+
+  const filteredEpisodes = animeInfo?.episodes?.filter((episode: any) => {
+    const matchesSearch = episode.number.toString().includes(searchQuery);
+
+    if (searchQuery) {
+      return matchesSearch;
+    }
+
+    if (selectedRange && !isLoading) {
+      return (
+        episode.number >= selectedRange.start &&
+        episode.number <= selectedRange.end
+      );
+    }
+
+    return true;
+  });
+
+  if (isLoading) {
+    return (
+      <LayoutWrapper>
+        <View style={styles.container}>
+          <ActivityIndicator
+            size="large"
+            color={Colors.Pink}
+            style={styles.loadingIndicator}
+          />
+        </View>
+      </LayoutWrapper>
+    );
+  }
+
   return (
     <LayoutWrapper>
       <View style={styles.container}>
@@ -132,9 +204,123 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
             renderVideo()
           )}
         </View>
-        <View style={styles.content}>
-          <AAText>{animeInfo?.title || 'Loading...'}</AAText>
+        <View
+          style={{
+            padding: 10,
+            alignItems: 'center',
+            backgroundColor: Colors.LightGray,
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}>
+          <AAText
+            ignoretheme
+            style={{
+              fontSize: 12,
+              color: Colors.White,
+              fontWeight: '600',
+            }}>
+            You are watching
+          </AAText>
+          <AAText
+            ignoretheme
+            style={{
+              color: Colors.Pink,
+              fontSize: 12,
+              paddingLeft: 5,
+              fontWeight: '600',
+            }}>
+            Episode {episodeNumber}
+          </AAText>
         </View>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              gap: 20,
+              alignItems: 'center',
+              marginTop: 20,
+            }}>
+            <View style={{gap: 10, width: '40%'}}>
+              <AAText style={{fontSize: 18, fontWeight: '600'}}>
+                List of Episodes
+              </AAText>
+              <AADropDown
+                episodes={animeInfo?.episodes || []}
+                onRangeSelected={handleRangeSelected}
+                selectedRange={selectedRange}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 20,
+                padding: Platform.OS === 'ios' ? 10 : 0,
+                paddingHorizontal: Platform.OS === 'ios' ? 0 : 10,
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: Colors.White,
+                borderRadius: 10,
+                width: '50%',
+              }}>
+              <AIcons name="search1" size={20} color={theme.colors.text} />
+              <TextInput
+                placeholder="Search Ep"
+                value={searchQuery}
+                onChangeText={text => setSearchQuery(text)}
+                style={{
+                  color: Colors.White,
+                  width: '100%',
+                  fontSize: 16,
+                  letterSpacing: 1,
+                }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              marginTop: 20,
+              gap: 10,
+            }}>
+            {filteredEpisodes?.map(item => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('VideoScreen', {
+                    id: item.id,
+                    episodeNumber: item.number,
+                  })
+                }
+                key={item.id}
+                style={{
+                  backgroundColor:
+                    item.number === episodeNumber
+                      ? Colors.Pink
+                      : isWatched(item.id)
+                      ? Colors.DarkPink
+                      : theme.colors.alt,
+                  padding: 10,
+                  width: (width - 20) / 6,
+                  alignItems: 'center',
+                  borderRadius: 5,
+                }}>
+                <AAText
+                  ignoretheme
+                  style={{
+                    color:
+                      item.number === episodeNumber
+                        ? Colors.White
+                        : theme.colors.text,
+                    fontSize: 14,
+                    fontWeight: '600',
+                  }}>
+                  {item.number}
+                </AAText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     </LayoutWrapper>
   );
@@ -165,9 +351,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-  },
-  episodeCard: {
-    marginTop: -10,
   },
 });
 

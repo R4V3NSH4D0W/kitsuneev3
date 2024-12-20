@@ -5964,6 +5964,13 @@ react-native-create-thumbnail@^2.0.0:
   resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-2.0.1.tgz#8a42f4a73fe6db8cc7ecc4673c55f13f89dd45fb"
   integrity sha512-D3UEuFJ9hDuf4XTMyNsqsk1SsTxak8EeKTf68QclZQKngwe67YuYaCE8h6CWdzm6ncDH4nbq/MZtFs+d+lD+iA==
 
+react-native-element-dropdown@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-element-dropdown/-/react-native-element-dropdown-2.12.2.tgz#48d0c12b87591e2498c73bbde80e18374a4c262e"
+  integrity sha512-Tf8hfRuniYEXo+LGoVgIMoItKWuPLX6jbqlwAFgMbBhmWGTuV+g1OVOAx/ny16kgnwp+NhgJoWpxhVvr7HSmXA==
+  dependencies:
+    lodash "^4.17.21"
+
 react-native-gesture-handler@^2.21.2:
   version "2.21.2"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.21.2.tgz#824a098d7397212fbe51aa3a9df84833a4ea1c3f"

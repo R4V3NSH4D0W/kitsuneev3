@@ -20,6 +20,7 @@ import {useTheme} from '../wrappers/theme-context';
 
 interface IEpisodeCardProps {
   data: Episode[];
+
   image?: string;
 }
 
@@ -97,7 +98,12 @@ export default function EpisodeCard({data, image}: IEpisodeCardProps) {
         keyExtractor={(item, index) => `${item.id}-${index}`}
         renderItem={({item}) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('VideoScreen', {id: item.id})}>
+            onPress={() =>
+              navigation.navigate('VideoScreen', {
+                id: item.id,
+                episodeNumber: item.number,
+              })
+            }>
             {renderEpisode({item, defaultImage})}
           </TouchableOpacity>
         )}
