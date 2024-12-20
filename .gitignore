@@ -22,7 +22,9 @@ DerivedData
 *.xcuserstate
 **/.xcode.env.local
 env.js
-
+.bundle
+android/app/build/outputs/apk/
+android/app/build/outputs/bundle/
 # Android/IntelliJ
 #
 build/
