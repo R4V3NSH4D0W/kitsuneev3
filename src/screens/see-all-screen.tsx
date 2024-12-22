@@ -23,7 +23,7 @@ import {
   getRecentlyUpdated,
   getTopAiringAnime,
 } from '../helper/api.helper';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import {trimTitle} from '../helper/util.helper';
 import AAButton from '../ui/button';
 import {useMyList} from '../helper/storage.helper';
@@ -160,7 +160,7 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
           </AAText>
         </View>
         <View style={styles.animeDetails}>
-          <AAText style={styles.title}>{trimTitle(item.title)}</AAText>
+          <AAText style={styles.title}>{trimTitle(item.title, 45)}</AAText>
           <AAText style={styles.duration}>{item.duration}</AAText>
           <AAButton
             ignoreTheme
@@ -169,7 +169,11 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
               styles.button,
               isInMyList && {backgroundColor: theme.colors.background},
             ]}
-            textStyle={isInMyList ? {color: Colors.Pink} : styles.text}
+            textStyle={
+              isInMyList
+                ? {color: Colors.Pink, fontSize: FontSize.sm}
+                : styles.text
+            }
             onPress={handlePress}
             icon={
               <FIcons
@@ -248,6 +252,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+    fontSize: FontSize.xmd,
     backgroundColor: Colors.Pink,
     color: Colors.White,
     paddingHorizontal: 4,
@@ -258,21 +263,25 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: FontSize.sm,
+    fontFamily: 'Poppins-Regular',
   },
   duration: {
-    fontSize: 14,
+    paddingVertical: 2,
+    fontSize: FontSize.xs,
   },
   button: {
     marginTop: 10,
     paddingVertical: 2,
-    width: 110,
+
+    width: 100,
     borderRadius: 15,
     borderColor: Colors.Pink,
     backgroundColor: Colors.Pink,
   },
   text: {
-    fontWeight: '600',
+    fontSize: FontSize.sm,
     color: Colors.White,
+    paddingRight: 4,
   },
 });

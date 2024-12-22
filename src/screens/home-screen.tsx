@@ -88,6 +88,7 @@ export default function HomeScreen() {
   return (
     <LayoutWrapper>
       <ScrollView
+        key={loading ? 'loading' : 'loaded'}
         // eslint-disable-next-line react-native/no-inline-styles
         style={{marginBottom: continueWatching ? 80 : 0}}
         showsVerticalScrollIndicator={false}

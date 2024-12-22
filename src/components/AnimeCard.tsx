@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import AAText from '../ui/text';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import {AnimeResult} from '../constants/types';
 interface IAnimeCardProps {
   title: string;
@@ -82,20 +82,21 @@ export default AnimeCard;
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    paddingLeft: 20,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: FontSize.xmd,
+    fontFamily: 'Poppins-SemiBold',
   },
   titleRow: {
-    marginBottom: 20,
+    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   titleButton: {
-    fontSize: 16,
+    fontSize: FontSize.sm,
+    paddingRight: 20,
     color: Colors.Pink,
   },
   image: {
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     height: 200,
     width: 140,
-    marginRight: 20,
+    marginRight: 10,
     marginBottom: 10,
   },
   type: {
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: Colors.Pink,
     color: Colors.White,
+    fontSize: FontSize.xmd,
     paddingHorizontal: 5,
     borderRadius: 5,
   },

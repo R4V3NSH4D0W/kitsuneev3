@@ -1,3 +1,4 @@
+import {scale} from 'react-native-size-matters';
 export interface Theme {
   dark: boolean;
   colors: {
@@ -18,6 +19,15 @@ export const Colors = {
   DarkPink: '#572649',
 };
 
+export const FontSize = {
+  xs: scale(10),
+  sm: scale(12),
+  xmd: scale(14),
+  md: scale(16),
+  lg: scale(20),
+  xl: scale(24),
+  xxl: scale(28),
+};
 export const lightTheme: Theme = {
   dark: false,
   colors: {

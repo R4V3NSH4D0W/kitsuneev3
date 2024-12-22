@@ -15,7 +15,7 @@ import AAText from '../ui/text';
 import AAButton from '../ui/button';
 
 import {DateItem} from '../constants/types';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 
 import {
   checkDate,
@@ -178,7 +178,7 @@ export default function CalendarScreen() {
         )}
         <View style={styles.time}>
           <View style={styles.smallLine} />
-          <AAText>{item.airingTime}</AAText>
+          <AAText style={styles.airingTime}>{item.airingTime}</AAText>
         </View>
         <View style={styles.scheduleContent}>
           <TouchableOpacity onPress={() => navigateToDetail(item.id)}>
@@ -202,7 +202,11 @@ export default function CalendarScreen() {
                 styles.button,
                 isInMyList && {backgroundColor: theme.colors.background},
               ]}
-              textStyle={isInMyList ? {color: Colors.Pink} : styles.text}
+              textStyle={
+                isInMyList
+                  ? {color: Colors.Pink, fontSize: FontSize.sm}
+                  : styles.text
+              }
               onPress={handlePress}
               icon={
                 <FIcons
@@ -288,23 +292,23 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Pink,
   },
   weekdayText: {
-    fontSize: 14,
+    fontSize: FontSize.sm,
   },
   selectedWeekdayText: {
-    fontSize: 14,
+    fontSize: FontSize.sm,
     color: Colors.White,
   },
   dateText: {
-    fontSize: 16,
+    fontSize: FontSize.sm,
     fontWeight: '600',
   },
   selectedDateText: {
-    fontSize: 16,
+    fontSize: FontSize.sm,
     fontWeight: '600',
     color: Colors.White,
   },
   scheduleList: {
-    marginTop: 20,
+    marginTop: 5,
   },
   scheduleContainer: {
     paddingTop: 5,
@@ -334,11 +338,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 16,
+    fontSize: FontSize.xmd,
     fontWeight: '500',
   },
   episode: {
-    fontSize: 14,
+    fontSize: FontSize.sm,
     fontWeight: '400',
   },
   col: {
@@ -352,6 +356,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Pink,
   },
   text: {
+    fontSize: FontSize.sm,
     fontWeight: '600',
     color: Colors.White,
   },
@@ -373,12 +378,12 @@ const styles = StyleSheet.create({
     marginBottom: height / 2.5,
   },
   noSchedule: {
-    fontSize: 20,
+    fontSize: FontSize.lg,
     fontWeight: '600',
     color: Colors.Pink,
   },
   sorry: {
-    fontSize: 18,
+    fontSize: FontSize.lg,
     marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 30,
@@ -408,6 +413,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   currentTime: {
-    fontSize: 14,
+    fontSize: FontSize.sm,
+  },
+  airingTime: {
+    fontSize: FontSize.xmd,
   },
 });

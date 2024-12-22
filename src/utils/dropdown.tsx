@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {Episode} from '../constants/types';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import AAText from '../ui/text';
 import AIcons from 'react-native-vector-icons/AntDesign';
 import {useTheme} from '../wrappers/theme-context';
@@ -67,7 +67,7 @@ export default function AADropDown({
     const isSelected = selectedRange?.value.start === item.value.start;
     return (
       <View style={[styles.dropdownItem, isSelected && styles.selectedItem]}>
-        <AAText>{item.label}</AAText>
+        <AAText style={styles.text}>{item.label}</AAText>
       </View>
     );
   };
@@ -77,7 +77,7 @@ export default function AADropDown({
       style={styles.dropdown}
       containerStyle={styles.dropdownContainer}
       itemTextStyle={{color: Colors.Pink}}
-      selectedTextStyle={{color: Colors.Pink}}
+      selectedTextStyle={{color: Colors.Pink, fontSize: FontSize.sm}}
       showsVerticalScrollIndicator={false}
       iconColor={Colors.Pink}
       data={dropdownData}
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
   dropdownItem: {
     paddingVertical: 10,
     paddingHorizontal: 15,
+
     backgroundColor: Colors.LightGray,
   },
   selectedItem: {
@@ -113,5 +114,8 @@ const styles = StyleSheet.create({
   },
   DropDownIcon: {
     paddingRight: 10,
+  },
+  text: {
+    fontSize: FontSize.sm,
   },
 });

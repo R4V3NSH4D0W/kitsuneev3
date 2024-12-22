@@ -56,6 +56,8 @@ export const getAnimeSearchResults = (query: string): Promise<any> =>
 export const getMostFavorite = (page?: number): Promise<any> =>
   fetchData(`mostfavorite?page=${page}`);
 
+export const getZoroWorking = (): Promise<any> => fetchData('iszoroworking');
+
 export const getFilteredAnimeResults = (filters: {
   sort: string | null;
   type: string | null;

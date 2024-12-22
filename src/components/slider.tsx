@@ -6,7 +6,7 @@ import {Dimensions, Image, StyleSheet, View, FlatList} from 'react-native';
 import AAText from '../ui/text';
 import AAButton from '../ui/button';
 
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import {ISpotLightResult} from '../constants/types';
 import {useMyList} from '../helper/storage.helper';
 import LinearGradient from 'react-native-linear-gradient';
@@ -56,7 +56,13 @@ const SliderItem = ({item}: ISliderItemProps) => {
             textStyle={styles.text}
             style={[styles.button, styles.PinkButton]}
             onPress={() => console.log('Play Pressed')}
-            icon={<Icons name="play-circle" size={20} color={Colors.White} />}
+            icon={
+              <Icons
+                name="play-circle"
+                size={FontSize.md}
+                color={Colors.White}
+              />
+            }
           />
 
           <AAButton
@@ -67,7 +73,7 @@ const SliderItem = ({item}: ISliderItemProps) => {
             onPress={() => handlePress()}
             icon={
               <FIcons
-                size={20}
+                size={FontSize.md}
                 name={isInMyList ? 'check' : 'plus'}
                 color={Colors.White}
               />
@@ -102,7 +108,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   titleText: {
-    fontSize: 20,
+    fontSize: FontSize.md,
     fontWeight: '600',
 
     color: Colors.White,
@@ -128,7 +134,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   subText: {
-    fontSize: 18,
+    fontSize: FontSize.xmd,
     maxWidth: 400,
     fontWeight: '400',
     paddingVertical: 5,
@@ -155,6 +161,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.White,
+    fontSize: FontSize.sm,
+    fontFamily: 'Poppins-SemiBold',
   },
   gradient: {
     zIndex: 1,

@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../constants/types';
 import AAText from '../ui/text';
@@ -24,9 +24,13 @@ const NavBar = () => {
         </View>
         <View style={styles.icons}>
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-            <Icons name="search-outline" size={24} color={Colors.White} />
+            <Icons
+              name="search-outline"
+              size={FontSize.lg}
+              color={Colors.White}
+            />
           </TouchableOpacity>
-          <Icons name="notifications-outline" size={24} color={Colors.White} />
+          {/* <Icons name="notifications-outline" size={24} color={Colors.White} /> */}
         </View>
       </View>
     </View>

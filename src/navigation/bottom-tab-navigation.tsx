@@ -13,7 +13,7 @@ import {
 import FIcons from 'react-native-vector-icons/FontAwesome';
 import Profile from '../screens/profile';
 import {useTheme} from '../wrappers/theme-context';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 
 import MyList from '../screens/my-list-screen';
 import CalendarScreen from '../screens/calendar-screen';
@@ -79,7 +79,9 @@ const BottomTabNavigation = () => {
                 style={styles.continueWatchingImage}
               />
               <View>
-                <AAText>{trimTitle(continueWatching.name, 25)}</AAText>
+                <AAText style={styles.continueWatchingTitle}>
+                  {trimTitle(continueWatching.name, 25)}
+                </AAText>
 
                 <View
                   style={{
@@ -87,10 +89,10 @@ const BottomTabNavigation = () => {
                     alignItems: 'center',
                     gap: 5,
                   }}>
-                  <IIcons name="play" size={16} color={Colors.Pink} />
+                  <IIcons name="play" size={FontSize.sm} color={Colors.Pink} />
                   <AAText
                     ignoretheme
-                    style={{fontSize: 12, color: Colors.Pink}}>
+                    style={{fontSize: FontSize.xs, color: Colors.Pink}}>
                     Continue
                   </AAText>
                 </View>
@@ -114,9 +116,9 @@ const BottomTabNavigation = () => {
           headerShown: false,
           tabBarActiveTintColor: Colors.Pink,
           tabBarStyle: {
-            paddingTop: Platform.OS === 'ios' ? 10 : 0,
+            paddingTop: 10,
             shadowColor: '#000',
-            height: Platform.OS === 'ios' ? 80 : 60,
+            height: Platform.OS === 'ios' ? 80 : 80,
             shadowOpacity: 0.1,
             shadowOffset: {width: 0, height: -3},
             shadowRadius: 5,
@@ -164,7 +166,7 @@ const BottomTabNavigation = () => {
 const styles = StyleSheet.create({
   continueWatchingContainer: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 80 : 60,
+    bottom: 80,
     zIndex: 100,
     padding: 10,
     width: '100%',
@@ -172,8 +174,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   continueWatchingTitle: {
-    fontSize: 16,
-    fontFamily: 'Poppins-Bold',
+    fontSize: FontSize.xmd,
+    fontFamily: 'Poppins-SemiBold',
   },
   continueWatchingContent: {
     flexDirection: 'row',
@@ -186,9 +188,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 12,
     marginRight: 10,
-  },
-  continueWatchingText: {
-    fontSize: 14,
   },
 });
 

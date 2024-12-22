@@ -14,13 +14,12 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 import AAText from '../ui/text';
 import {Episode} from '../constants/types';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import AIcons from 'react-native-vector-icons/AntDesign';
 import {useTheme} from '../wrappers/theme-context';
 
 interface IEpisodeCardProps {
   data: Episode[];
-
   image?: string;
 }
 
@@ -80,7 +79,7 @@ export default function EpisodeCard({data, image}: IEpisodeCardProps) {
                 styles.searchContainer,
                 {borderColor: theme.colors.text},
               ]}>
-              <AIcons name="search1" size={20} color={theme.colors.text} />
+              <AIcons name="search1" size={18} color={theme.colors.text} />
               <TextInput
                 style={[styles.input, {color: theme.colors.text}]}
                 placeholderTextColor={theme.colors.text}
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   titleText: {
-    fontSize: 20,
+    fontSize: FontSize.xmd,
     fontWeight: '600',
   },
   episodeContainer: {
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     height: 40,
-    fontSize: 16,
+    fontSize: FontSize.sm,
   },
   image: {
     width: 150,
@@ -162,7 +161,7 @@ const styles = StyleSheet.create({
     left: 10,
     color: Colors.White,
     zIndex: 1,
-    fontWeight: '600',
+    fontSize: FontSize.sm,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

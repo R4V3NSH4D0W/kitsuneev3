@@ -18,7 +18,7 @@ import LayoutWrapper from '../wrappers/layout-wrapper';
 import AAText from '../ui/text';
 import AAButton from '../ui/button';
 
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import {Anime, RootStackParamList} from '../constants/types';
 
 import AnimeCard from '../components/AnimeCard';
@@ -26,6 +26,7 @@ import EpisodeCard from '../components/episodes-card';
 
 import {getAnimeDetail} from '../helper/api.helper';
 import {useMyList} from '../helper/storage.helper';
+import {trimTitle} from '../helper/util.helper';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -48,7 +49,7 @@ const Banner = ({
 }) => (
   <View style={styles.banner}>
     <TouchableOpacity style={styles.backIcon} onPress={onBackPress}>
-      <Icons name="arrow-back" size={30} color={Colors.White} />
+      <Icons name="arrow-back" size={FontSize.xl} color={Colors.White} />
     </TouchableOpacity>
     <Image
       source={{uri: image || 'https://via.placeholder.com/300'}}
@@ -170,21 +171,27 @@ const DetailScreen = ({route}: DetailScreenProps) => {
         />
 
         <View style={styles.row}>
-          <AAText style={styles.titleText}>{animeInfo?.title}</AAText>
+          <AAText style={styles.titleText}>
+            {trimTitle(animeInfo?.title || '', 42)}
+          </AAText>
           <View style={styles.iconContainer}>
             <TouchableOpacity onPress={() => handlePress()}>
               {isInMyList ? (
-                <Icons size={30} name="bookmark-outline" color={Colors.Pink} />
+                <Icons
+                  size={FontSize.xl}
+                  name="bookmark-outline"
+                  color={Colors.Pink}
+                />
               ) : (
                 <Icons
-                  size={30}
+                  size={FontSize.xl}
                   name="bookmark-outline"
                   color={theme.colors.text}
                 />
               )}
             </TouchableOpacity>
             <Icons
-              size={30}
+              size={FontSize.xl}
               name="share-social-outline"
               color={theme.colors.text}
             />
@@ -205,7 +212,13 @@ const DetailScreen = ({route}: DetailScreenProps) => {
             onPress={() => {}}
             textStyle={styles.buttonTextAlt}
             style={[styles.buttonAlt, styles.controllerButton]}
-            icon={<Icons name="play-circle" size={20} color={Colors.White} />}
+            icon={
+              <Icons
+                name="play-circle"
+                size={FontSize.md}
+                color={Colors.White}
+              />
+            }
           />
           <AAButton
             ignoreTheme
@@ -213,7 +226,9 @@ const DetailScreen = ({route}: DetailScreenProps) => {
             onPress={() => {}}
             textStyle={styles.buttonText}
             style={[styles.button, styles.controllerButton]}
-            icon={<Icons name="download" size={20} color={Colors.Pink} />}
+            icon={
+              <Icons name="download" size={FontSize.md} color={Colors.Pink} />
+            }
           />
         </View>
         <View style={styles.description}>{renderDescription()}</View>
@@ -263,10 +278,10 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     lineHeight: 20,
-    fontSize: 12,
+    fontSize: FontSize.xs,
   },
   genres: {
-    fontSize: 12,
+    fontSize: FontSize.xs,
     paddingBottom: 10,
   },
   description: {
@@ -275,7 +290,7 @@ const styles = StyleSheet.create({
   },
   viewMoreText: {
     color: Colors.Pink,
-    fontSize: 14,
+    fontSize: FontSize.xs,
   },
   loading: {
     flex: 1,
@@ -317,12 +332,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   titleText: {
-    fontSize: 18,
+    fontSize: FontSize.md,
     maxWidth: '70%',
     fontWeight: '600',
   },
   statusText: {
-    fontSize: 14,
+    fontSize: FontSize.sm,
   },
   genreListContainer: {
     paddingLeft: 10,
@@ -340,17 +355,21 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
-    height: 50,
+    height: 40,
+    padding: -10,
+    justifyContent: 'center',
     borderColor: Colors.Pink,
   },
   buttonAlt: {
     borderRadius: 10,
-    height: 50,
+    height: 40,
+    padding: -10,
     borderColor: Colors.Pink,
     backgroundColor: Colors.Pink,
   },
   buttonText: {
     color: Colors.Pink,
+    fontSize: FontSize.sm,
   },
   controllerButton: {
     width: '48%',
@@ -358,6 +377,7 @@ const styles = StyleSheet.create({
   },
   buttonTextAlt: {
     color: Colors.White,
+    fontSize: FontSize.sm,
   },
   infoContainer: {
     gap: 10,

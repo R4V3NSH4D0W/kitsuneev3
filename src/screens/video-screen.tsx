@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,22 +10,24 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import Video from 'react-native-video';
+import Video, {
+  OnBufferData,
+  SelectedTrackType,
+  TextTrackType,
+  VideoRef,
+} from 'react-native-video';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {Anime, RootStackParamList} from '../constants/types';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import {getAnimeDetail, getEpisodeSource} from '../helper/api.helper';
-import {
-  SelectedTrackType,
-  TextTrackType,
-} from 'react-native-video/lib/types/video';
+
 import AAText from '../ui/text';
 import {
   useContinueWatching,
   useWatchedEpisodes,
 } from '../helper/storage.helper';
 import AIcons from 'react-native-vector-icons/AntDesign';
-import {Colors} from '../constants/constants';
+import {Colors, FontSize} from '../constants/constants';
 import AADropDown from '../utils/dropdown';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useTheme} from '../wrappers/theme-context';
@@ -47,9 +49,13 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
   const {theme} = useTheme();
+  const videoRef = useRef<VideoRef>(null);
 
   const {markAsWatched, isWatched} = useWatchedEpisodes();
   const {continueWatching, setContinueWatching} = useContinueWatching();
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [isFullScreen, setIsFullscreen] = useState<boolean>(false);
+  console.log('isBuffering', isBuffering);
 
   useEffect(() => {
     if (animeInfo && (!continueWatching || continueWatching.id !== id)) {
@@ -116,34 +122,79 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
       return (
         <ActivityIndicator
           size="large"
-          color="#007bff"
+          color={Colors.Pink}
           style={styles.noSourceIndicator}
         />
       );
     }
 
+    const renderLoading = () => {
+      console.log('renderLoading triggered');
+      return (
+        <View style={styles.loadingIndicator}>
+          <ActivityIndicator size="large" color={Colors.Pink} />
+        </View>
+      );
+    };
+
+    const onVideoBuffer = (param: OnBufferData) => {
+      console.log('onVideoBuffer');
+      setIsBuffering(param.isBuffering);
+    };
+
+    const onReadyForDisplay = () => {
+      console.log('onReadyForDisplay');
+      setIsBuffering(false);
+    };
+
+    console.log('isBuffering', isBuffering);
+
     return (
-      <Video
-        source={{
-          uri: hlsSource,
-          textTracks: [
-            {
-              title: 'English CC',
-              language: 'en',
-              type: TextTrackType.VTT,
-              uri: englishSubtitle?.url,
-            },
-          ],
-        }}
-        style={styles.video}
-        controls={true}
-        resizeMode="contain"
-        onProgress={handleProgress}
-        selectedTextTrack={{
-          type: SelectedTrackType.INDEX,
-          value: 0,
-        }}
-      />
+      <View style={styles.videoContainer}>
+        {isBuffering && renderLoading()}
+
+        <Video
+          style={styles.video}
+          ref={videoRef}
+          source={{
+            uri: hlsSource,
+
+            textTracks: [
+              {
+                title: 'English CC',
+                language: 'en',
+                type: TextTrackType.VTT,
+                uri: englishSubtitle?.url,
+              },
+            ],
+          }}
+          // showNotificationControls={true}
+
+          controls={true}
+          resizeMode="contain"
+          onProgress={handleProgress}
+          onBuffer={onVideoBuffer}
+          onReadyForDisplay={onReadyForDisplay}
+          onFullscreenPlayerWillPresent={() => setIsFullscreen(true)}
+          onFullscreenPlayerDidDismiss={() => setIsFullscreen(false)}
+          // renderLoader={
+          //   isBuffering ? (
+          //     <ActivityIndicator
+          //       size={'large'}
+          //       color={Colors.Pink}
+          //       style={{
+          //         zIndex: 10,
+          //       }}
+          //     />
+          //   ) : undefined
+          // }
+          selectedTextTrack={{
+            type: SelectedTrackType.INDEX,
+            value: 0,
+          }}
+          // renderLoader={() => isBuffering && renderLoading()}
+        />
+      </View>
     );
   };
 
@@ -232,93 +283,103 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
             Episode {episodeNumber}
           </AAText>
         </View>
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              gap: 20,
-              alignItems: 'center',
-              marginTop: 20,
-            }}>
-            <View style={{gap: 10, width: '40%'}}>
-              <AAText style={{fontSize: 18, fontWeight: '600'}}>
-                List of Episodes
-              </AAText>
-              <AADropDown
-                episodes={animeInfo?.episodes || []}
-                onRangeSelected={handleRangeSelected}
-                selectedRange={selectedRange}
-              />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
+              <View style={{width: '40%'}}>
+                <AAText style={{fontSize: FontSize.xmd, fontWeight: '600'}}>
+                  List of Episodes
+                </AAText>
+                <AADropDown
+                  episodes={animeInfo?.episodes || []}
+                  onRangeSelected={handleRangeSelected}
+                  selectedRange={selectedRange}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 10,
+                  padding: Platform.OS === 'ios' ? 10 : 0,
+                  paddingHorizontal: 10,
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: Colors.White,
+                  borderRadius: 10,
+                  width: '50%',
+                  marginBottom: 20,
+                }}>
+                <AIcons name="search1" size={20} color={theme.colors.text} />
+                <TextInput
+                  placeholder="Search Ep"
+                  value={searchQuery}
+                  keyboardType="numeric"
+                  onChangeText={text => setSearchQuery(text)}
+                  style={{
+                    color: Colors.White,
+                    width: '100%',
+                    fontSize: FontSize.sm,
+                    letterSpacing: 1,
+                  }}
+                />
+              </View>
             </View>
             <View
               style={{
                 flexDirection: 'row',
-                gap: 20,
-                padding: Platform.OS === 'ios' ? 10 : 0,
-                paddingHorizontal: Platform.OS === 'ios' ? 0 : 10,
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: Colors.White,
-                borderRadius: 10,
-                width: '50%',
+                flexWrap: 'wrap',
+                marginTop: 20,
+                gap: 10,
               }}>
-              <AIcons name="search1" size={20} color={theme.colors.text} />
-              <TextInput
-                placeholder="Search Ep"
-                value={searchQuery}
-                onChangeText={text => setSearchQuery(text)}
-                style={{
-                  color: Colors.White,
-                  width: '100%',
-                  fontSize: 16,
-                  letterSpacing: 1,
-                }}
-              />
+              {filteredEpisodes?.map(item => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('VideoScreen', {
+                      id: item.id,
+                      episodeNumber: item.number,
+                    })
+                  }
+                  key={item.id}
+                  style={{
+                    backgroundColor:
+                      item.number === episodeNumber
+                        ? Colors.Pink
+                        : isWatched(item.id)
+                        ? Colors.DarkPink
+                        : theme.colors.alt,
+                    padding: 10,
+                    width: (width - 20) / 6,
+                    alignItems: 'center',
+                    borderRadius: 5,
+                  }}>
+                  <AAText
+                    ignoretheme
+                    style={{
+                      color:
+                        item.number === episodeNumber
+                          ? Colors.White
+                          : theme.colors.text,
+                      fontSize: FontSize.sm,
+                      fontWeight: '600',
+                    }}>
+                    {item.number}
+                  </AAText>
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              marginTop: 20,
-              gap: 10,
-            }}>
-            {filteredEpisodes?.map(item => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('VideoScreen', {
-                    id: item.id,
-                    episodeNumber: item.number,
-                  })
-                }
-                key={item.id}
-                style={{
-                  backgroundColor:
-                    item.number === episodeNumber
-                      ? Colors.Pink
-                      : isWatched(item.id)
-                      ? Colors.DarkPink
-                      : theme.colors.alt,
-                  padding: 10,
-                  width: (width - 20) / 6,
-                  alignItems: 'center',
-                  borderRadius: 5,
-                }}>
-                <AAText
-                  ignoretheme
-                  style={{
-                    color:
-                      item.number === episodeNumber
-                        ? Colors.White
-                        : theme.colors.text,
-                    fontSize: 14,
-                    fontWeight: '600',
-                  }}>
-                  {item.number}
-                </AAText>
-              </TouchableOpacity>
-            ))}
+          <View style={{marginBottom: 20}}>
+            {/* <AnimeCard
+              title="Related Anime"
+              data={animeInfo?.recommendations || []}
+              hideSeeAll
+            /> */}
           </View>
         </ScrollView>
       </View>
@@ -331,12 +392,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   videoContainer: {
-    height: 250,
+    height: 350,
     backgroundColor: '#000',
     justifyContent: 'center',
+    position: 'relative',
   },
   video: {
     flex: 1,
+
+    zIndex: 10,
   },
   noSourceIndicator: {
     justifyContent: 'center',
@@ -348,9 +412,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100,
   },
   content: {
-    paddingHorizontal: 20,
+    padding: 15,
   },
 });
 

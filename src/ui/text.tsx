@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TextStyle} from 'react-native';
 import React from 'react';
 import {useTheme} from '../wrappers/theme-context';
+import {FontSize} from '../constants/constants';
 
 interface IAATextProps {
   style?: TextStyle;
@@ -20,7 +21,7 @@ const AAText: React.FC<IAATextProps> = ({children, style, ignoretheme}) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 16,
+    fontSize: FontSize.md,
     fontFamily: 'Poppins-Medium',
   },
 });
