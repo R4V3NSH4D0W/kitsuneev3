@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Platform,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
@@ -27,18 +26,19 @@ import EpisodeCard from '../components/episodes-card';
 import {getAnimeDetail} from '../helper/api.helper';
 import {useMyList} from '../helper/storage.helper';
 import {trimTitle} from '../helper/util.helper';
+import SkeletonDetail from '../utils/skeleton-loaders/detail-skeleton';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
 };
 
-const LoadingIndicator = () => {
-  return (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Colors.Pink} />
-    </View>
-  );
-};
+// const LoadingIndicator = () => {
+//   return (
+//     <View style={styles.loading}>
+//       <ActivityIndicator size="large" color={Colors.Pink} />
+//     </View>
+//   );
+// };
 
 const Banner = ({
   image,
@@ -147,7 +147,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   if (loading) {
     return (
       <LayoutWrapper>
-        <LoadingIndicator />
+        <SkeletonDetail />
       </LayoutWrapper>
     );
   }

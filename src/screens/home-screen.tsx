@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  View,
-  ScrollView,
-  StyleSheet,
-  RefreshControl,
-} from 'react-native';
+import {ScrollView, RefreshControl} from 'react-native';
 
 import Slider from '../components/slider';
 import AnimeCard from '../components/AnimeCard';
@@ -22,6 +16,8 @@ import {Colors} from '../constants/constants';
 import LayoutWrapper from '../wrappers/layout-wrapper';
 import {AnimeResult, ISpotLightResult} from '../constants/types';
 import {useContinueWatching} from '../helper/storage.helper';
+import SkeletonAnimeCard from '../utils/skeleton-loaders/anime-card-skeleton';
+import SkeletonSlider from '../utils/skeleton-loaders/slider-skeleton';
 
 export default function HomeScreen() {
   const [spotLight, setSpotLight] = useState<ISpotLightResult[]>([]);
@@ -78,9 +74,10 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <LayoutWrapper>
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color={Colors.Pink} />
-        </View>
+        <SkeletonSlider />
+        <SkeletonAnimeCard />
+        <SkeletonAnimeCard />
+        <SkeletonAnimeCard />
       </LayoutWrapper>
     );
   }
@@ -109,11 +106,3 @@ export default function HomeScreen() {
     </LayoutWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

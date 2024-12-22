@@ -1,36 +1,39 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  StyleSheet,
   View,
-  ActivityIndicator,
-  ScrollView,
+  Platform,
   TextInput,
+  ScrollView,
+  StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Video, {
-  OnBufferData,
-  SelectedTrackType,
-  TextTrackType,
   VideoRef,
+  OnBufferData,
+  TextTrackType,
+  SelectedTrackType,
 } from 'react-native-video';
+import AIcons from 'react-native-vector-icons/AntDesign';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp, useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+
+import {Colors, FontSize} from '../constants/constants';
 import {Anime, RootStackParamList} from '../constants/types';
+
+import {useTheme} from '../wrappers/theme-context';
 import LayoutWrapper from '../wrappers/layout-wrapper';
+
+import {
+  useWatchedEpisodes,
+  useContinueWatching,
+} from '../helper/storage.helper';
 import {getAnimeDetail, getEpisodeSource} from '../helper/api.helper';
 
 import AAText from '../ui/text';
-import {
-  useContinueWatching,
-  useWatchedEpisodes,
-} from '../helper/storage.helper';
-import AIcons from 'react-native-vector-icons/AntDesign';
-import {Colors, FontSize} from '../constants/constants';
 import AADropDown from '../utils/dropdown';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useTheme} from '../wrappers/theme-context';
 
 const {width} = Dimensions.get('window');
 
@@ -40,22 +43,23 @@ type VideoScreenProps = {
 
 const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
   const {id, episodeNumber} = route.params;
-  const animeID = id.split('$episode')[0];
-  const [episodeSources, setEpisodeSources] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [hasMarkedWatched, setHasMarkedWatched] = useState<boolean>(false);
-  const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const animeID = id.split('$episode')[0];
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const {theme} = useTheme();
-  const videoRef = useRef<VideoRef>(null);
+  const [isBuffering, setIsBuffering] = useState<boolean>(false);
+  const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+
+  const [episodeSources, setEpisodeSources] = useState<any | null>(null);
+  const [hasMarkedWatched, setHasMarkedWatched] = useState<boolean>(false);
 
   const {markAsWatched, isWatched} = useWatchedEpisodes();
   const {continueWatching, setContinueWatching} = useContinueWatching();
-  const [isBuffering, setIsBuffering] = useState(false);
-  const [isFullScreen, setIsFullscreen] = useState<boolean>(false);
   console.log('isBuffering', isBuffering);
+
+  const {theme} = useTheme();
+  const videoRef = useRef<VideoRef>(null);
 
   useEffect(() => {
     if (animeInfo && (!continueWatching || continueWatching.id !== id)) {
@@ -70,8 +74,8 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
         getEpisodeSource(id),
         getAnimeDetail(animeID),
       ]);
-      setEpisodeSources(sourceResult || null);
       setAnimeInfo(animeInfoResult || null);
+      setEpisodeSources(sourceResult || null);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -138,16 +142,12 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     };
 
     const onVideoBuffer = (param: OnBufferData) => {
-      console.log('onVideoBuffer');
       setIsBuffering(param.isBuffering);
     };
 
     const onReadyForDisplay = () => {
-      console.log('onReadyForDisplay');
       setIsBuffering(false);
     };
-
-    console.log('isBuffering', isBuffering);
 
     return (
       <View style={styles.videoContainer}>
@@ -168,15 +168,11 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
               },
             ],
           }}
-          // showNotificationControls={true}
-
           controls={true}
           resizeMode="contain"
           onProgress={handleProgress}
           onBuffer={onVideoBuffer}
           onReadyForDisplay={onReadyForDisplay}
-          onFullscreenPlayerWillPresent={() => setIsFullscreen(true)}
-          onFullscreenPlayerDidDismiss={() => setIsFullscreen(false)}
           // renderLoader={
           //   isBuffering ? (
           //     <ActivityIndicator
@@ -259,26 +255,26 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
           style={{
             padding: 10,
             alignItems: 'center',
-            backgroundColor: Colors.LightGray,
             flexDirection: 'row',
             justifyContent: 'center',
+            backgroundColor: Colors.LightGray,
           }}>
           <AAText
             ignoretheme
             style={{
               fontSize: 12,
-              color: Colors.White,
               fontWeight: '600',
+              color: Colors.White,
             }}>
             You are watching
           </AAText>
           <AAText
             ignoretheme
             style={{
-              color: Colors.Pink,
               fontSize: 12,
               paddingLeft: 5,
               fontWeight: '600',
+              color: Colors.Pink,
             }}>
             Episode {episodeNumber}
           </AAText>
@@ -287,10 +283,10 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
           <View style={styles.content}>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
                 marginTop: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
               <View style={{width: '40%'}}>
                 <AAText style={{fontSize: FontSize.xmd, fontWeight: '600'}}>
@@ -304,38 +300,38 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
               </View>
               <View
                 style={{
-                  flexDirection: 'row',
                   gap: 10,
-                  padding: Platform.OS === 'ios' ? 10 : 0,
-                  paddingHorizontal: 10,
-                  alignItems: 'center',
-                  borderWidth: 1,
-                  borderColor: Colors.White,
-                  borderRadius: 10,
                   width: '50%',
+                  borderWidth: 1,
+                  borderRadius: 10,
                   marginBottom: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 10,
+                  borderColor: Colors.White,
+                  padding: Platform.OS === 'ios' ? 10 : 0,
                 }}>
                 <AIcons name="search1" size={20} color={theme.colors.text} />
                 <TextInput
-                  placeholder="Search Ep"
                   value={searchQuery}
                   keyboardType="numeric"
-                  onChangeText={text => setSearchQuery(text)}
+                  placeholder="Search Ep"
                   style={{
-                    color: Colors.White,
                     width: '100%',
-                    fontSize: FontSize.sm,
                     letterSpacing: 1,
+                    color: Colors.White,
+                    fontSize: FontSize.sm,
                   }}
+                  onChangeText={text => setSearchQuery(text)}
                 />
               </View>
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                marginTop: 20,
                 gap: 10,
+                marginTop: 20,
+                flexWrap: 'wrap',
+                flexDirection: 'row',
               }}>
               {filteredEpisodes?.map(item => (
                 <TouchableOpacity
@@ -354,9 +350,9 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
                         ? Colors.DarkPink
                         : theme.colors.alt,
                     padding: 10,
-                    width: (width - 20) / 6,
-                    alignItems: 'center',
                     borderRadius: 5,
+                    alignItems: 'center',
+                    width: (width - 20) / 6,
                   }}>
                   <AAText
                     ignoretheme
@@ -365,8 +361,8 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
                         item.number === episodeNumber
                           ? Colors.White
                           : theme.colors.text,
-                      fontSize: FontSize.sm,
                       fontWeight: '600',
+                      fontSize: FontSize.sm,
                     }}>
                     {item.number}
                   </AAText>
@@ -393,9 +389,9 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     height: 350,
+    position: 'relative',
     backgroundColor: '#000',
     justifyContent: 'center',
-    position: 'relative',
   },
   video: {
     flex: 1,
@@ -403,18 +399,18 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   noSourceIndicator: {
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   loadingIndicator: {
-    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
     zIndex: 100,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     padding: 15,

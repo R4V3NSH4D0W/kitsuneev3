@@ -44,7 +44,6 @@ export const AppProvider: React.FC<{children: ReactNode}> = ({children}) => {
     episodeNumber: number;
   } | null>(null);
 
-  // Fetch data from AsyncStorage on load
   useEffect(() => {
     const fetchMyList = async () => {
       try {
