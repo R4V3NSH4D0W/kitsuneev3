@@ -78,7 +78,7 @@ export default function SkeletonDetail() {
 
           {/* Text Rows */}
           <View style={{marginTop: 20}}>
-            {[100, 98, 90, 95, 20].map((width, index) => (
+            {[100, 100, 96, 99, 98, 90, 95, 20].map((width, index) => (
               <View
                 key={index}
                 style={{
@@ -146,7 +146,7 @@ export default function SkeletonDetail() {
           </View>
           {/* Text Rows */}
           <View style={{marginTop: 20}}>
-            {[100, 98, 90, 95, 20].map((width, index) => (
+            {[100, 98].map((width, index) => (
               <View
                 key={index}
                 style={{

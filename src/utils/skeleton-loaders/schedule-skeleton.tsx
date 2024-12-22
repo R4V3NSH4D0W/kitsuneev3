@@ -1,67 +1,135 @@
-import {View} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import {Dimensions, View} from 'react-native';
 import React from 'react';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {useTheme} from '../../wrappers/theme-context';
+const {height} = Dimensions.get('window');
 
 export default function SkeletonSchedule() {
   const {theme} = useTheme();
+
+  // const skeletonItems = Array(5).fill(null);
   return (
     <SkeletonPlaceholder
       backgroundColor={theme.colors.skeletonBackgroung}
       highlightColor={theme.colors.skeletonHighlight}>
-      <View style={{padding: 20}}>
+      <View style={{height: height}}>
+        <View
+          style={{
+            paddingTop: 20,
+            flexDirection: 'row',
+            gap: 10,
+            alignItems: 'center',
+          }}>
+          <View style={{borderWidth: 4, width: 20, borderRadius: 4}} />
+          <View style={{height: 16, width: 40, borderRadius: 4}} />
+        </View>
+        {/* Render Schedule Section */}
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            marginTop: 20,
           }}>
-          <View
-            style={{
-              flex: 1,
-              height: 20,
-              backgroundColor: theme.colors.skeletonHighlight,
-              marginRight: 10,
-            }}
-          />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{height: 90, width: 120, borderRadius: 20}} />
+          <View style={{width: '60%'}}>
+            <View style={{width: '100%', height: 15, borderRadius: 4}} />
             <View
-              style={{
-                width: 30,
-                height: 20,
-                backgroundColor: theme.colors.skeletonHighlight,
-                marginRight: 10,
-              }}
+              style={{width: '10%', height: 12, borderRadius: 4, marginTop: 4}}
             />
             <View
-              style={{
-                width: 30,
-                height: 20,
-                backgroundColor: theme.colors.skeletonHighlight,
-              }}
+              style={{width: '40%', height: 15, borderRadius: 4, marginTop: 4}}
             />
           </View>
         </View>
         <View
           style={{
+            paddingTop: 20,
             flexDirection: 'row',
-            marginTop: 20,
-            justifyContent: 'space-between',
+            gap: 10,
+            alignItems: 'center',
           }}>
-          <View
-            style={{
-              width: 100,
-              height: 20,
-              backgroundColor: theme.colors.skeletonHighlight,
-            }}
-          />
-          <View
-            style={{
-              width: 100,
-              height: 20,
-              backgroundColor: theme.colors.skeletonHighlight,
-            }}
-          />
+          <View style={{borderWidth: 4, width: 20, borderRadius: 4}} />
+          <View style={{height: 16, width: 40, borderRadius: 4}} />
+        </View>
+        {/* Render Schedule Section */}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 20,
+          }}>
+          <View style={{height: 90, width: 120, borderRadius: 20}} />
+          <View style={{width: '60%'}}>
+            <View style={{width: '100%', height: 15, borderRadius: 4}} />
+            <View
+              style={{width: '10%', height: 12, borderRadius: 4, marginTop: 4}}
+            />
+            <View
+              style={{width: '40%', height: 15, borderRadius: 4, marginTop: 4}}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            paddingTop: 20,
+            flexDirection: 'row',
+            gap: 10,
+            alignItems: 'center',
+          }}>
+          <View style={{borderWidth: 4, width: 20, borderRadius: 4}} />
+          <View style={{height: 16, width: 40, borderRadius: 4}} />
+        </View>
+        {/* Render Schedule Section */}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 20,
+          }}>
+          <View style={{height: 90, width: 120, borderRadius: 20}} />
+          <View style={{width: '60%'}}>
+            <View style={{width: '100%', height: 15, borderRadius: 4}} />
+            <View
+              style={{width: '10%', height: 12, borderRadius: 4, marginTop: 4}}
+            />
+            <View
+              style={{width: '40%', height: 15, borderRadius: 4, marginTop: 4}}
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            paddingTop: 20,
+            flexDirection: 'row',
+            gap: 10,
+            alignItems: 'center',
+          }}>
+          <View style={{borderWidth: 4, width: 20, borderRadius: 4}} />
+          <View style={{height: 16, width: 40, borderRadius: 4}} />
+        </View>
+        {/* Render Schedule Section */}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 20,
+          }}>
+          <View style={{height: 90, width: 120, borderRadius: 20}} />
+          <View style={{width: '60%'}}>
+            <View style={{width: '100%', height: 15, borderRadius: 4}} />
+            <View
+              style={{width: '10%', height: 12, borderRadius: 4, marginTop: 4}}
+            />
+            <View
+              style={{width: '40%', height: 15, borderRadius: 4, marginTop: 4}}
+            />
+          </View>
         </View>
       </View>
     </SkeletonPlaceholder>

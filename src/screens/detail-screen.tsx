@@ -27,6 +27,7 @@ import {getAnimeDetail} from '../helper/api.helper';
 import {useMyList} from '../helper/storage.helper';
 import {trimTitle} from '../helper/util.helper';
 import SkeletonDetail from '../utils/skeleton-loaders/detail-skeleton';
+import {RefreshControl} from 'react-native-gesture-handler';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -106,6 +107,12 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     fetchAnimeInfo();
   }, [id, fetchAnimeInfo]);
 
+  const onRefresh = async () => {
+    setLoading(true);
+    await fetchAnimeInfo();
+    setLoading(false);
+  };
+
   const toggleBottomSheet = () => {
     if (isSheetVisible) {
       bottomSheetRef.current?.close();
@@ -164,7 +171,16 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
   return (
     <LayoutWrapper>
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+            colors={[Colors.Pink]}
+          />
+        }>
         <Banner
           image={animeInfo?.image}
           onBackPress={() => navigation.goBack()}
@@ -312,7 +328,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   row: {
     marginTop: 20,

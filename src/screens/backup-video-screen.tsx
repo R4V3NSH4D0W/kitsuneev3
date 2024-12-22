@@ -16,8 +16,7 @@ import Video, {
   SelectedTrackType,
 } from 'react-native-video';
 import AIcons from 'react-native-vector-icons/AntDesign';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Colors, FontSize} from '../constants/constants';
@@ -44,14 +43,17 @@ type VideoScreenProps = {
 const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
   const {id, episodeNumber} = route.params;
 
-  const animeID = id.split('$episode')[0];
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentId, setCurrentId] = useState<string>(id);
+  const [currentEpisodeNumber, setCurrentEpisodeNumber] =
+    useState<number>(episodeNumber);
+
+  const animeID = currentId.split('$episode')[0];
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const navigation = useNavigation<StackNavigationProp<any>>();
   const [isBuffering, setIsBuffering] = useState<boolean>(false);
   const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
 
   const [episodeSources, setEpisodeSources] = useState<any | null>(null);
+  console.log('episodeSources', episodeSources);
   const [hasMarkedWatched, setHasMarkedWatched] = useState<boolean>(false);
 
   const {markAsWatched, isWatched} = useWatchedEpisodes();
@@ -62,16 +64,29 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
   const videoRef = useRef<VideoRef>(null);
 
   useEffect(() => {
-    if (animeInfo && (!continueWatching || continueWatching.id !== id)) {
-      setContinueWatching(id, animeInfo.image, animeInfo.title, episodeNumber);
+    if (animeInfo && (!continueWatching || continueWatching.id !== currentId)) {
+      setContinueWatching(
+        currentId,
+        animeInfo.image,
+        animeInfo.title,
+        currentEpisodeNumber,
+      );
     }
-  }, [animeInfo, continueWatching, setContinueWatching, id, episodeNumber]);
+  }, [
+    animeInfo,
+    continueWatching,
+    setContinueWatching,
+    currentId,
+    currentEpisodeNumber,
+  ]);
+
+  const [isVideoLoading, setIsVideoLoading] = useState<boolean>(false);
 
   const fetchAllData = useCallback(async () => {
     try {
-      setIsLoading(true);
+      setIsVideoLoading(true);
       const [sourceResult, animeInfoResult] = await Promise.all([
-        getEpisodeSource(id),
+        getEpisodeSource(currentId),
         getAnimeDetail(animeID),
       ]);
       setAnimeInfo(animeInfoResult || null);
@@ -79,13 +94,39 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      setIsLoading(false);
+      setIsVideoLoading(false);
     }
-  }, [id, animeID]);
+  }, [currentId, animeID]);
 
   useEffect(() => {
     fetchAllData();
   }, [fetchAllData]);
+
+  const handleEpisodeSelect = async (episodeId: string, epNumber: number) => {
+    try {
+      setCurrentId(episodeId);
+      setCurrentEpisodeNumber(epNumber);
+      setEpisodeSources(null);
+      setSelectedEpisode(epNumber);
+      await fetchEpisodeSource(episodeId);
+    } catch (error) {
+      console.error('Error selecting episode:', error);
+    }
+  };
+
+  const [selectedEpisode, setSelectedEpisode] = useState<number>(episodeNumber);
+
+  const fetchEpisodeSource = useCallback(async (episodeId: string) => {
+    try {
+      setIsVideoLoading(true);
+      const sourceResult = await getEpisodeSource(episodeId);
+      setEpisodeSources(sourceResult || null);
+    } catch (error) {
+      console.error('Error fetching episode source:', error);
+    } finally {
+      setIsVideoLoading(false);
+    }
+  }, []);
 
   const getHlsSource = (): string | null => {
     if (!episodeSources || !episodeSources.sources) {
@@ -133,8 +174,9 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     }
 
     const renderLoading = () => {
+      console.log('renderLoading triggered');
       return (
-        <View style={{position: 'absolute', zIndex: 999, left: '45%'}}>
+        <View style={styles.loadingIndicator}>
           <ActivityIndicator size="large" color={Colors.Pink} />
         </View>
       );
@@ -146,6 +188,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
 
     const onReadyForDisplay = () => {
       setIsBuffering(false);
+      setIsVideoLoading(false);
     };
 
     return (
@@ -172,22 +215,10 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
           onProgress={handleProgress}
           onBuffer={onVideoBuffer}
           onReadyForDisplay={onReadyForDisplay}
-          // renderLoader={
-          //   isBuffering ? (
-          //     <ActivityIndicator
-          //       size={'large'}
-          //       color={Colors.Pink}
-          //       style={{
-          //         zIndex: 10,
-          //       }}
-          //     />
-          //   ) : undefined
-          // }
           selectedTextTrack={{
             type: SelectedTrackType.INDEX,
             value: 0,
           }}
-          // renderLoader={() => isBuffering && renderLoading()}
         />
       </View>
     );
@@ -212,7 +243,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
       return matchesSearch;
     }
 
-    if (selectedRange && !isLoading) {
+    if (selectedRange) {
       return (
         episode.number >= selectedRange.start &&
         episode.number <= selectedRange.end
@@ -222,24 +253,26 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     return true;
   });
 
-  if (isLoading) {
-    return (
-      <LayoutWrapper>
-        <View style={styles.container}>
-          <ActivityIndicator
-            size="large"
-            color={Colors.Pink}
-            style={styles.loadingIndicator}
-          />
-        </View>
-      </LayoutWrapper>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <LayoutWrapper>
+  //       <View style={styles.container}>
+  //         <ActivityIndicator
+  //           size="large"
+  //           color={Colors.Pink}
+  //           style={styles.loadingIndicator}
+  //         />
+  //       </View>
+  //     </LayoutWrapper>
+  //   );
+  // }
 
   return (
     <LayoutWrapper>
       <View style={styles.container}>
-        <View style={styles.videoContainer}>{!isLoading && renderVideo()}</View>
+        <View style={styles.videoContainer}>
+          {!isVideoLoading && renderVideo()}
+        </View>
         <View
           style={{
             padding: 10,
@@ -265,7 +298,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
               fontWeight: '600',
               color: Colors.Pink,
             }}>
-            Episode {episodeNumber}
+            Episode {selectedEpisode}
           </AAText>
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -281,6 +314,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
                 <AAText style={{fontSize: FontSize.xmd, fontWeight: '600'}}>
                   List of Episodes
                 </AAText>
+
                 <AADropDown
                   episodes={animeInfo?.episodes || []}
                   onRangeSelected={handleRangeSelected}
@@ -325,16 +359,11 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
               }}>
               {filteredEpisodes?.map(item => (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('VideoScreen', {
-                      id: item.id,
-                      episodeNumber: item.number,
-                    })
-                  }
+                  onPress={() => handleEpisodeSelect(item.id, item.number)}
                   key={item.id}
                   style={{
                     backgroundColor:
-                      item.number === episodeNumber
+                      item.number === selectedEpisode
                         ? Colors.Pink
                         : isWatched(item.id)
                         ? Colors.DarkPink
@@ -364,10 +393,10 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
           </View>
           <View style={{marginBottom: 20}}>
             {/* <AnimeCard
-              title="Related Anime"
-              data={animeInfo?.recommendations || []}
-              hideSeeAll
-            /> */}
+                title="Related Anime"
+                data={animeInfo?.recommendations || []}
+                hideSeeAll
+              /> */}
           </View>
         </ScrollView>
       </View>
@@ -388,7 +417,7 @@ const styles = StyleSheet.create({
   video: {
     flex: 1,
 
-    zIndex: 1,
+    zIndex: 10,
   },
   noSourceIndicator: {
     alignItems: 'center',
@@ -399,7 +428,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 2,
+    zIndex: 100,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
