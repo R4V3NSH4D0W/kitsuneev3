@@ -96,7 +96,6 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
         (progress.currentTime / progress.playableDuration) * 100;
       if (playbackPercentage >= 50 && !hasMarkedWatched) {
         try {
-          console.log('Marking as watched:', animeEpisodeId);
           await markAsWatched(animeEpisodeId, playbackPercentage);
           setHasMarkedWatched(true);
         } catch (error) {
@@ -239,7 +238,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   centeredContainer: {
-    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: 350,
