@@ -107,7 +107,8 @@ export default function SearchScreen() {
           </View>
           <TouchableOpacity
             style={styles.option}
-            onPress={() => navigation.navigate('SortAndFilter')}>
+            // onPress={() => navigation.navigate('SortAndFilter')}
+          >
             <Icon name="options" size={30} color={Colors.Pink} />
           </TouchableOpacity>
         </View>

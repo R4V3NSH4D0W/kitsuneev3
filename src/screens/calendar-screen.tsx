@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    marginBottom: height / 3,
+    marginBottom: height / 4,
     alignItems: 'center',
     justifyContent: 'center',
   },

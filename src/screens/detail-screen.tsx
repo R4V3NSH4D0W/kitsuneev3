@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Platform,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
@@ -27,18 +26,20 @@ import EpisodeCard from '../components/episodes-card';
 import {getAnimeDetail} from '../helper/api.helper';
 import {useMyList} from '../helper/storage.helper';
 import {trimTitle} from '../helper/util.helper';
+import SkeletonDetail from '../utils/skeleton-loaders/detail-skeleton';
+import {RefreshControl} from 'react-native-gesture-handler';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
 };
 
-const LoadingIndicator = () => {
-  return (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Colors.Pink} />
-    </View>
-  );
-};
+// const LoadingIndicator = () => {
+//   return (
+//     <View style={styles.loading}>
+//       <ActivityIndicator size="large" color={Colors.Pink} />
+//     </View>
+//   );
+// };
 
 const Banner = ({
   image,
@@ -106,6 +107,12 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     fetchAnimeInfo();
   }, [id, fetchAnimeInfo]);
 
+  const onRefresh = async () => {
+    setLoading(true);
+    await fetchAnimeInfo();
+    setLoading(false);
+  };
+
   const toggleBottomSheet = () => {
     if (isSheetVisible) {
       bottomSheetRef.current?.close();
@@ -147,7 +154,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   if (loading) {
     return (
       <LayoutWrapper>
-        <LoadingIndicator />
+        <SkeletonDetail />
       </LayoutWrapper>
     );
   }
@@ -164,7 +171,16 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
   return (
     <LayoutWrapper>
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+            colors={[Colors.Pink]}
+          />
+        }>
         <Banner
           image={animeInfo?.image}
           onBackPress={() => navigation.goBack()}
@@ -312,7 +328,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   row: {
     marginTop: 20,

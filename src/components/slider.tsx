@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Icons from 'react-native-vector-icons/Ionicons';
 import FIcons from 'react-native-vector-icons/Feather';
 import {Dimensions, Image, StyleSheet, View, FlatList} from 'react-native';
@@ -11,6 +11,10 @@ import {ISpotLightResult} from '../constants/types';
 import {useMyList} from '../helper/storage.helper';
 import LinearGradient from 'react-native-linear-gradient';
 import NavBar from './navbar';
+import {useTheme} from '../wrappers/theme-context';
+import {getAnimeDetail} from '../helper/api.helper';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const {height, width} = Dimensions.get('window');
 
@@ -21,41 +25,76 @@ interface ISliderProps {
 interface ISliderItemProps {
   item: ISpotLightResult;
 }
+
 const SliderItem = ({item}: ISliderItemProps) => {
   const {addToList, removeFromList, isInList} = useMyList();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const isInMyList = isInList(item.id);
+  const {theme} = useTheme();
 
-  const handlePress = async () => {
+  const [animeInfo, setAnimeInfo] = useState<any | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchAnimeDetails = async () => {
+      try {
+        const details = await getAnimeDetail(item.id);
+        if (isMounted) {
+          setAnimeInfo(details);
+        }
+      } catch (error) {
+        console.error('Failed to fetch anime details:', error);
+      }
+    };
+
+    fetchAnimeDetails();
+    return () => {
+      isMounted = false;
+    };
+  }, [item.id]);
+
+  const onPlay = () => {
+    if (!animeInfo) {
+      console.warn('Anime details not loaded yet.');
+      return;
+    }
+
+    const episodesouces = animeInfo?.episodes[0].id;
+    const episodeNumber = animeInfo?.episodes[0].number;
+
+    navigation.navigate('VideoScreen', {
+      id: episodesouces,
+      episodeNumber: episodeNumber,
+    });
+  };
+
+  const handleBookmark = async () => {
     if (isInMyList) {
       await removeFromList(item.id);
     } else {
       await addToList(item.id);
     }
   };
+
   return (
     <View style={styles.slide}>
       <NavBar />
       <Image source={{uri: item.banner}} style={styles.image} />
-
       <View style={styles.overlay} />
       <LinearGradient
-        colors={['transparent', '#181a20']}
+        colors={['transparent', theme.colors.background]}
         style={styles.gradient}
       />
       <View style={styles.sliderContent}>
-        <AAText ignoretheme style={styles.titleText}>
-          #{item.rank} spotlight
-        </AAText>
-        <AAText ignoretheme style={styles.subText}>
-          {item.title}
-        </AAText>
+        <AAText style={styles.titleText}>#{item.rank} spotlight</AAText>
+        <AAText style={styles.subText}>{item.title}</AAText>
         <View style={styles.controller}>
           <AAButton
             title="Play"
             ignoreTheme
             textStyle={styles.text}
             style={[styles.button, styles.PinkButton]}
-            onPress={() => console.log('Play Pressed')}
+            onPress={onPlay}
             icon={
               <Icons
                 name="play-circle"
@@ -64,18 +103,37 @@ const SliderItem = ({item}: ISliderItemProps) => {
               />
             }
           />
-
           <AAButton
             title="My List"
             ignoreTheme
-            style={styles.button}
-            textStyle={styles.text}
-            onPress={() => handlePress()}
+            style={{
+              ...styles.button,
+              borderColor: isInMyList
+                ? Colors.Pink
+                : theme.dark
+                ? Colors.White
+                : Colors.LightGray,
+            }}
+            textStyle={{
+              ...styles.text,
+              color: isInMyList
+                ? Colors.Pink
+                : theme.dark
+                ? Colors.White
+                : Colors.LightGray,
+            }}
+            onPress={handleBookmark}
             icon={
               <FIcons
                 size={FontSize.md}
                 name={isInMyList ? 'check' : 'plus'}
-                color={Colors.White}
+                color={
+                  isInMyList
+                    ? Colors.Pink
+                    : theme.dark
+                    ? Colors.White
+                    : Colors.LightGray
+                }
               />
             }
           />
@@ -94,6 +152,8 @@ const Slider = ({data}: ISliderProps) => {
         pagingEnabled
         keyExtractor={item => item.id}
         showsHorizontalScrollIndicator={false}
+        initialNumToRender={3}
+        windowSize={5}
         viewabilityConfig={{viewAreaCoveragePercentThreshold: 50}}
         renderItem={({item}) => <SliderItem item={item} />}
       />
@@ -110,7 +170,6 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: FontSize.md,
     fontWeight: '600',
-
     color: Colors.White,
   },
   slide: {
@@ -125,7 +184,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   sliderContent: {
     left: 20,
@@ -146,7 +205,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 25,
     paddingVertical: 8,
     flexDirection: 'row',

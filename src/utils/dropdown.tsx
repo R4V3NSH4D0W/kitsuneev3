@@ -66,8 +66,26 @@ export default function AADropDown({
   }) => {
     const isSelected = selectedRange?.value.start === item.value.start;
     return (
-      <View style={[styles.dropdownItem, isSelected && styles.selectedItem]}>
-        <AAText style={styles.text}>{item.label}</AAText>
+      <View
+        style={[
+          styles.dropdownItem,
+          isSelected && styles.selectedItem,
+          {
+            backgroundColor: isSelected
+              ? Colors.Pink
+              : theme.dark
+              ? Colors.LightGray
+              : Colors.White,
+          },
+        ]}>
+        <AAText
+          ignoretheme
+          style={{
+            ...styles.text,
+            color: isSelected ? Colors.White : theme.colors.text,
+          }}>
+          {item.label}
+        </AAText>
       </View>
     );
   };
@@ -81,6 +99,8 @@ export default function AADropDown({
       showsVerticalScrollIndicator={false}
       iconColor={Colors.Pink}
       data={dropdownData}
+      placeholder="EPS:"
+      placeholderStyle={{color: Colors.Pink}}
       labelField="label"
       valueField="value"
       value={selectedRange}
@@ -100,14 +120,11 @@ const styles = StyleSheet.create({
     height: 50,
   },
   dropdownContainer: {
-    backgroundColor: Colors.LightGray,
     borderWidth: 0,
   },
   dropdownItem: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-
-    backgroundColor: Colors.LightGray,
   },
   selectedItem: {
     backgroundColor: Colors.Pink,
