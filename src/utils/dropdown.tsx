@@ -100,6 +100,7 @@ export default function AADropDown({
       iconColor={Colors.Pink}
       data={dropdownData}
       placeholder="EPS:"
+      placeholderStyle={{color: Colors.Pink}}
       labelField="label"
       valueField="value"
       value={selectedRange}

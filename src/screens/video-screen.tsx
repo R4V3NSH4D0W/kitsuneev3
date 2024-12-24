@@ -181,20 +181,16 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     return true;
   });
 
-  // if (isLoading) {
-  //   return (
-  //     <LayoutWrapper>
-  //       <View style={styles.centeredContainer}>
-  //         <ActivityIndicator size="large" color={Colors.Pink} />
-  //       </View>
-  //     </LayoutWrapper>
-  //   );
-  // }
-
   return (
     <LayoutWrapper>
       <View style={styles.container}>
-        {renderVideo()}
+        {isLoading ? (
+          <View style={styles.centeredContainer}>
+            <ActivityIndicator size="large" color={Colors.Pink} />
+          </View>
+        ) : (
+          renderVideo()
+        )}
         <View style={styles.episodeHeader}>
           <AAText ignoretheme style={styles.headerText}>
             You are watching
@@ -243,9 +239,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   centeredContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    height: 350,
+    backgroundColor: '#000',
   },
   videoContainer: {
     height: 350,

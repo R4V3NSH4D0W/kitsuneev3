@@ -5,6 +5,7 @@ import {useTheme} from '../wrappers/theme-context';
 import {useWatchedEpisodes} from '../helper/storage.helper';
 import AAText from '../ui/text';
 import {Episode} from '../constants/types';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface EpisodeListsProps {
   filteredEpisodes: Episode[];
@@ -25,7 +26,15 @@ export default function EpisodeLists({
 
   if (!filteredEpisodes?.length) {
     return (
-      <AAText style={styles.noEpisodesText}>No episodes available.</AAText>
+      <SkeletonPlaceholder
+        backgroundColor={theme.colors.skeletonBackgroung}
+        highlightColor={theme.colors.skeletonHighlight}>
+        <View style={styles.container}>
+          {[...Array(8)].map((_, index) => (
+            <View key={index} style={styles.skeletonEpisodeButton} />
+          ))}
+        </View>
+      </SkeletonPlaceholder>
     );
   }
 
@@ -89,5 +98,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: FontSize.md,
     color: Colors.LightGray,
+  },
+  skeletonEpisodeButton: {
+    height: 40,
+    width: BUTTON_WIDTH,
+    borderRadius: 5,
+    padding: 10,
   },
 });
