@@ -4,7 +4,7 @@ import {useTheme} from '../wrappers/theme-context';
 import {FontSize} from '../constants/constants';
 
 interface IAATextProps {
-  style?: TextStyle;
+  style?: TextStyle | TextStyle[];
   ignoretheme?: boolean;
   children: React.ReactNode;
 }
@@ -13,7 +13,11 @@ const AAText: React.FC<IAATextProps> = ({children, style, ignoretheme}) => {
   const {theme} = useTheme();
   return (
     <Text
-      style={[styles.text, style, !ignoretheme && {color: theme.colors.text}]}>
+      style={[
+        styles.text,
+        ...(Array.isArray(style) ? style : [style]),
+        !ignoretheme && {color: theme.colors.text},
+      ]}>
       {children}
     </Text>
   );
@@ -25,4 +29,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
   },
 });
+
 export default AAText;
