@@ -2,6 +2,7 @@
 <p align="center">
   <img src="https://github.com/user-attachments/assets/ab6c0b79-eb89-4e05-87db-7a7912aa870d" alt="Kitsunee Logo" width="200" height="200" />
 </p>
+
 ## Screenshots
 
 ### 🌙 DarkMode
