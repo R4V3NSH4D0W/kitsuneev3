@@ -1,5 +1,18 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
+# ScreenShots
+
+
+
+## DarkMode
+
+| ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 56 59](https://github.com/user-attachments/assets/fb3f4fdd-5e20-45ac-aebc-cf689ed77a8c) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 30](https://github.com/user-attachments/assets/ad05193a-f344-4fad-a922-947be2263d1a) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 38](https://github.com/user-attachments/assets/16452e98-22ef-4544-9409-9829d354b16d) |
+|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 46](https://github.com/user-attachments/assets/106cfdfc-00a8-4da4-8230-0c6633cdc2cc) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 53](https://github.com/user-attachments/assets/b9510fcc-59ac-4070-a9eb-0ddf46b8c5e2) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 58 27](https://github.com/user-attachments/assets/d7824d39-4c8f-4912-a7a9-1dfd7def8472) | 
+
+
+
+
 # Getting Started
 
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
