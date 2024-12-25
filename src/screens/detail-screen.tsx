@@ -28,18 +28,11 @@ import {useMyList} from '../helper/storage.helper';
 import {trimTitle} from '../helper/util.helper';
 import SkeletonDetail from '../utils/skeleton-loaders/detail-skeleton';
 import {RefreshControl} from 'react-native-gesture-handler';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
 };
-
-// const LoadingIndicator = () => {
-//   return (
-//     <View style={styles.loading}>
-//       <ActivityIndicator size="large" color={Colors.Pink} />
-//     </View>
-//   );
-// };
 
 const Banner = ({
   image,
@@ -60,36 +53,18 @@ const Banner = ({
   </View>
 );
 
-// const GenreList = ({genres}: {genres: string[]}) => (
-//   <FlatList
-//     horizontal
-//     data={genres}
-//     keyExtractor={item => item}
-//     renderItem={({item}) => (
-//       <AAButton
-//         title={item}
-//         ignoreTheme
-//         onPress={() => {}}
-//         style={styles.genreButton}
-//         textStyle={styles.genreText}
-//       />
-//     )}
-//     showsHorizontalScrollIndicator={false}
-//     contentContainerStyle={styles.genreListContainer}
-//   />
-// );
-
 const DetailScreen = ({route}: DetailScreenProps) => {
   const {id} = route.params;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+  console.log(animeInfo?.episodes[0]?.id);
   const {addToList, removeFromList, isInList} = useMyList();
   const [isSheetVisible, setIsSheetVisible] = useState<boolean>(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const {theme} = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const fetchAnimeInfo = useCallback(async () => {
     setLoading(true);
@@ -134,9 +109,6 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
     return (
       <View>
-        {/* <AAText style={styles.genres}>
-          genres: {animeInfo.genres.join(', ')}
-        </AAText> */}
         <TouchableOpacity onPress={toggleBottomSheet}>
           <AAText style={styles.descriptionText}>
             {truncatedDescription}
@@ -167,6 +139,13 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     } else {
       await addToList(animeInfo?.id || '');
     }
+  };
+
+  const handelPlay = () => {
+    return navigation.navigate('VideoScreen', {
+      id: animeInfo?.episodes[0].id,
+      episodeNumber: animeInfo?.episodes[0].number,
+    });
   };
 
   return (
@@ -213,19 +192,13 @@ const DetailScreen = ({route}: DetailScreenProps) => {
             />
           </View>
         </View>
-
-        {/* <View style={styles.row}>
-          <View style={styles.infoContainer}>
-            <AAText style={styles.statusText}>{animeInfo?.releaseDate}</AAText>
-            <AAText style={styles.statusText}>{animeInfo?.status}</AAText>
-          </View>
-        </View> */}
-
         <View style={styles.controllerRow}>
           <AAButton
             title="Play"
             ignoreTheme
-            onPress={() => {}}
+            onPress={() => {
+              handelPlay();
+            }}
             textStyle={styles.buttonTextAlt}
             style={[styles.buttonAlt, styles.controllerButton]}
             icon={
