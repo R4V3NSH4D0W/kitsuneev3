@@ -1,15 +1,14 @@
-![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 58 48](https://github.com/user-attachments/assets/8260eb7c-36bf-40f9-ab46-4fe6b0889725)This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Kitsunee
+## Screenshots
 
-# Screenshots
-
-## 🌙 DarkMode
+### 🌙 DarkMode
 
 | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 56 59](https://github.com/user-attachments/assets/fb3f4fdd-5e20-45ac-aebc-cf689ed77a8c) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 30](https://github.com/user-attachments/assets/ad05193a-f344-4fad-a922-947be2263d1a) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 38](https://github.com/user-attachments/assets/16452e98-22ef-4544-9409-9829d354b16d) |
 |--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
 | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 46](https://github.com/user-attachments/assets/106cfdfc-00a8-4da4-8230-0c6633cdc2cc) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 57 53](https://github.com/user-attachments/assets/b9510fcc-59ac-4070-a9eb-0ddf46b8c5e2) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 58 27](https://github.com/user-attachments/assets/d7824d39-4c8f-4912-a7a9-1dfd7def8472) |
 | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 58 48](https://github.com/user-attachments/assets/8239dda1-1c23-4363-b568-f5baf3909de1) |                                                                                                  |                                                                                                  |
 
-## ☀ LightMode
+### ☀ LightMode
 
 | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 59 24](https://github.com/user-attachments/assets/d43986d5-97e9-4435-acc3-33527c49c01b) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 59 29](https://github.com/user-attachments/assets/585d5a8c-7c07-4688-ae46-f3990f5a5c6e) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 19 59 43](https://github.com/user-attachments/assets/28383f6e-aca9-4514-a29d-6e3d563f8898) |
 |--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
