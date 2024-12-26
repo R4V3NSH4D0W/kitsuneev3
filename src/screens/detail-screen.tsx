@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   labelContent: {
     flexDirection: 'row',
-    alignItems: 'center',
+
     gap: 10,
   },
   labelContainer: {
@@ -440,9 +440,10 @@ const styles = StyleSheet.create({
   },
   labelRating: {
     borderWidth: 1,
-    paddingHorizontal: 5,
+    paddingHorizontal: 8,
     borderColor: Colors.Pink,
     borderRadius: 5,
+    marginBottom: 5,
   },
 });
 
