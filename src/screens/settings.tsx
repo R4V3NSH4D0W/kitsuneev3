@@ -49,7 +49,7 @@ export default function Settings() {
                 <Icon
                   name={isDarkMode ? 'moon-o' : 'sun-o'}
                   size={16}
-                  color={isDarkMode ? Colors.Pink : '#ffcc00'}
+                  color={Colors.Pink}
                   style={styles.icon}
                 />
               </Animated.View>

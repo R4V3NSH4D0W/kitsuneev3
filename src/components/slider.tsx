@@ -152,7 +152,7 @@ const Slider = ({data}: ISliderProps) => {
         pagingEnabled
         keyExtractor={item => item.id}
         showsHorizontalScrollIndicator={false}
-        initialNumToRender={3}
+        initialNumToRender={5}
         windowSize={5}
         viewabilityConfig={{viewAreaCoveragePercentThreshold: 50}}
         renderItem={({item}) => <SliderItem item={item} />}
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     fontSize: FontSize.xmd,
-    maxWidth: 400,
+    maxWidth: 380,
     fontWeight: '400',
     paddingVertical: 5,
     color: Colors.White,

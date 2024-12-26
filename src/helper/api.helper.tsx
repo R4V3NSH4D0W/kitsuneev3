@@ -58,6 +58,10 @@ export const getMostFavorite = (page?: number): Promise<any> =>
 
 export const getZoroWorking = (): Promise<any> => fetchData('iszoroworking');
 
+export const jikanAnime = async (malId: number) => {
+  const response = await fetch(`https://api.jikan.moe/v4/anime/${malId}`);
+  return await response.json();
+};
 export const getFilteredAnimeResults = (filters: {
   sort: string | null;
   type: string | null;
