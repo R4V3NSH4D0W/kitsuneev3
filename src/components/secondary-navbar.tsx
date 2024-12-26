@@ -9,6 +9,7 @@ import {useTheme} from '../wrappers/theme-context';
 interface ISecondaryNavBarProps {
   title: string;
   hasGoBack?: boolean;
+  hasSearch?: boolean;
   logoEnabled?: boolean;
 }
 
@@ -16,6 +17,7 @@ export default function SecondaryNavBar({
   title,
   hasGoBack,
   logoEnabled = true,
+  hasSearch = true,
 }: ISecondaryNavBarProps) {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const {theme} = useTheme();
@@ -38,9 +40,11 @@ export default function SecondaryNavBar({
         <AAText style={styles.navText}>{title}</AAText>
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-        <AIcons name="search1" size={24} color={theme.colors.text} />
-      </TouchableOpacity>
+      {hasSearch && (
+        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+          <AIcons name="search1" size={24} color={theme.colors.text} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

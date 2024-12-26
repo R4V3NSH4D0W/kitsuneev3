@@ -153,9 +153,15 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
           }}
           controls
           resizeMode="contain"
+          // eslint-disable-next-line react-native/no-inline-styles
+          controlsStyles={{
+            hideNext: true,
+            hidePrevious: true,
+          }}
           onProgress={handleProgress}
           onBuffer={(param: OnBufferData) => setIsBuffering(param.isBuffering)}
           onReadyForDisplay={() => setIsBuffering(false)}
+          subtitleStyle={styles.subTitle}
           selectedTextTrack={{type: SelectedTrackType.INDEX, value: 0}}
         />
       </View>
@@ -307,6 +313,9 @@ const styles = StyleSheet.create({
     flex: 1,
     letterSpacing: 1,
     fontSize: FontSize.sm,
+  },
+  subTitle: {
+    paddingBottom: 20,
   },
 });
 

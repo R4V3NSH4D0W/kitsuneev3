@@ -18,8 +18,10 @@ import SecondaryNavBar from '../components/secondary-navbar';
 
 export default function MyList() {
   const {myList} = useMyList();
+  console.log('My List', myList);
   const {continueWatching} = useContinueWatching();
   const [animeDetails, setAnimeDetails] = useState<any[]>([]);
+  console.log('AnimeDetail', animeDetails);
   const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<any>>();
 

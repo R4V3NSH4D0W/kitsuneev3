@@ -10,8 +10,6 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import FIcons from 'react-native-vector-icons/FontAwesome';
-import Profile from '../screens/profile';
 import {useTheme} from '../wrappers/theme-context';
 import {Colors, FontSize} from '../constants/constants';
 
@@ -24,6 +22,7 @@ import EIcons from 'react-native-vector-icons/Entypo';
 import {trimTitle} from '../helper/util.helper';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Settings from '../screens/settings';
 interface IIconsProps {
   color: string;
   size: number;
@@ -43,8 +42,8 @@ const MyListIcon = ({color, size}: IIconsProps) => (
   <Icons name="bookmark-outline" size={size} color={color} />
 );
 
-const ProfileIcon = ({color, size}: IIconsProps) => (
-  <FIcons name="user-o" size={size} color={color} />
+const SettingIcon = ({color, size}: IIconsProps) => (
+  <Icons name="settings-outline" size={size} color={color} />
 );
 
 const BottomTabNavigation = () => {
@@ -152,10 +151,10 @@ const BottomTabNavigation = () => {
           }}
         />
         <Tab.Screen
-          name="Profile"
-          component={Profile}
+          name="Settings"
+          component={Settings}
           options={{
-            tabBarIcon: ProfileIcon,
+            tabBarIcon: SettingIcon,
           }}
         />
       </Tab.Navigator>

@@ -211,8 +211,8 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
             loading ? (
-              <View style={styles.loadingContainer}>
-                <AAText>Loading more...</AAText>
+              <View style={styles.loadingMore}>
+                <ActivityIndicator size={'large'} color={Colors.Pink} />
               </View>
             ) : null
           }
@@ -231,6 +231,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingMore: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 40,
   },
 
   animeCard: {

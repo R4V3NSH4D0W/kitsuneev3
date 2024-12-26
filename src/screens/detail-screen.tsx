@@ -18,28 +18,26 @@ import AAText from '../ui/text';
 import AAButton from '../ui/button';
 
 import {Colors, FontSize} from '../constants/constants';
-import {Anime, RootStackParamList} from '../constants/types';
+import {
+  Anime,
+  JikanAnimeResponse,
+  RootStackParamList,
+} from '../constants/types';
 
 import AnimeCard from '../components/AnimeCard';
 import EpisodeCard from '../components/episodes-card';
 
-import {getAnimeDetail} from '../helper/api.helper';
+import {getAnimeDetail, jikanAnime} from '../helper/api.helper';
 import {useMyList} from '../helper/storage.helper';
-import {trimTitle} from '../helper/util.helper';
+import {trimRating, trimTitle} from '../helper/util.helper';
 import SkeletonDetail from '../utils/skeleton-loaders/detail-skeleton';
 import {RefreshControl} from 'react-native-gesture-handler';
+import {StackNavigationProp} from '@react-navigation/stack';
+import AIcons from 'react-native-vector-icons/AntDesign';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
 };
-
-// const LoadingIndicator = () => {
-//   return (
-//     <View style={styles.loading}>
-//       <ActivityIndicator size="large" color={Colors.Pink} />
-//     </View>
-//   );
-// };
 
 const Banner = ({
   image,
@@ -60,42 +58,27 @@ const Banner = ({
   </View>
 );
 
-// const GenreList = ({genres}: {genres: string[]}) => (
-//   <FlatList
-//     horizontal
-//     data={genres}
-//     keyExtractor={item => item}
-//     renderItem={({item}) => (
-//       <AAButton
-//         title={item}
-//         ignoreTheme
-//         onPress={() => {}}
-//         style={styles.genreButton}
-//         textStyle={styles.genreText}
-//       />
-//     )}
-//     showsHorizontalScrollIndicator={false}
-//     contentContainerStyle={styles.genreListContainer}
-//   />
-// );
-
 const DetailScreen = ({route}: DetailScreenProps) => {
   const {id} = route.params;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [animeInfo, setAnimeInfo] = useState<Anime | null>(null);
+
   const {addToList, removeFromList, isInList} = useMyList();
   const [isSheetVisible, setIsSheetVisible] = useState<boolean>(false);
+
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const {theme} = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const fetchAnimeInfo = useCallback(async () => {
     setLoading(true);
     try {
       const result: Anime = await getAnimeDetail(id);
-      setAnimeInfo(result || null);
+      const jikanResult: JikanAnimeResponse = await jikanAnime(result.malID);
+
+      setAnimeInfo({...result, jikan: jikanResult || null});
     } catch (error) {
       console.error('Error fetching anime:', error);
     } finally {
@@ -134,9 +117,6 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
     return (
       <View>
-        {/* <AAText style={styles.genres}>
-          genres: {animeInfo.genres.join(', ')}
-        </AAText> */}
         <TouchableOpacity onPress={toggleBottomSheet}>
           <AAText style={styles.descriptionText}>
             {truncatedDescription}
@@ -167,6 +147,13 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     } else {
       await addToList(animeInfo?.id || '');
     }
+  };
+
+  const handelPlay = () => {
+    return navigation.navigate('VideoScreen', {
+      id: animeInfo?.episodes[0].id,
+      episodeNumber: animeInfo?.episodes[0].number,
+    });
   };
 
   return (
@@ -213,19 +200,31 @@ const DetailScreen = ({route}: DetailScreenProps) => {
             />
           </View>
         </View>
-
-        {/* <View style={styles.row}>
-          <View style={styles.infoContainer}>
-            <AAText style={styles.statusText}>{animeInfo?.releaseDate}</AAText>
-            <AAText style={styles.statusText}>{animeInfo?.status}</AAText>
+        {!animeInfo?.jikan?.data?.score ? null : (
+          <View style={styles.labelContainer}>
+            <View style={styles.labelContent}>
+              <AIcons name="star" size={FontSize.md} color={Colors.Pink} />
+              <AAText ignoretheme style={styles.label}>
+                {animeInfo?.jikan?.data?.score}
+              </AAText>
+              <AAText ignoretheme style={styles.label}>
+                {'>'}
+              </AAText>
+            </View>
+            <AAText style={styles.label}>{animeInfo?.jikan?.data?.year}</AAText>
+            <AAText ignoretheme style={[styles.label, styles.labelRating]}>
+              {trimRating(animeInfo?.jikan?.data?.rating)}
+            </AAText>
           </View>
-        </View> */}
+        )}
 
         <View style={styles.controllerRow}>
           <AAButton
             title="Play"
             ignoreTheme
-            onPress={() => {}}
+            onPress={() => {
+              handelPlay();
+            }}
             textStyle={styles.buttonTextAlt}
             style={[styles.buttonAlt, styles.controllerButton]}
             icon={
@@ -247,7 +246,19 @@ const DetailScreen = ({route}: DetailScreenProps) => {
             }
           />
         </View>
-        <View style={styles.description}>{renderDescription()}</View>
+
+        <View style={styles.description}>
+          {!animeInfo?.jikan?.data?.genres ? null : (
+            <AAText style={styles.genreText}>
+              Genres: {''}
+              {animeInfo?.jikan?.data.genres
+                .map(genre => genre?.name)
+                .join(', ')}
+            </AAText>
+          )}
+
+          {renderDescription()}
+        </View>
         <EpisodeCard
           data={animeInfo?.episodes ?? []}
           image={animeInfo?.image}
@@ -297,6 +308,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xs,
   },
   genres: {
+    flexDirection: 'row',
     fontSize: FontSize.xs,
     paddingBottom: 10,
   },
@@ -367,7 +379,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.Pink,
   },
   genreText: {
-    color: Colors.Pink,
+    fontSize: FontSize.xs,
+    marginBottom: 4,
   },
   button: {
     borderRadius: 10,
@@ -408,6 +421,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
+  },
+  label: {
+    fontSize: FontSize.sm,
+    color: Colors.Pink,
+  },
+  labelContent: {
+    flexDirection: 'row',
+
+    gap: 10,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  labelRating: {
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    borderColor: Colors.Pink,
+    borderRadius: 5,
+    marginBottom: 5,
   },
 });
 

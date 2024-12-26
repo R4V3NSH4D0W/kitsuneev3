@@ -85,3 +85,7 @@ export const checkDate = (
 
   return false;
 };
+
+export const trimRating = (rating: string) => {
+  return rating.split(' -')[0];
+};
