@@ -11,6 +11,7 @@ import {getZoroWorking} from '../helper/api.helper';
 
 import InitalLoading from '../screens/util-screen/inital-screen';
 import ErrorScreen from '../screens/util-screen/404-screen';
+import InternetConnection from '../components/internet-connection';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -21,9 +22,14 @@ export default function StackNavigation() {
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
-      const response = await getZoroWorking();
-      setResult(response);
-      setLoading(false);
+      try {
+        const response = await getZoroWorking();
+        setResult(response);
+      } catch (error) {
+        console.error('Error fetching Zoro working status:', error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -31,19 +37,24 @@ export default function StackNavigation() {
   if (loading) {
     return <InitalLoading />;
   }
+
   const isWorking = result?.isWorking === true;
 
   if (!isWorking) {
     return <ErrorScreen />;
   }
+
   return (
-    <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
-      <Stack.Screen name="Tabs" component={BottomTabNavigation} />
-      <Stack.Screen name="Detail" component={DetailScreen} />
-      <Stack.Screen name="VideoScreen" component={VideoScreen} />
-      <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="SortAndFilter" component={SortAndFilter} />
-      <Stack.Screen name="SeeAll" component={SeeAllScreen} />
-    </Stack.Navigator>
+    <>
+      <InternetConnection />
+      <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
+        <Stack.Screen name="Tabs" component={BottomTabNavigation} />
+        <Stack.Screen name="Detail" component={DetailScreen} />
+        <Stack.Screen name="VideoScreen" component={VideoScreen} />
+        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="SortAndFilter" component={SortAndFilter} />
+        <Stack.Screen name="SeeAll" component={SeeAllScreen} />
+      </Stack.Navigator>
+    </>
   );
 }

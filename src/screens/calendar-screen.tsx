@@ -282,7 +282,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginRight: 12,
     borderRadius: 30,
-    marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: Colors.Pink,
@@ -308,9 +307,11 @@ const styles = StyleSheet.create({
     color: Colors.White,
   },
   scheduleList: {
+    height: height / 1.7,
     marginTop: 5,
   },
   scheduleContainer: {
+    flex: 1,
     paddingTop: 5,
   },
   smallLine: {
@@ -361,8 +362,8 @@ const styles = StyleSheet.create({
     color: Colors.White,
   },
   loading: {
-    flex: 1,
-    marginBottom: height / 4,
+    height: height / 2,
+    zIndex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
