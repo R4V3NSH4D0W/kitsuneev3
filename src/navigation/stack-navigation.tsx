@@ -1,40 +1,65 @@
 import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import BottomTabNavigation from './bottom-tab-navigation';
-import DetailScreen from '../screens/detail-screen';
-import {RootStackParamList} from '../constants/types';
-import VideoScreen from '../screens/video-screen';
-import SearchScreen from '../screens/search-screen';
-import SortAndFilter from '../screens/sort-and-filter-screen';
-import SeeAllScreen from '../screens/see-all-screen';
-import {getZoroWorking} from '../helper/api.helper';
 
-import InitalLoading from '../screens/util-screen/inital-screen';
+import VideoScreen from '../screens/video-screen';
+import DetailScreen from '../screens/detail-screen';
+import SearchScreen from '../screens/search-screen';
+import SeeAllScreen from '../screens/see-all-screen';
 import ErrorScreen from '../screens/util-screen/404-screen';
+import SortAndFilter from '../screens/sort-and-filter-screen';
+import InitalLoading from '../screens/util-screen/inital-screen';
 import InternetConnection from '../components/internet-connection';
+import NoInternetConnectionScreen from '../screens/util-screen/no-internet-connection-screen';
+
+import {getZoroWorking} from '../helper/api.helper';
+import {checkInternetConnection} from '../helper/network-helper';
+
+import {RootStackParamList} from '../constants/types';
+import BottomTabNavigation from './bottom-tab-navigation';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function StackNavigation() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<{isWorking: boolean} | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [connected, setConnected] = useState<boolean | null>(null);
+  const [result, setResult] = useState<{isWorking: boolean}>({isWorking: true});
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await getZoroWorking();
+      setResult(response);
+    } catch (error) {
+      console.error('Error fetching Zoro working status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkConnection = async () => {
+    const status = await checkInternetConnection();
+    setConnected(status);
+  };
 
   useEffect(() => {
-    setLoading(true);
-    const fetchData = async () => {
-      try {
-        const response = await getZoroWorking();
-        setResult(response);
-      } catch (error) {
-        console.error('Error fetching Zoro working status:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    checkConnection();
   }, []);
 
-  if (loading) {
+  useEffect(() => {
+    if (connected === true) {
+      fetchData();
+    } else {
+      setLoading(false);
+    }
+  }, [connected]);
+
+  if (connected === false) {
+    return (
+      <NoInternetConnectionScreen onRetry={checkConnection} loading={loading} />
+    );
+  }
+
+  if (loading || connected === null) {
     return <InitalLoading />;
   }
 

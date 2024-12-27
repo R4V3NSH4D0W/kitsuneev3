@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, StyleSheet, Animated, View} from 'react-native';
 import FIcons from 'react-native-vector-icons/Feather';
 import {subscribeToInternetConnection} from '../helper/network-helper';
+import {Colors, FontSize} from '../constants/constants';
 
 const InternetConnection: React.FC = () => {
   const [bannerHeight] = useState(new Animated.Value(0));
@@ -43,12 +44,12 @@ const InternetConnection: React.FC = () => {
   return (
     <>
       <Animated.View style={[styles.banner, {height: bannerHeight}]}>
-        <FIcons name="wifi-off" size={20} color="#fff" />
+        <FIcons name="wifi-off" size={16} color="#fff" />
         <Text style={styles.bannerText}>No Internet Connection</Text>
       </Animated.View>
       {showRestoredMessage && (
         <View style={styles.restoredBanner}>
-          <FIcons name="wifi" size={20} color="#fff" />
+          <FIcons name="wifi" size={16} color="#fff" />
           <Text style={styles.restoredText}>Connection Restored</Text>
         </View>
       )}
@@ -58,7 +59,7 @@ const InternetConnection: React.FC = () => {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#ff4d4d',
+    backgroundColor: Colors.Red,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
@@ -72,12 +73,12 @@ const styles = StyleSheet.create({
   },
   bannerText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: FontSize.sm,
     fontWeight: 'bold',
     marginLeft: 8,
   },
   restoredBanner: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.Green,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',

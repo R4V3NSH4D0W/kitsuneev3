@@ -19,6 +19,8 @@ export const Colors = {
   White: '#ffffff',
   LightGray: '#1e222a',
   DarkPink: '#572649',
+  Red: '#f01e2c',
+  Green: '#00c04b',
 };
 
 export const FontSize = {
