@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running pre-push hook..."
+
+yarn bump && git add package.json && git commit -m 'chore(release): bump version [ci skip]' && git push
+

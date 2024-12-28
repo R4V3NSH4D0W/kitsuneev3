@@ -24,6 +24,55 @@ export default function StackNavigation() {
   const [connected, setConnected] = useState<boolean | null>(null);
   const [result, setResult] = useState<{isWorking: boolean}>({isWorking: true});
 
+  const currentVersion = '0.0.1';
+  const [latestVersion, setLatestVersion] = useState<string | null>(null);
+  console.log(latestVersion);
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+  console.log(isUpdateAvailable);
+  useEffect(() => {
+    const fetchLatestVersion = async () => {
+      try {
+        const response = await fetch(
+          'https://api.github.com/repos/R4V3NSH4D0W/kitsuneev3/releases/latest',
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch latest version: ${response.status}`);
+        }
+        const responseData = await response.json();
+        const latestTag = responseData.tag_name;
+        setLatestVersion(latestTag);
+
+        // Compare versions
+        if (compareVersions(currentVersion, latestTag)) {
+          setIsUpdateAvailable(true);
+        }
+      } catch (error) {
+        console.error('Error fetching latest version:', error);
+      }
+    };
+
+    fetchLatestVersion();
+  }, []);
+
+  // Function to compare versions (semver compatible)
+  const compareVersions = (current: string, latest: string): boolean => {
+    const currentParts = current.split('.').map(Number);
+    const latestParts = latest.split('.').map(Number);
+
+    for (
+      let i = 0;
+      i < Math.max(currentParts.length, latestParts.length);
+      i++
+    ) {
+      const currentPart = currentParts[i] || 0;
+      const latestPart = latestParts[i] || 0;
+
+      if (currentPart < latestPart) return true; // Update required
+      if (currentPart > latestPart) return false; // Already updated
+    }
+    return false; // Versions are equal
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -67,6 +116,10 @@ export default function StackNavigation() {
 
   if (!isWorking) {
     return <ErrorScreen />;
+  }
+
+  if (isUpdateAvailable) {
+    console.warn(`A new version (${latestVersion}) is available!`);
   }
 
   return (
