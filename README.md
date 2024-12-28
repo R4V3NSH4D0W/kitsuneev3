@@ -19,8 +19,59 @@
 | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 20 00 28](https://github.com/user-attachments/assets/7c59099b-683b-462f-908f-292a21b8cfe0) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 20 00 42](https://github.com/user-attachments/assets/27a065fd-1fd6-4a7c-b01b-2b8df6883e18) | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 20 01 06](https://github.com/user-attachments/assets/092a31a5-9942-47c1-8953-df3076bffccd) |
 | ![Simulator Screenshot - iPhone 16 Pro - 2024-12-25 at 20 01 15](https://github.com/user-attachments/assets/2b462255-6854-48dd-b9ca-ca4e5356d851) |                                                                                                  |                                                                                                  |
 
+# Backend setup
+1. Clone Repo
+````bash
+git clone https://github.com/R4V3NSH4D0W/kitsunee-backend.git
+````
+2. Install Depedencies
+````
+# using npm
+npm install
 
+# or using yarn
+yarn install
+````
+3. Run server
+````
+# using npm
+npm run dev
 
+# using Yarn
+yarn install
+````
+4. Port forwarding
+````
+Step 1: go to Terminal
+Step 2: Select SQL Console
+Step 3: Forward port
+Step 4: use port 3000
+Step 5: Change visibility to Public
+````
+
+# Next
+
+## Clone APP Repo
+
+```
+git clone https://github.com/R4V3NSH4D0W/kitsuneev3.git
+````
+
+## Install Dependencies
+````
+# using npm
+npm install
+
+# or using yarn
+yarn install
+````
+
+# Before Gettting Started
+
+## Create a env.js file in Root Directory 
+````
+const BASE_URL = "port forwared link";
+````
 
 
 
@@ -70,35 +121,4 @@ If everything is set up _correctly_, you should see your new app running in your
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
 # kitsuneev3
