@@ -2,7 +2,9 @@ import NetInfo from '@react-native-community/netinfo';
 
 export const checkInternetConnection = async (): Promise<boolean> => {
   const state = await NetInfo.fetch();
-  return (state.isConnected && state.isInternetReachable) ?? false;
+  const isConnected =
+    (state.isConnected ?? false) && (state.isInternetReachable ?? true);
+  return isConnected;
 };
 
 export const subscribeToInternetConnection = (
@@ -10,7 +12,7 @@ export const subscribeToInternetConnection = (
 ): (() => void) => {
   const unsubscribe = NetInfo.addEventListener(state => {
     const isConnected =
-      (state.isConnected && state.isInternetReachable) ?? false;
+      (state.isConnected ?? false) && (state.isInternetReachable ?? true);
     callback(isConnected);
   });
   return unsubscribe;
