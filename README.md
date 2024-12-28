@@ -70,7 +70,7 @@ yarn install
 
 ## Create a env.js file in Root Directory 
 ````
-const BASE_URL = "port forwared link";
+export const BASE_URL = "port forwared link";
 ````
 
 
