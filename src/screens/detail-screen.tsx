@@ -34,6 +34,7 @@ import SkeletonDetail from '../utils/skeleton-loaders/detail-skeleton';
 import {RefreshControl} from 'react-native-gesture-handler';
 import {StackNavigationProp} from '@react-navigation/stack';
 import AIcons from 'react-native-vector-icons/AntDesign';
+import ProviderError from '../components/provider-error';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -66,6 +67,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
   const {addToList, removeFromList, isInList} = useMyList();
   const [isSheetVisible, setIsSheetVisible] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -80,7 +82,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
 
       setAnimeInfo({...result, jikan: jikanResult || null});
     } catch (error) {
-      console.error('Error fetching anime:', error);
+      setHasError(true);
     } finally {
       setLoading(false);
     }
@@ -104,6 +106,10 @@ const DetailScreen = ({route}: DetailScreenProps) => {
     }
     setIsSheetVisible(!isSheetVisible);
   };
+
+  if (hasError) {
+    return <ProviderError onRetry={onRefresh} />;
+  }
 
   const renderDescription = () => {
     if (!animeInfo?.description) {

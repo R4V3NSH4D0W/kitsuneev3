@@ -8,8 +8,8 @@ import SeeAllScreen from '../screens/see-all-screen';
 import ErrorScreen from '../screens/util-screen/404-screen';
 import SortAndFilter from '../screens/sort-and-filter-screen';
 import InitalLoading from '../screens/util-screen/inital-screen';
-import InternetConnection from '../components/internet-connection';
 import NoInternetConnectionScreen from '../screens/util-screen/no-internet-connection-screen';
+import InternetConnection from '../components/internet-connection';
 
 import {getZoroWorking} from '../helper/api.helper';
 import {checkInternetConnection} from '../helper/network-helper';
@@ -37,8 +37,10 @@ export default function StackNavigation() {
   };
 
   const checkConnection = async () => {
+    setLoading(true);
     const status = await checkInternetConnection();
     setConnected(status);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -48,19 +50,17 @@ export default function StackNavigation() {
   useEffect(() => {
     if (connected === true) {
       fetchData();
-    } else {
-      setLoading(false);
     }
   }, [connected]);
+
+  if (loading) {
+    return <InitalLoading />;
+  }
 
   if (connected === false) {
     return (
       <NoInternetConnectionScreen onRetry={checkConnection} loading={loading} />
     );
-  }
-
-  if (loading || connected === null) {
-    return <InitalLoading />;
   }
 
   const isWorking = result?.isWorking === true;

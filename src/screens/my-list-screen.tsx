@@ -15,6 +15,7 @@ import {getAnimeDetail} from '../helper/api.helper';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import SecondaryNavBar from '../components/secondary-navbar';
+import ProviderError from '../components/provider-error';
 
 export default function MyList() {
   const {myList} = useMyList();
@@ -23,6 +24,7 @@ export default function MyList() {
   const [animeDetails, setAnimeDetails] = useState<any[]>([]);
   console.log('AnimeDetail', animeDetails);
   const [loading, setLoading] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const navigateToDetail = (id: string) => {
@@ -33,7 +35,7 @@ export default function MyList() {
       const result = await getAnimeDetail(id);
       return result;
     } catch (error) {
-      console.error('Error fetching anime details:', error);
+      setHasError(true);
     }
   };
 
@@ -49,6 +51,10 @@ export default function MyList() {
 
     fetchDetails();
   }, [myList]);
+
+  if (hasError) {
+    return <ProviderError hasRetry={false} />;
+  }
 
   const renderAnimeItem = ({item}: {item: any}) => (
     <AnimeItemCard

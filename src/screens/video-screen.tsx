@@ -30,6 +30,7 @@ import {
   getHlsSource,
 } from '../helper/video-player-helper';
 import EpisodeLists from '../components/episode-lists';
+import ProviderError from '../components/provider-error';
 
 type VideoScreenProps = {
   route: RouteProp<RootStackParamList, 'VideoScreen'>;
@@ -49,7 +50,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
   const [selectedRange, setSelectedRange] = useState<
     {start: number; end: number} | undefined
   >(undefined);
-
+  const [hasError, setHasError] = useState<boolean>(false);
   const {markAsWatched} = useWatchedEpisodes();
   const {continueWatching, setContinueWatching} = useContinueWatching();
   const {theme} = useTheme();
@@ -78,6 +79,8 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
       } = await fetchAnimeAndEpisodeData(animeID, animeEpisodeId);
       setAnimeInfo(fetchedAnimeInfo || null);
       setEpisodeSources(fetchedEpisodeSources || null);
+    } catch (error) {
+      setHasError(true);
     } finally {
       setIsLoading(false);
     }
@@ -111,6 +114,10 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     setAnimeEpisodeId(episodeId);
     setHasMarkedWatched(false);
   };
+
+  if (hasError) {
+    return <ProviderError hasRetry={false} />;
+  }
 
   const renderLoading = () => (
     <View style={styles.bufferingIndicator}>

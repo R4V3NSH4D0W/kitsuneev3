@@ -376,15 +376,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: height / 2.5,
+    marginBottom: height / 5,
   },
   noSchedule: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: '600',
     color: Colors.Pink,
   },
   sorry: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.sm,
     marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 30,

@@ -1,15 +1,16 @@
+import React from 'react';
 import {
   View,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import React from 'react';
-import FIcon from 'react-native-vector-icons/Feather';
-import IIcons from 'react-native-vector-icons/Ionicons';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AAText from '../../ui/text';
 import {useTheme} from '../../wrappers/theme-context';
 import {Colors, FontSize} from '../../constants/constants';
+import LayoutWrapper from '../../wrappers/layout-wrapper';
 
 type NoInternetConnectionScreenProps = {
   onRetry: () => void;
@@ -21,23 +22,24 @@ export default function NoInternetConnectionScreen({
   loading,
 }: NoInternetConnectionScreenProps) {
   const {theme} = useTheme();
-  console.log(loading);
 
   return (
-    <View style={styles.container}>
-      <FIcon name="wifi-off" size={50} color={theme.colors.text} />
-      <AAText style={styles.text}>No Internet Connection</AAText>
-      <TouchableOpacity
-        disabled={loading}
-        style={styles.refreshButton}
-        onPress={onRetry}>
-        {loading ? (
-          <ActivityIndicator size="small" color={theme.colors.text} />
-        ) : (
-          <IIcons name="reload" size={20} color={theme.colors.text} />
-        )}
-      </TouchableOpacity>
-    </View>
+    <LayoutWrapper>
+      <View style={styles.container}>
+        <FeatherIcon name="wifi-off" size={50} color={theme.colors.text} />
+        <AAText style={styles.text}>No Internet Connection</AAText>
+        <TouchableOpacity
+          style={[styles.refreshButton, loading && styles.disabledButton]}
+          onPress={onRetry}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator size="small" color={theme.colors.text} />
+          ) : (
+            <Ionicons name="reload" size={20} color={theme.colors.text} />
+          )}
+        </TouchableOpacity>
+      </View>
+    </LayoutWrapper>
   );
 }
 
@@ -63,5 +65,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     backgroundColor: Colors.Pink,
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
