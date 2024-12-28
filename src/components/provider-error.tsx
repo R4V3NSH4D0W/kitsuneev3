@@ -29,12 +29,12 @@ export default function ProviderError({
             Check your Internet connection or try again later
           </AAText>
         )}
-        {hasRetry && (
+        {hasRetry && onRetry && (
           <AAButton
             ignoreTheme
             title="Retry"
             style={styles.button}
-            onPress={() => onRetry}
+            onPress={onRetry}
             textStyle={styles.buttonText}
           />
         )}

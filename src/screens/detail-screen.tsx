@@ -93,6 +93,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   }, [id, fetchAnimeInfo]);
 
   const onRefresh = async () => {
+    console.log('triggred');
     setLoading(true);
     await fetchAnimeInfo();
     setLoading(false);
@@ -108,7 +109,7 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   };
 
   if (hasError) {
-    return <ProviderError onRetry={onRefresh} />;
+    return <ProviderError hasRetry={false} />;
   }
 
   const renderDescription = () => {

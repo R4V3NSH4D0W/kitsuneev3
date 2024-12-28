@@ -88,7 +88,7 @@ export default function HomeScreen() {
   }
 
   if (hasError) {
-    return <ProviderError onRetry={fetchAllData} />;
+    return <ProviderError onRetry={onRefresh} />;
   }
 
   return (
