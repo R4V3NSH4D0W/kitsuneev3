@@ -244,7 +244,10 @@ export default function CalendarScreen() {
         ) : schedule.length > 0 ? (
           <FlatList
             data={schedule}
-            style={styles.scheduleList}
+            style={[
+              styles.scheduleList,
+              {height: continueWatching ? height / 1.6 : height / 1.4},
+            ]}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderScheduleItem}
             showsVerticalScrollIndicator={false}
@@ -282,7 +285,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginRight: 12,
     borderRadius: 30,
-    marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: Colors.Pink,
@@ -311,6 +313,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   scheduleContainer: {
+    flex: 1,
     paddingTop: 5,
   },
   smallLine: {
@@ -362,7 +365,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    marginBottom: height / 4,
+    marginBottom: height * 0.25,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -375,15 +378,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: height / 2.5,
+    marginBottom: height / 5,
   },
   noSchedule: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
     fontWeight: '600',
     color: Colors.Pink,
   },
   sorry: {
-    fontSize: FontSize.lg,
+    fontSize: FontSize.sm,
     marginTop: 10,
     textAlign: 'center',
     paddingHorizontal: 30,

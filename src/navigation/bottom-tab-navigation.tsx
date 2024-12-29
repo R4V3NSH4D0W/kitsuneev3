@@ -3,13 +3,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home-screen';
 import Icons from 'react-native-vector-icons/Ionicons';
-import {
-  Platform,
-  View,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useTheme} from '../wrappers/theme-context';
 import {Colors, FontSize} from '../constants/constants';
 
@@ -117,7 +111,7 @@ const BottomTabNavigation = () => {
           tabBarStyle: {
             paddingTop: 10,
             shadowColor: '#000',
-            height: Platform.OS === 'ios' ? 80 : 80,
+            height: 80,
             shadowOpacity: 0.1,
             shadowOffset: {width: 0, height: -3},
             shadowRadius: 5,
