@@ -189,17 +189,6 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
     );
   };
 
-  // if (loading && animeList.length === 0) {
-  //   return (
-  //     <LayoutWrapper>
-  //       <View style={styles.loadingContainer}>
-  //         {/* <ActivityIndicator size="large" color={Colors.Pink} /> */}
-  //         <SeeAllSkeleton />
-  //       </View>
-  //     </LayoutWrapper>
-  //   );
-  // }
-
   return (
     <LayoutWrapper>
       <SecondaryNavBar title={type} hasGoBack logoEnabled={false} />
@@ -232,11 +221,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingTop: 20,
-  },
-  loadingContainer: {
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   loadingMore: {
     flex: 1,
