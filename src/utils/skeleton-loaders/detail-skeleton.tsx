@@ -13,7 +13,7 @@ export default function SkeletonDetail() {
     <View>
       <SkeletonSlider />
       <SkeletonPlaceholder
-        backgroundColor={theme.colors.skeletonBackgroung}
+        backgroundColor={theme.colors.skeletonBackground}
         highlightColor={theme.colors.skeletonHighlight}>
         <View style={{padding: 20}}>
           {/* Header Section */}

@@ -30,6 +30,7 @@ import {useMyList} from '../helper/storage.helper';
 import FIcons from 'react-native-vector-icons/Feather';
 import {useTheme} from '../wrappers/theme-context';
 import {StackNavigationProp} from '@react-navigation/stack';
+import SeeAllSkeleton from '../utils/skeleton-loaders/see-all-skeleton';
 
 type SeeAllScreenProps = {
   route: RouteProp<RootStackParamList, 'SeeAll'>;
@@ -188,35 +189,40 @@ export default function SeeAllScreen({route}: SeeAllScreenProps) {
     );
   };
 
-  if (loading && animeList.length === 0) {
-    return (
-      <LayoutWrapper>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.Pink} />
-        </View>
-      </LayoutWrapper>
-    );
-  }
+  // if (loading && animeList.length === 0) {
+  //   return (
+  //     <LayoutWrapper>
+  //       <View style={styles.loadingContainer}>
+  //         {/* <ActivityIndicator size="large" color={Colors.Pink} /> */}
+  //         <SeeAllSkeleton />
+  //       </View>
+  //     </LayoutWrapper>
+  //   );
+  // }
 
   return (
     <LayoutWrapper>
       <SecondaryNavBar title={type} hasGoBack logoEnabled={false} />
       <View style={styles.container}>
-        <FlatList
-          data={animeList}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          renderItem={renderAnimeItem}
-          onEndReached={loadMoreAnime}
-          onEndReachedThreshold={0.5}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            loading ? (
-              <View style={styles.loadingMore}>
-                <ActivityIndicator size={'large'} color={Colors.Pink} />
-              </View>
-            ) : null
-          }
-        />
+        {loading && animeList.length === 0 ? (
+          <SeeAllSkeleton />
+        ) : (
+          <FlatList
+            data={animeList}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
+            renderItem={renderAnimeItem}
+            onEndReached={loadMoreAnime}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={
+              loading ? (
+                <View style={styles.loadingMore}>
+                  <ActivityIndicator size={'large'} color={Colors.Pink} />
+                </View>
+              ) : null
+            }
+          />
+        )}
       </View>
     </LayoutWrapper>
   );
@@ -228,9 +234,9 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
   loadingMore: {
     flex: 1,

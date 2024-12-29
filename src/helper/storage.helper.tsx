@@ -87,7 +87,6 @@ export const AppProvider: React.FC<{children: ReactNode}> = ({children}) => {
   ) => {
     try {
       const anime = {id, image, name, episodeNumber};
-      console.log('anime', anime);
       setContinueWatchingState(anime);
       await AsyncStorage.setItem('continueWatching', JSON.stringify(anime));
     } catch (error) {
