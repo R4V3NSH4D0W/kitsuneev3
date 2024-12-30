@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import VideoScreen from '../screens/video-screen';
 import DetailScreen from '../screens/detail-screen';
 import SearchScreen from '../screens/search-screen';
@@ -10,12 +9,12 @@ import SortAndFilter from '../screens/sort-and-filter-screen';
 import InitalLoading from '../screens/util-screen/inital-screen';
 import NoInternetConnectionScreen from '../screens/util-screen/no-internet-connection-screen';
 import InternetConnection from '../components/internet-connection';
-
+import BottomTabNavigation from './bottom-tab-navigation';
 import {getZoroWorking} from '../helper/api.helper';
 import {checkInternetConnection} from '../helper/network-helper';
-
 import {RootStackParamList} from '../constants/types';
-import BottomTabNavigation from './bottom-tab-navigation';
+import {checkForUpdate} from '../helper/update-app-helper';
+import UpdateScreen from '../screens/update-app-screen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -23,7 +22,10 @@ export default function StackNavigation() {
   const [loading, setLoading] = useState<boolean>(true);
   const [connected, setConnected] = useState<boolean | null>(null);
   const [result, setResult] = useState<{isWorking: boolean}>({isWorking: true});
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
+  const currentAppVersion = '1.0.0';
 
+  const [mounted, setMounted] = useState(false);
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -45,13 +47,19 @@ export default function StackNavigation() {
 
   useEffect(() => {
     checkConnection();
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (connected === true) {
+    if (mounted && connected !== null) {
       fetchData();
+      checkForUpdate(currentAppVersion).then(updateInfo => {
+        if (updateInfo.isUpdateAvailable) {
+          setIsUpdateAvailable(true);
+        }
+      });
     }
-  }, [connected]);
+  }, [mounted, connected]);
 
   if (loading) {
     return <InitalLoading />;
@@ -69,11 +77,23 @@ export default function StackNavigation() {
     return <ErrorScreen />;
   }
 
+  const handleSkipUpdate = () => {
+    setIsUpdateAvailable(false);
+  };
+
   return (
     <>
       <InternetConnection />
       <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
-        <Stack.Screen name="Tabs" component={BottomTabNavigation} />
+        {isUpdateAvailable ? (
+          <Stack.Screen
+            name="UpdateScreen"
+            component={UpdateScreen}
+            initialParams={{onSkipUpdate: handleSkipUpdate}}
+          />
+        ) : (
+          <Stack.Screen name="Tabs" component={BottomTabNavigation} />
+        )}
         <Stack.Screen name="Detail" component={DetailScreen} />
         <Stack.Screen name="VideoScreen" component={VideoScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
