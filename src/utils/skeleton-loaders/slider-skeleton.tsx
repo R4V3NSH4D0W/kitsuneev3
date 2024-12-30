@@ -8,7 +8,7 @@ export default function SkeletonSlider() {
   const {theme} = useTheme();
   return (
     <SkeletonPlaceholder
-      backgroundColor={theme.colors.skeletonBackgroung}
+      backgroundColor={theme.colors.skeletonBackground}
       highlightColor={theme.colors.skeletonHighlight}>
       <View style={{width: '100%', height: 250}} />
     </SkeletonPlaceholder>

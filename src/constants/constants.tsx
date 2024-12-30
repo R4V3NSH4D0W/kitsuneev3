@@ -9,7 +9,7 @@ export interface Theme {
     miniumTintColor: string;
     maxiumTintColor: string;
     alt: string;
-    skeletonBackgroung: string;
+    skeletonBackground: string;
     skeletonHighlight: string;
   };
 }
@@ -42,7 +42,7 @@ export const lightTheme: Theme = {
     miniumTintColor: '#091227',
     maxiumTintColor: '#D4D4D4',
     alt: '#F8f8f8',
-    skeletonBackgroung: '#e1e1e1',
+    skeletonBackground: '#e1e1e1',
     skeletonHighlight: '#f2f2f2',
   },
 };
@@ -57,7 +57,7 @@ export const darkTheme: Theme = {
     miniumTintColor: '#FFFFFF',
     maxiumTintColor: '#808080',
     alt: '#1e222a',
-    skeletonBackgroung: '#2c2c2c',
+    skeletonBackground: '#2c2c2c',
     skeletonHighlight: '#3d3d3d',
   },
 };

@@ -11,7 +11,7 @@ export default function SkeletonSchedule() {
   // const skeletonItems = Array(5).fill(null);
   return (
     <SkeletonPlaceholder
-      backgroundColor={theme.colors.skeletonBackgroung}
+      backgroundColor={theme.colors.skeletonBackground}
       highlightColor={theme.colors.skeletonHighlight}>
       <View style={{height: height}}>
         <View

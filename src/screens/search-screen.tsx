@@ -81,6 +81,7 @@ export default function SearchScreen() {
     <AnimeItemCard
       title={item.title}
       image={item.image}
+      type={item.type}
       onPress={() => navigateToDetail(item.id)}
     />
   );
@@ -112,19 +113,21 @@ export default function SearchScreen() {
             <Icon name="options" size={30} color={Colors.Pink} />
           </TouchableOpacity>
         </View>
-        {!loading && (
-          <FlatList
-            data={searchResults}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderAnimeItem}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            columnWrapperStyle={styles.row}
-          />
-        )}
-        {searchText.length === 0 && !loading && (
-          <RowAnimeCard data={mostfavorite} />
-        )}
+        <View style={styles.searchAnimeContainer}>
+          {!loading && (
+            <FlatList
+              data={searchResults}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderAnimeItem}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              columnWrapperStyle={styles.row}
+            />
+          )}
+          {searchText.length === 0 && !loading && (
+            <RowAnimeCard data={mostfavorite} />
+          )}
+        </View>
       </View>
       {loading && (
         <View style={styles.loading}>
@@ -169,11 +172,13 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: 'space-between',
-    marginTop: 20,
   },
   loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  searchAnimeContainer: {
+    marginTop: 20,
   },
 });

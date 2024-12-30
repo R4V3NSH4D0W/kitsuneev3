@@ -27,7 +27,7 @@ export default function EpisodeLists({
   if (!filteredEpisodes?.length) {
     return (
       <SkeletonPlaceholder
-        backgroundColor={theme.colors.skeletonBackgroung}
+        backgroundColor={theme.colors.skeletonBackground}
         highlightColor={theme.colors.skeletonHighlight}>
         <View style={styles.container}>
           {[...Array(8)].map((_, index) => (

@@ -11,7 +11,7 @@ const SkeletonAnimeCard = () => {
   return (
     <View style={styles.container}>
       <SkeletonPlaceholder
-        backgroundColor={theme.colors.skeletonBackgroung}
+        backgroundColor={theme.colors.skeletonBackground}
         highlightColor={theme.colors.skeletonHighlight}>
         <View style={styles.titleRow}>
           <View style={styles.title} />
@@ -25,7 +25,7 @@ const SkeletonAnimeCard = () => {
         keyExtractor={(item, index) => `skeleton-${index}`}
         renderItem={() => (
           <SkeletonPlaceholder
-            backgroundColor={theme.colors.skeletonBackgroung}
+            backgroundColor={theme.colors.skeletonBackground}
             highlightColor={theme.colors.skeletonHighlight}>
             <View style={styles.imageContainer}>
               <View style={styles.image} />

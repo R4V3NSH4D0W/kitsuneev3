@@ -19,10 +19,8 @@ import ProviderError from '../components/provider-error';
 
 export default function MyList() {
   const {myList} = useMyList();
-  console.log('My List', myList);
   const {continueWatching} = useContinueWatching();
   const [animeDetails, setAnimeDetails] = useState<any[]>([]);
-  console.log('AnimeDetail', animeDetails);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -64,47 +62,45 @@ export default function MyList() {
       onPress={() => navigateToDetail(item.id)}
     />
   );
-  if (loading) {
-    return (
-      <LayoutWrapper>
-        <View
-          style={[
-            styles.loadingIndicator,
-            // eslint-disable-next-line react-native/no-inline-styles
-            {marginBottom: continueWatching ? 90 : 0},
-          ]}>
-          <ActivityIndicator size="large" color={Colors.Pink} />
-        </View>
-      </LayoutWrapper>
-    );
-  }
 
   return (
     <LayoutWrapper>
       <SecondaryNavBar title="Mylist" />
-      <View style={styles.container}>
-        {animeDetails.length === 0 ? (
-          <View style={styles.emptyDesc}>
-            <Image
-              source={require('../../assets/images/empty.png')}
-              style={styles.emptyImage}
+      <View
+        style={[styles.container, {marginBottom: continueWatching ? 90 : 0}]}>
+        {!loading ? (
+          animeDetails.length === 0 ? (
+            <View style={styles.emptyDesc}>
+              <Image
+                source={require('../../assets/images/empty.png')}
+                style={styles.emptyImage}
+              />
+              <AAText ignoretheme style={styles.emptyText}>
+                Your List is Empty
+              </AAText>
+              <AAText style={styles.emptySubText}>
+                It seems that you haven't added any anime to the list
+              </AAText>
+            </View>
+          ) : (
+            <FlatList
+              data={animeDetails}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderAnimeItem}
+              keyExtractor={item => item.id.toString()}
+              numColumns={2}
+              columnWrapperStyle={styles.row}
             />
-            <AAText ignoretheme style={styles.emptyText}>
-              Your List is Empty
-            </AAText>
-            <AAText style={styles.emptySubText}>
-              It seems that you haven't added any anime to the list
-            </AAText>
-          </View>
+          )
         ) : (
-          <FlatList
-            data={animeDetails}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderAnimeItem}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            columnWrapperStyle={styles.row}
-          />
+          <View
+            style={[
+              styles.loadingIndicator,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {marginBottom: continueWatching ? 90 : 0},
+            ]}>
+            <ActivityIndicator size="large" color={Colors.Pink} />
+          </View>
         )}
       </View>
     </LayoutWrapper>
