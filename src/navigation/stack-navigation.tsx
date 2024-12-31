@@ -15,6 +15,7 @@ import {checkInternetConnection} from '../helper/network-helper';
 import {RootStackParamList} from '../constants/types';
 import {checkForUpdate} from '../helper/update-app-helper';
 import UpdateScreen from '../screens/update-app-screen';
+import {getCurrentAppVersion} from '../helper/util.helper';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -23,7 +24,8 @@ export default function StackNavigation() {
   const [connected, setConnected] = useState<boolean | null>(null);
   const [result, setResult] = useState<{isWorking: boolean}>({isWorking: true});
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
-  const currentAppVersion = '1.0.0';
+
+  // const currentAppVersion = '1.0.0';
 
   const [mounted, setMounted] = useState(false);
   const fetchData = async () => {
@@ -53,7 +55,7 @@ export default function StackNavigation() {
   useEffect(() => {
     if (mounted && connected !== null) {
       fetchData();
-      checkForUpdate(currentAppVersion).then(updateInfo => {
+      checkForUpdate(getCurrentAppVersion).then(updateInfo => {
         if (updateInfo.isUpdateAvailable) {
           setIsUpdateAvailable(true);
         }
