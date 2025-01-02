@@ -19,10 +19,10 @@ import {RootStackParamList} from '../constants/types';
 import * as Progress from 'react-native-progress';
 import {useTheme} from '../wrappers/theme-context';
 import RNFS from 'react-native-fs';
-import {Linking} from 'react-native';
-// import {checkAndRequestPermissions} from '../helper/permission-helper';
+import SendIntent from 'react-native-send-intent';
+import RNFetchBlob from 'rn-fetch-blob';
 import {getCurrentAppVersion} from '../helper/util.helper';
-import {requestStoragePermission} from '../helper/permission-helper';
+import {requestPermissions} from '../helper/permission-helper';
 
 type UpdateScreenProps = {
   route: RouteProp<RootStackParamList, 'UpdateScreen'>;
@@ -48,24 +48,36 @@ export default function UpdateScreen({route}: UpdateScreenProps) {
 
     fetchUpdateInfo();
   }, []);
-
   const startDownloadAnimation = async () => {
-    const hasPermissions = await requestStoragePermission();
-    if (!hasPermissions) {
-      Alert.alert('Permission Required', 'Please allow storage permission');
-      return;
-    }
+    try {
+      const hasPermissions = await requestPermissions();
+      if (!hasPermissions) {
+        Alert.alert(
+          'Permission Required',
+          'Please allow storage permission to proceed.',
+        );
+        return;
+      }
 
-    setIsDownloading(true);
-    Animated.spring(downloadAnim, {
-      toValue: 1,
-      friction: 5,
-      tension: 50,
-      useNativeDriver: true,
-    }).start();
+      setIsDownloading(true);
+      Animated.spring(downloadAnim, {
+        toValue: 1,
+        friction: 5,
+        tension: 50,
+        useNativeDriver: true,
+      }).start();
 
-    if (updateInfo?.downloadUrl) {
-      downloadFile(updateInfo.downloadUrl);
+      // Trigger file download
+      if (updateInfo?.downloadUrl) {
+        await downloadFile(updateInfo.downloadUrl);
+      } else {
+        Alert.alert('Error', 'Download URL is missing.');
+      }
+    } catch (error) {
+      console.error('Error during download process:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -80,10 +92,22 @@ export default function UpdateScreen({route}: UpdateScreenProps) {
   };
 
   const downloadFile = async (url: string) => {
+    console.log('Requesting storage permission...');
+    const hasPermissions = await requestPermissions();
+    if (!hasPermissions) {
+      Alert.alert('Permission Required', 'Please allow storage permission');
+      return;
+    }
+
     const downloadDest = `${RNFS.DocumentDirectoryPath}/update.apk`;
-    console.log(url);
+    console.log('Download path:', downloadDest);
 
     try {
+      const fileExists = await RNFS.exists(downloadDest);
+      if (fileExists) {
+        console.log('File already exists, deleting...');
+        await RNFS.unlink(downloadDest);
+      }
       const download = RNFS.downloadFile({
         fromUrl: url,
         toFile: downloadDest,
@@ -94,12 +118,10 @@ export default function UpdateScreen({route}: UpdateScreenProps) {
         progress: res => {
           const progress = res.bytesWritten / res.contentLength;
           console.log('Download progress:', progress);
-
           if (Math.abs(progress - downloadProgress) > 0.001) {
             setDownloadProgress(progress);
           }
         },
-
         progressDivider: 1,
       });
 
@@ -108,52 +130,38 @@ export default function UpdateScreen({route}: UpdateScreenProps) {
       stopDownloadAnimation();
       installAPK(downloadDest);
     } catch (error) {
+      console.error('Download Error:', error);
       Alert.alert('Error', 'Failed to download the file. Please try again.');
       stopDownloadAnimation();
     }
   };
 
-  // const checkIfFileExists = async () => {
-  //   const filePath = `${RNFS.DocumentDirectoryPath}/update.apk`;
-
-  //   try {
-  //     // Check if the file exists
-  //     const fileExists = await RNFS.exists(filePath);
-  //     if (fileExists) {
-  //       console.log('File exists at:', filePath);
-  //       // You can proceed with installation or other logic
-  //     } else {
-  //       console.log('File does not exist at:', filePath);
-  //       // Handle the case where the file does not exist
-  //     }
-  //   } catch (error) {
-  //     console.error('Error checking file existence:', error);
-  //   }
-  // };
-  // checkIfFileExists();
-
-  const installAPK = async (filePath: string) => {
+  const installAPK = async (downloadedFilePath: string) => {
+    console.log('Installing APK:', downloadedFilePath);
     try {
-      const fileExists = await RNFS.exists(filePath);
-      if (!fileExists) {
-        Alert.alert('Error', 'APK file not found.');
-        return;
-      }
-
-      const uri = `file://${filePath}`;
-
       if (Platform.OS === 'android') {
-        const supported = await Linking.canOpenURL(uri);
+        const fileUri = `file://${downloadedFilePath}`;
+        const success = await SendIntent.openFileChooser(
+          {
+            fileUrl: fileUri,
+            type: 'application/vnd.android.package-archive',
+          },
+          'com.android.packageinstaller',
+        );
 
-        if (supported) {
-          await Linking.openURL(uri);
+        if (success !== undefined && success) {
+          await RNFetchBlob.fs.unlink(downloadedFilePath);
         } else {
-          Alert.alert('Error', 'Cannot open APK file.');
+          Alert.alert('Installation Error', 'Failed to install the update.');
         }
+      } else {
+        Alert.alert(
+          'Unsupported Platform',
+          'APK installation is supported only on Android devices.',
+        );
       }
     } catch (error) {
-      console.error('Failed to install APK', error);
-      Alert.alert('Error', 'Failed to install the APK.');
+      Alert.alert('Error', 'Failed to install the update.');
     }
   };
 

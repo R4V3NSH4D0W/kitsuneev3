@@ -1,6 +1,6 @@
 import {PermissionsAndroid} from 'react-native';
 
-export const requestStoragePermission = async (): Promise<boolean> => {
+export const requestPermissions = async (): Promise<boolean> => {
   try {
     const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -17,3 +17,14 @@ export const requestStoragePermission = async (): Promise<boolean> => {
     return false;
   }
 };
+
+// export const openInstallPermissionSettings = () => {
+//   if (Platform.OS === 'android') {
+//     const packageName = 'com.kitsunee';
+//     const appSettingsUrl = `package:${packageName}`;
+
+//     Linking.openURL(appSettingsUrl).catch(err => {
+//       console.error('Failed to open settings:', err);
+//     });
+//   }
+// };
