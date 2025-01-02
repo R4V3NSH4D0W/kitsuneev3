@@ -1,8 +1,7 @@
 import {DateItem} from '../constants/types';
 import DeviceInfo from 'react-native-device-info';
 
-// export const getCurrentAppVersion = DeviceInfo.getVersion();
-export const getCurrentAppVersion = '1.0.0';
+export const getCurrentAppVersion = DeviceInfo.getVersion();
 
 export const formatDate = (date: string | Date) => {
   const d = new Date(date);
