@@ -81,6 +81,9 @@ export type RootStackParamList = {
   Search: undefined;
   SortAndFilter: undefined;
   SeeAll: {type: string};
+  UpdateScreen: {
+    onSkipUpdate?: () => void;
+  };
 };
 
 export type DateItem = {

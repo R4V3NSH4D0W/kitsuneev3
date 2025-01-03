@@ -1,4 +1,7 @@
 import {DateItem} from '../constants/types';
+import DeviceInfo from 'react-native-device-info';
+
+export const getCurrentAppVersion = DeviceInfo.getVersion();
 
 export const formatDate = (date: string | Date) => {
   const d = new Date(date);
@@ -88,4 +91,27 @@ export const checkDate = (
 
 export const trimRating = (rating: string) => {
   return rating.split(' -')[0];
+};
+
+export const parseReleaseNotes = (releaseNotes: string) => {
+  const sectionRegex = /# (.*?)\n/g;
+  const listItemRegex = /(\d+\.\s.*?)(?=\n|\r|$)/g;
+
+  const sections = [];
+  let match;
+  while ((match = sectionRegex.exec(releaseNotes)) !== null) {
+    const sectionTitle = match[1];
+    const sectionStart = match.index + match[0].length;
+    const sectionEnd = sectionRegex.lastIndex;
+    const sectionContent = releaseNotes.slice(sectionStart, sectionEnd).trim();
+
+    const items = sectionContent.match(listItemRegex) || [];
+
+    sections.push({
+      title: sectionTitle,
+      items,
+    });
+  }
+
+  return sections;
 };
