@@ -25,8 +25,6 @@ export default function StackNavigation() {
   const [result, setResult] = useState<{isWorking: boolean}>({isWorking: true});
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
 
-  // const currentAppVersion = '1.0.0';
-
   const [mounted, setMounted] = useState(false);
   const fetchData = async () => {
     try {
