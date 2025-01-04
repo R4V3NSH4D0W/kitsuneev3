@@ -35,6 +35,7 @@ import {RefreshControl} from 'react-native-gesture-handler';
 import {StackNavigationProp} from '@react-navigation/stack';
 import AIcons from 'react-native-vector-icons/AntDesign';
 import ProviderError from '../components/provider-error';
+import {showToast} from '../helper/toast-helper';
 
 type DetailScreenProps = {
   route: RouteProp<RootStackParamList, 'Detail'>;
@@ -151,8 +152,10 @@ const DetailScreen = ({route}: DetailScreenProps) => {
   const handlePress = async () => {
     if (isInMyList) {
       await removeFromList(animeInfo?.id || '');
+      showToast('error', 'Removed from My List');
     } else {
       await addToList(animeInfo?.id || '');
+      showToast('success', 'Added to My List');
     }
   };
 

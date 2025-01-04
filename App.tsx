@@ -6,6 +6,8 @@ import {ThemeProvider} from './src/wrappers/theme-context';
 import StackNavigation from './src/navigation/stack-navigation';
 import {AppProvider} from './src/helper/storage.helper';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
+import toastConfig from './src/ui/toast-config';
 
 const App = () => {
   return (
@@ -15,6 +17,7 @@ const App = () => {
           <NavigationContainer>
             <StackNavigation />
           </NavigationContainer>
+          <Toast config={toastConfig} position="bottom" bottomOffset={50} />
         </AppProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
