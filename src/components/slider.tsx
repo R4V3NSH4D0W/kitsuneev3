@@ -10,7 +10,6 @@ import {Colors, FontSize} from '../constants/constants';
 import {ISpotLightResult} from '../constants/types';
 import {useMyList} from '../helper/storage.helper';
 import LinearGradient from 'react-native-linear-gradient';
-import NavBar from './navbar';
 import {useTheme} from '../wrappers/theme-context';
 import {getAnimeDetail} from '../helper/api.helper';
 import {useNavigation} from '@react-navigation/native';
@@ -78,7 +77,6 @@ const SliderItem = ({item}: ISliderItemProps) => {
 
   return (
     <View style={styles.slide}>
-      <NavBar />
       <Image source={{uri: item.banner}} style={styles.image} />
       <View style={styles.overlay} />
       <LinearGradient

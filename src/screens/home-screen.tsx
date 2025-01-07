@@ -19,6 +19,7 @@ import {useContinueWatching} from '../helper/storage.helper';
 import SkeletonAnimeCard from '../utils/skeleton-loaders/anime-card-skeleton';
 import SkeletonSlider from '../utils/skeleton-loaders/slider-skeleton';
 import ProviderError from '../components/provider-error';
+import NavBar from '../components/navbar';
 
 export default function HomeScreen() {
   const [spotLight, setSpotLight] = useState<ISpotLightResult[]>([]);
@@ -105,6 +106,7 @@ export default function HomeScreen() {
             colors={[Colors.Pink]}
           />
         }>
+        <NavBar />
         <Slider data={spotLight} />
         <AnimeCard title="Top Airing" data={topAiringAnime} />
         <AnimeCard title="New Episode Releases" data={recentlyUpdated} />

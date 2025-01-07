@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
@@ -7,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   StatusBar,
   BackHandler,
+  useWindowDimensions,
 } from 'react-native';
 import Video, {
   VideoRef,
@@ -15,10 +17,10 @@ import Video, {
   SelectedTrackType,
 } from 'react-native-video';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors, FontSize} from '../constants/constants';
 import {findEnglishSubtitle, getHlsSource} from '../helper/video-player-helper';
 import Slider from '@react-native-community/slider';
-import FIcon from 'react-native-vector-icons/Feather';
 import AAText from '../ui/text';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 
@@ -38,6 +40,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   setIsBuffering,
   onProgress,
 }) => {
+  const {width, height} = useWindowDimensions();
   const videoRef = useRef<VideoRef>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -46,6 +49,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [showControls, setShowControls] = useState(true);
   const [isInteracting, setIsInteracting] = useState(false);
   const [lastPressTime, setLastPressTime] = useState(0);
+  const isLandScape = width > height;
 
   const hideTimer = useRef<any>(null);
 
@@ -217,13 +221,17 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </TouchableWithoutFeedback>
 
       {showControls && (
-        <View style={styles.controlsContainer}>
+        <View
+          style={[
+            styles.controlsContainer,
+            {paddingBottom: !isLandScape && isFullScreen ? 30 : 0},
+          ]}>
           <View style={styles.videoControls}>
             <TouchableOpacity onPress={handleBackward}>
               <Icon name="backward" size={20} color={Colors.White} />
             </TouchableOpacity>
             <TouchableOpacity onPress={togglePlayPause}>
-              <FIcon
+              <Icon
                 name={isPlaying ? 'pause' : 'play'}
                 size={20}
                 color={Colors.White}
@@ -249,11 +257,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               thumbTintColor={Colors.Pink}
             />
             <View style={styles.rightSlider}>
-              <AAText ignoretheme style={styles.time}>
+              <AAText ignoretheme style={[styles.time, {paddingLeft: 10}]}>
                 {formatTime(duration)}
               </AAText>
               <TouchableOpacity onPress={toggleFullScreen}>
-                <Icon name="expand" size={20} color={Colors.White} />
+                {isFullScreen ? (
+                  <MIcon name="arrow-collapse" size={20} color={Colors.White} />
+                ) : (
+                  <Icon name="expand" size={20} color={Colors.White} />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -303,7 +315,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   slider: {
-    width: '70%',
+    flex: 1,
     marginVertical: 5,
   },
   fullScreen: {
@@ -313,6 +325,8 @@ const styles = StyleSheet.create({
   time: {
     color: Colors.White,
     fontSize: FontSize.sm,
+    maxWidth: 60,
+    minWidth: 50,
   },
   rightSlider: {
     flexDirection: 'row',
@@ -325,9 +339,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 30,
     paddingVertical: 10,
-  },
-  thumbStyle: {
-    height: 5,
   },
 });
 

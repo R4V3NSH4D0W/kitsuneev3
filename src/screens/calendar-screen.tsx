@@ -193,7 +193,7 @@ export default function CalendarScreen() {
             </View>
           </TouchableOpacity>
           <View style={styles.col}>
-            <AAText style={styles.title}>{trimTitle(item?.title)}</AAText>
+            <AAText style={styles.title}>{trimTitle(item?.title, 60)}</AAText>
             <AAText style={styles.episode}>{item.airingEpisode}</AAText>
             <AAButton
               ignoreTheme
@@ -341,8 +341,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: FontSize.xmd,
-    fontWeight: '500',
+    fontSize: FontSize.sm,
   },
   episode: {
     fontSize: FontSize.sm,
