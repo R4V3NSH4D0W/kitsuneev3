@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   TextInput,
@@ -6,12 +6,6 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import Video, {
-  VideoRef,
-  OnBufferData,
-  TextTrackType,
-  SelectedTrackType,
-} from 'react-native-video';
 import AIcons from 'react-native-vector-icons/AntDesign';
 import {RouteProp} from '@react-navigation/native';
 import {Colors, FontSize} from '../constants/constants';
@@ -24,13 +18,10 @@ import {
 } from '../helper/storage.helper';
 import AAText from '../ui/text';
 import AADropDown from '../utils/dropdown';
-import {
-  fetchAnimeAndEpisodeData,
-  findEnglishSubtitle,
-  getHlsSource,
-} from '../helper/video-player-helper';
+import {fetchAnimeAndEpisodeData} from '../helper/video-player-helper';
 import EpisodeLists from '../components/episode-lists';
 import ProviderError from '../components/provider-error';
+import VideoPlayer from '../components/video-player';
 
 type VideoScreenProps = {
   route: RouteProp<RootStackParamList, 'VideoScreen'>;
@@ -54,7 +45,6 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
   const {markAsWatched} = useWatchedEpisodes();
   const {continueWatching, setContinueWatching} = useContinueWatching();
   const {theme} = useTheme();
-  const videoRef = useRef<VideoRef>(null);
 
   useEffect(() => {
     if (
@@ -119,65 +109,11 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
     return <ProviderError hasRetry={false} />;
   }
 
-  const renderLoading = () => (
-    <View style={styles.bufferingIndicator}>
-      <ActivityIndicator size="large" color={Colors.Pink} />
-    </View>
-  );
-
-  const renderVideo = () => {
-    const hlsSource = getHlsSource(episodeSources);
-    if (!hlsSource) {
-      return (
-        <ActivityIndicator
-          size="large"
-          color={Colors.Pink}
-          style={styles.noSourceIndicator}
-        />
-      );
-    }
-
-    const englishSubtitle = findEnglishSubtitle(
-      episodeSources?.subtitles || [],
-    );
-
-    return (
-      <View style={styles.videoContainer}>
-        {isBuffering && renderLoading()}
-        <Video
-          style={styles.video}
-          ref={videoRef}
-          source={{
-            uri: hlsSource,
-            textTracks: [
-              {
-                title: 'English CC',
-                language: 'en',
-                type: TextTrackType.VTT,
-                uri: englishSubtitle?.url,
-              },
-            ],
-          }}
-          controls
-          resizeMode="contain"
-          // eslint-disable-next-line react-native/no-inline-styles
-          controlsStyles={{
-            hideNext: true,
-            hidePrevious: true,
-          }}
-          onProgress={handleProgress}
-          onBuffer={(param: OnBufferData) => setIsBuffering(param.isBuffering)}
-          onReadyForDisplay={() => setIsBuffering(false)}
-          subtitleStyle={styles.subTitle}
-          selectedTextTrack={{type: SelectedTrackType.INDEX, value: 0}}
-        />
-      </View>
-    );
-  };
-
-  const handleRangeSelected = (range: {start: number; end: number}) => {
-    setSelectedRange(range);
-  };
+  // const renderLoading = () => (
+  //   <View style={styles.bufferingIndicator}>
+  //     <ActivityIndicator size="large" color={Colors.Pink} />
+  //   </View>
+  // );
 
   const filteredEpisodes = animeInfo?.episodes?.filter(episode => {
     const matchesSearch = episode.number.toString().includes(searchQuery);
@@ -201,7 +137,12 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
             <ActivityIndicator size="large" color={Colors.Pink} />
           </View>
         ) : (
-          renderVideo()
+          <VideoPlayer
+            episodeSources={episodeSources}
+            isBuffering={isBuffering}
+            setIsBuffering={setIsBuffering}
+            onProgress={handleProgress}
+          />
         )}
         <View style={styles.episodeHeader}>
           <AAText ignoretheme style={styles.headerText}>
@@ -218,7 +159,7 @@ const VideoScreen: React.FC<VideoScreenProps> = ({route}) => {
                 <AAText style={styles.dropdownText}>List of Episodes</AAText>
                 <AADropDown
                   episodes={animeInfo?.episodes || []}
-                  onRangeSelected={handleRangeSelected}
+                  onRangeSelected={setSelectedRange}
                   selectedRange={selectedRange}
                 />
               </View>
@@ -256,22 +197,10 @@ const styles = StyleSheet.create({
     height: 350,
     backgroundColor: '#000',
   },
-  videoContainer: {
-    height: 350,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-  },
-  video: {
-    flex: 1,
-  },
   bufferingIndicator: {
     position: 'absolute',
     zIndex: 999,
     left: '45%',
-  },
-  noSourceIndicator: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   episodeHeader: {
     padding: 10,
@@ -320,9 +249,6 @@ const styles = StyleSheet.create({
     flex: 1,
     letterSpacing: 1,
     fontSize: FontSize.sm,
-  },
-  subTitle: {
-    paddingBottom: 20,
   },
 });
 

@@ -67,6 +67,7 @@ export default function MyList() {
     <LayoutWrapper>
       <SecondaryNavBar title="Mylist" />
       <View
+        // eslint-disable-next-line react-native/no-inline-styles
         style={[styles.container, {marginBottom: continueWatching ? 90 : 0}]}>
         {!loading ? (
           animeDetails.length === 0 ? (
