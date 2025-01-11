@@ -38,7 +38,7 @@ yarn install
 npm run dev
 
 # using Yarn
-yarn install
+yarn run dev
 ````
 4. Port forwarding
 ````
