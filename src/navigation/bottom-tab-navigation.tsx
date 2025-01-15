@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home-screen';
@@ -11,12 +10,12 @@ import MyList from '../screens/my-list-screen';
 import CalendarScreen from '../screens/calendar-screen';
 import {useContinueWatching} from '../helper/storage.helper';
 import AAText from '../ui/text';
-import IIcons from 'react-native-vector-icons/Ionicons';
 import EIcons from 'react-native-vector-icons/Entypo';
 import {trimTitle} from '../helper/util.helper';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Settings from '../screens/settings';
+
 interface IIconsProps {
   color: string;
   size: number;
@@ -47,7 +46,7 @@ const BottomTabNavigation = () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       {continueWatching && (
         <View
           style={[
@@ -62,11 +61,7 @@ const BottomTabNavigation = () => {
                   episodeNumber: continueWatching.episodeNumber,
                 })
               }
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '92%',
-              }}>
+              style={styles.continueWatchingTouch}>
               <Image
                 source={{uri: continueWatching.image}}
                 style={styles.continueWatchingImage}
@@ -75,35 +70,24 @@ const BottomTabNavigation = () => {
                 <AAText style={styles.continueWatchingTitle}>
                   {trimTitle(continueWatching.name, 25)}
                 </AAText>
-
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 5,
-                  }}>
-                  <IIcons name="play" size={FontSize.sm} color={Colors.Pink} />
-                  <AAText
-                    ignoretheme
-                    style={{fontSize: FontSize.xs, color: Colors.Pink}}>
+                <View style={styles.continueWatchingActions}>
+                  <Icons name="play" size={FontSize.sm} color={Colors.Pink} />
+                  <AAText ignoretheme style={styles.continueWatchingText}>
                     Continue
                   </AAText>
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-                removeContinueWatching();
-              }}
-              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
-              style={{width: '10%'}}>
+              onPress={removeContinueWatching}
+              hitSlop={styles.hitSlop}
+              style={styles.closeButton}>
               <EIcons name="cross" size={26} color={theme.colors.text} />
             </TouchableOpacity>
           </View>
         </View>
       )}
 
-      {/* Bottom Tab Navigator */}
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
@@ -122,34 +106,27 @@ const BottomTabNavigation = () => {
             fontFamily: 'Poppins-Medium',
             marginTop: 2,
           },
+          lazy: false,
         }}>
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{
-            tabBarIcon: HomeIcon,
-          }}
+          options={{tabBarIcon: HomeIcon}}
         />
         <Tab.Screen
           name="Schedule"
           component={CalendarScreen}
-          options={{
-            tabBarIcon: CalendarIcon,
-          }}
+          options={{tabBarIcon: CalendarIcon}}
         />
         <Tab.Screen
           name="My List"
           component={MyList}
-          options={{
-            tabBarIcon: MyListIcon,
-          }}
+          options={{tabBarIcon: MyListIcon}}
         />
         <Tab.Screen
           name="Settings"
           component={Settings}
-          options={{
-            tabBarIcon: SettingIcon,
-          }}
+          options={{tabBarIcon: SettingIcon}}
         />
       </Tab.Navigator>
     </View>
@@ -157,6 +134,7 @@ const BottomTabNavigation = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {flex: 1},
   continueWatchingContainer: {
     position: 'absolute',
     bottom: 80,
@@ -166,15 +144,16 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  continueWatchingTitle: {
-    fontSize: FontSize.xmd,
-    fontFamily: 'Poppins-SemiBold',
-  },
   continueWatchingContent: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
     paddingHorizontal: 10,
+  },
+  continueWatchingTouch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '92%',
   },
   continueWatchingImage: {
     width: 80,
@@ -182,6 +161,21 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginRight: 10,
   },
+  continueWatchingTitle: {
+    fontSize: FontSize.sm,
+    fontFamily: 'Poppins-SemiBold',
+  },
+  continueWatchingActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  continueWatchingText: {
+    fontSize: FontSize.xs,
+    color: Colors.Pink,
+  },
+  closeButton: {width: '10%'},
+  hitSlop: {top: 10, bottom: 10, left: 10, right: 10},
 });
 
 export default BottomTabNavigation;

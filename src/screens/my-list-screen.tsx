@@ -21,13 +21,14 @@ export default function MyList() {
   const {myList} = useMyList();
   const {continueWatching} = useContinueWatching();
   const [animeDetails, setAnimeDetails] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const navigateToDetail = (id: string) => {
     navigation.navigate('Detail', {id});
   };
+
   const fetchAnimeDetails = async (id: string) => {
     try {
       const result = await getAnimeDetail(id);
@@ -38,16 +39,25 @@ export default function MyList() {
   };
 
   useEffect(() => {
-    setLoading(true);
-    const fetchDetails = async () => {
-      const details = await Promise.all(
-        myList.map(id => fetchAnimeDetails(id)),
-      );
-      setAnimeDetails(details);
-      setLoading(false);
-    };
+    if (myList && myList.length > 0) {
+      const fetchDetails = async () => {
+        try {
+          setLoading(true);
+          const details = await Promise.all(
+            myList.map(id => fetchAnimeDetails(id)),
+          );
+          setAnimeDetails(details);
+        } catch (error) {
+          setHasError(true);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchDetails();
+      fetchDetails();
+    } else {
+      setLoading(false);
+    }
   }, [myList]);
 
   if (hasError) {
@@ -69,31 +79,7 @@ export default function MyList() {
       <View
         // eslint-disable-next-line react-native/no-inline-styles
         style={[styles.container, {marginBottom: continueWatching ? 90 : 0}]}>
-        {!loading ? (
-          animeDetails.length === 0 ? (
-            <View style={styles.emptyDesc}>
-              <Image
-                source={require('../../assets/images/empty.png')}
-                style={styles.emptyImage}
-              />
-              <AAText ignoretheme style={styles.emptyText}>
-                Your List is Empty
-              </AAText>
-              <AAText style={styles.emptySubText}>
-                It seems that you haven't added any anime to the list
-              </AAText>
-            </View>
-          ) : (
-            <FlatList
-              data={animeDetails}
-              showsVerticalScrollIndicator={false}
-              renderItem={renderAnimeItem}
-              keyExtractor={item => item.id.toString()}
-              numColumns={2}
-              columnWrapperStyle={styles.row}
-            />
-          )
-        ) : (
+        {loading ? (
           <View
             style={[
               styles.loadingIndicator,
@@ -102,6 +88,30 @@ export default function MyList() {
             ]}>
             <ActivityIndicator size="large" color={Colors.Pink} />
           </View>
+        ) : myList.length === 0 ? (
+          <View style={styles.emptyDesc}>
+            <Image
+              source={require('../../assets/images/empty.png')}
+              style={styles.emptyImage}
+            />
+            <AAText ignoretheme style={styles.emptyText}>
+              Your List is Empty
+            </AAText>
+            <AAText style={styles.emptySubText}>
+              It seems that you haven't added any anime to the list
+            </AAText>
+          </View>
+        ) : (
+          <FlatList
+            data={animeDetails}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderAnimeItem}
+            keyExtractor={item => item.id.toString()}
+            numColumns={2}
+            initialNumToRender={5}
+            windowSize={5}
+            columnWrapperStyle={styles.row}
+          />
         )}
       </View>
     </LayoutWrapper>
@@ -111,13 +121,8 @@ export default function MyList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 20,
-  },
-  navTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginBottom: 20,
+    paddingTop: 10,
+    paddingHorizontal: 10,
   },
   emptyImage: {
     width: '100%',
