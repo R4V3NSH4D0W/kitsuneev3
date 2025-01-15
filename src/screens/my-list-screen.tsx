@@ -108,6 +108,8 @@ export default function MyList() {
             renderItem={renderAnimeItem}
             keyExtractor={item => item.id.toString()}
             numColumns={2}
+            initialNumToRender={5}
+            windowSize={5}
             columnWrapperStyle={styles.row}
           />
         )}
@@ -119,8 +121,8 @@ export default function MyList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingHorizontal: 10,
   },
   emptyImage: {
     width: '100%',

@@ -250,6 +250,7 @@ export default function CalendarScreen() {
             ]}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderScheduleItem}
+            removeClippedSubviews={false}
             showsVerticalScrollIndicator={false}
           />
         ) : (

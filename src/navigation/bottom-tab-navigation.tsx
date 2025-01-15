@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   continueWatchingTitle: {
-    fontSize: FontSize.xmd,
+    fontSize: FontSize.sm,
     fontFamily: 'Poppins-SemiBold',
   },
   continueWatchingActions: {
