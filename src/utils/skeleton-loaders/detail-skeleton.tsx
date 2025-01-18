@@ -15,7 +15,7 @@ export default function SkeletonDetail() {
       <SkeletonPlaceholder
         backgroundColor={theme.colors.skeletonBackground}
         highlightColor={theme.colors.skeletonHighlight}>
-        <View style={{padding: 20}}>
+        <View style={{padding: 10}}>
           {/* Header Section */}
           <View
             style={{

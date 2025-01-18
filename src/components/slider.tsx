@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   sliderContent: {
-    left: 20,
+    left: 10,
     bottom: 20,
     zIndex: 999,
     position: 'absolute',

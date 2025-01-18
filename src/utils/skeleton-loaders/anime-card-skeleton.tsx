@@ -43,7 +43,7 @@ export default SkeletonAnimeCard;
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
   titleRow: {
     flexDirection: 'row',
