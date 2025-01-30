@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Platform} from 'react-native';
 import VideoScreen from '../screens/video-screen';
 import DetailScreen from '../screens/detail-screen';
 import SearchScreen from '../screens/search-screen';
@@ -24,8 +25,8 @@ export default function StackNavigation() {
   const [connected, setConnected] = useState<boolean | null>(null);
   const [result, setResult] = useState<{isWorking: boolean}>({isWorking: true});
   const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean>(false);
-
   const [mounted, setMounted] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -53,11 +54,15 @@ export default function StackNavigation() {
   useEffect(() => {
     if (mounted && connected !== null) {
       fetchData();
-      checkForUpdate(getCurrentAppVersion).then(updateInfo => {
-        if (updateInfo.isUpdateAvailable) {
-          setIsUpdateAvailable(true);
-        }
-      });
+
+      // Only check for updates if not on iOS
+      if (Platform.OS !== 'ios') {
+        checkForUpdate(getCurrentAppVersion).then(updateInfo => {
+          if (updateInfo.isUpdateAvailable) {
+            setIsUpdateAvailable(true);
+          }
+        });
+      }
     }
   }, [mounted, connected]);
 
