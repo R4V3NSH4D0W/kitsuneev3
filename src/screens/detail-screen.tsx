@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
   description: {
     marginTop: 20,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   viewMoreText: {
     color: Colors.Pink,
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     top: 20,
-    left: 20,
+    left: 10,
     zIndex: 1,
     position: 'absolute',
   },
@@ -353,13 +353,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     justifyContent: 'space-between',
   },
   controllerRow: {
     marginTop: 20,
     flexDirection: 'row',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     justifyContent: 'space-between',
   },
   iconContainer: {
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingTop: 10,
   },
   labelRating: {

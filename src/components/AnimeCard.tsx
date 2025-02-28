@@ -82,7 +82,7 @@ export default AnimeCard;
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
   title: {
     fontSize: FontSize.xmd,

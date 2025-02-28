@@ -116,7 +116,7 @@ export default function EpisodeCard({data, image}: IEpisodeCardProps) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   titleText: {
     fontSize: FontSize.xmd,

@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
-    paddingHorizontal: 10,
   },
   continueWatchingTouch: {
     flexDirection: 'row',
